@@ -1,0 +1,31 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# OpenSCAD
+*.bak
+*.swp
+*.swo
+*~
+.scad~
+
+# 3D Model Files (optional - comment out if you want to track STLs)
+# *.stl
+# *.obj
+# *.iges
+# *.iges
+
+# Build artifacts
+*.gcode
+*.png
+*.pdf
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Thumbs.db
