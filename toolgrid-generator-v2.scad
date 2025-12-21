@@ -1,71 +1,77 @@
 /******************************
-* Adjustable Board Perameters
+* Adjustable Board Parameters
 ******************************/
+/* [Display Mode] */
+print_mode = "drawer";// [single_tile, drawer_grid]
+generate_part = "tiles"; // [tiles, connector_only]
+
 /* [Drawer Dimensions] */
-drawer = true;// true/false, false generates single tile only
-drawer_width = 231;// x size
-drawer_length = 473;// y size
-/* [Tile Settings] */
-//Add a label to the backside of tiles
-label=""; // Label to add to boards
-// Reduced thickness in center
-lite = true;
-// Part To Generate
-part = "tiles"; // [tiles:Tiles,connector:Connector Only]
+drawer_width = 231;// Interior width in mm
+drawer_length = 473;// Interior length in mm
 
-/** [Locking tabs] **/
+/* [Tile Grid Configuration] */
+tile_columns = 16; // Number of hole columns per tile (4-16)
+tile_rows = 16; // Number of hole rows per tile (4-16)
 
+/* [Hole Settings] */
+pin_hole_diameter = 4.2; // Tool peg hole diameter in mm
+hole_center_spacing = 9.5;// Center-to-center distance between holes in mm [8:.5:12]
+
+/* [Material & Weight Reduction] */
+use_lightweight = true; // Enable lightweight mode with cross-braces
+base_thickness = 8; // Base board thickness in mm (6mm minimum)
+lightweight_thickness = 4; // Thickness of cross-braces in lightweight mode [2:8]
+lightweight_web_spacing = 8; // Number of holes between support webs [4:2:16]
+
+/* [Interlocking Tabs - Tiles puzzle together with male tabs locking into female slots] */
 tab_front = "female";// [male, female, none]
 tab_back = "male";// [male, female, none]
 tab_left = "female";// [male, female, none]
 tab_right = "male";// [male, female, none]
 
-/* [Single Tile Trim] */
-// Board trim size (positive adds, or negative subtracts)
-// Use to adjust panel to fit drawer
-// TABS WILL NOT BE ADDED TO TRIMMED SIDE
-// Will be ignored in Drawer mode
-trim_width = 0;// [-3:8]
-// Will be ignored in Drawer mode
-trim_length = 0;// [-3:8]
+/* [Tab Configuration - Advanced] */
+tab_hole_diameter = 4; // Diameter of interlocking tab holes in mm
+tab_offset = 1.52; // Distance from edge to tab center in mm
+male_tab_clearance = .1; // Clearance around male tabs (mm) for fit tolerance
 
-/* [Advanced] */
-/*************************** 
-* Advanced Perameters (WARNING: Changes could break compatibility!)
-***************************/
-// Minimum side/back width (if less, will expand full tile)
-minimum_width = 12;
-// Thickness of the board (6mm minimum recommended)
-board_thickness = 8;
-// Number of columns of holes (width) per standard tile
-num_cols = 16; 
-// Number of rows of holes (length) per standard tile
-num_rows = 16;
+/* [Single Tile Trim - Only applies in single-tile mode] */
+trim_width = 0;// Add/remove width in mm [-3:8]
+trim_length = 0;// Add/remove length in mm [-3:8]
+custom_label = ""; // Optional label for tiles
 
-// Diameter of each hole
-hole_diameter = 4.2; 
-// Center-to-center distance between holes
-hole_spacing = 9.5;//[8:.5:12] 
-
-// Profile thickness for lite board
-lite_thickness = 4;// [2:8]
-// max number of holes before support web
-web_spacing = 8;// [4:2:16]
-
-// diameter of locking tab hole
-tab_diameter = 4;
-// distance from center of tab to edge of plate
-tab_side = 1.52;
-// amount to make male tab smaller than tab_diameter
-tab_clearance = .1;
-// position of tabs
-tab_position = [hole_spacing*4,hole_spacing*12];
+/* [Advanced Parameters] */
+edge_tile_min_width = 12; // Minimum edge tile width in mm before discarding
 
 /* [hidden] */
 /*************************** 
-* Calculated Perameters - DO NOT EDIT
+* Text Rendering Constants
+***************************/
+TEXT_SIZE = 3;
+TEXT_OFFSET_Y = 0.2;
+TEXT_CHAR_WIDTH = 3;
+CYLINDER_SEGMENTS = 20;
+CIRCLE_SEGMENTS = 12;
+
+/*************************** 
+* Calculated Parameters - DO NOT EDIT
 ***************************/
 
+// Map new parameter names to maintain compatibility
+drawer = (print_mode == "drawer_grid");
+lite = use_lightweight;
+part = (generate_part == "connector_only") ? "connector" : "tiles";
+label = custom_label;
+num_cols = tile_columns;
+num_rows = tile_rows;
+hole_diameter = pin_hole_diameter;
+hole_spacing = hole_center_spacing;
+lite_thickness = lightweight_thickness;
+web_spacing = lightweight_web_spacing;
+tab_diameter = tab_hole_diameter;
+tab_side = tab_offset;
+tab_clearance = male_tab_clearance;
+minimum_width = edge_tile_min_width;
+board_thickness = base_thickness;
 
 // Calculate the overall dimensions of the board in millimeters
 board_width_mm = (num_cols) * hole_spacing + ((drawer)?0:trim_width);
@@ -75,20 +81,28 @@ board_length_mm = (num_rows) * hole_spacing + ((drawer)?0:trim_length);
 board_width_in = board_width_mm / 25.4;
 board_length_in = board_length_mm / 25.4;
 
+// Dynamic tab positioning (quarter and three-quarter points)
+tab_position = [floor(num_cols * hole_spacing / 4), floor(num_cols * hole_spacing * 3 / 4)];
+
 // calculate drawer dimensions
 r_width = drawer_width%(num_cols * hole_spacing)+((drawer_width%(num_cols * hole_spacing) > minimum_width)?0:board_width_mm);
 w_reduce = (drawer_width%(num_cols * hole_spacing) > minimum_width)?0:1;
-r_length = drawer_length%(num_rows * hole_spacing)+((drawer_length%(num_cols * hole_spacing) > minimum_width)?0:board_width_mm);
-l_reduce = (drawer_length%(num_cols * hole_spacing) > minimum_width)?0:1;
+r_length = drawer_length%(num_rows * hole_spacing)+((drawer_length%(num_rows * hole_spacing) > minimum_width)?0:board_width_mm);
+l_reduce = (drawer_length%(num_rows * hole_spacing) > minimum_width)?0:1;
 w_holes = floor(r_width/hole_spacing);
 l_holes = floor(r_length/hole_spacing);
 
 // Calculate lite dimensions
 lite_offset = (hole_spacing-hole_diameter)/2-.5;
 
-function w_reduce() = (r_width < tab_position.x+tab_diameter && r_length < tab_position.x+tab_diameter && r_width < r_length)?1:0;
-function l_reduce() = (r_width < tab_position.x+tab_diameter && r_length < tab_position.x+tab_diameter && r_width >= r_length)?1:0;
-// Create the pegboard with holes
+// Creates the base pegboard with holes and optional locking tab cutouts
+// Parameters:
+//   rows       - Number of hole rows
+//   cols       - Number of hole columns  
+//   board_width_mm  - Total width in mm
+//   board_length_mm - Total length in mm
+//   qty        - Quantity label to display (count of identical tiles)
+//   tag        - Identifier text for tile type
 module pegboard(rows, cols, board_width_mm=board_width_mm, board_length_mm=board_length_mm,qty=1,tag="") {
 	 if(qty > 0) difference() {
         // Create the base board
@@ -97,7 +111,7 @@ module pegboard(rows, cols, board_width_mm=board_width_mm, board_length_mm=board
         if(rows && cols) for (row = [0 : rows - 1]) {
             for (col = [0 : cols - 1]) {
                 translate([(col+.5) * hole_spacing, (row + .5) * hole_spacing, -1])
-                    cylinder(h = board_thickness + 2, d = hole_diameter, $fn=12);
+                    cylinder(h = board_thickness + 2, d = hole_diameter, $fn=CIRCLE_SEGMENTS);
             }
         }
         // create the female tabs
@@ -114,41 +128,46 @@ module pegboard(rows, cols, board_width_mm=board_width_mm, board_length_mm=board
 				translate([board_width_mm-tab_side,0,0]) rotate([0,0,90]) slot(length=board_length_mm);
 			}
 			if(lite) {
-				trim_l = (drawer?board_length_mm%hole_spacing:trim_length);
-				trim_w = (drawer?board_width_mm%hole_spacing:trim_width);
+				trim_l = (drawer?r_length%hole_spacing:trim_length);
+				trim_w = (drawer?r_width%hole_spacing:trim_width);
 				lite(num_cols=cols,num_rows=rows,trim_l=trim_l,trim_w=trim_w);
 			}
 			if(qty) {
-				translate([2,.2,board_thickness/2]) rotate([90,0,0]) {
-					color("black") linear_extrude(height=1) text(size=3,halign="left",valign="center",text=str("x",qty));
+				translate([2,TEXT_OFFSET_Y,board_thickness/2]) rotate([90,0,0]) {
+					color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=str("x",qty));
 				}
 			}
 			if(tag) {
-				if(hole_spacing+len(tag)*3 > board_width_mm) {
+				if(hole_spacing+len(tag)*TEXT_CHAR_WIDTH > board_width_mm) {
 					translate([board_width_mm-.2,2,board_thickness/2]) rotate([90,0,90]) {
-						color("black") linear_extrude(height=1) text(size=3,halign="left",valign="center",text=tag);
+						color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=tag);
 					}
 				} else {
-					translate([hole_spacing,.2,board_thickness/2]) rotate([90,0,0]) {
-						color("black") linear_extrude(height=1) text(size=3,halign="left",valign="center",text=tag);
+					translate([hole_spacing,TEXT_OFFSET_Y,board_thickness/2]) rotate([90,0,0]) {
+						color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=tag);
 					}
 				}
 			}
 			if(label) {
-				if(tab_position.x+len(label)*3 > board_width_mm) {
-					translate([board_width_mm-.2,(hole_spacing+len(tag)*3 > board_width_mm?len(tag)*3+2:2),board_thickness/2]) rotate([90,0,90]) {
-						color("black") linear_extrude(height=1) text(size=3,halign="left",valign="center",text=label);
+				if(tab_position.x+len(label)*TEXT_CHAR_WIDTH > board_width_mm) {
+					translate([board_width_mm-.2,(hole_spacing+len(tag)*TEXT_CHAR_WIDTH > board_width_mm?len(tag)*TEXT_CHAR_WIDTH+2:2),board_thickness/2]) rotate([90,0,90]) {
+						color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=label);
 					}
 				} else {
-					translate([tab_position.x+3,.2,board_thickness/2]) rotate([90,0,0]) {
-						color("black") linear_extrude(height=1) text(size=3,halign="left",valign="center",text=label);
+					translate([tab_position.x+3,TEXT_OFFSET_Y,board_thickness/2]) rotate([90,0,0]) {
+						color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=label);
 					}
 				}
 			}
     }
 }
 
-// Thin the center
+// Adds lightweight cross-brace structure to reduce material usage
+// Parameters:
+//   num_cols   - Number of hole columns
+//   num_rows   - Number of hole rows
+//   trim_l     - Additional length offset for remainder tiles (mm)
+//   trim_w     - Additional width offset for remainder tiles (mm)
 module lite(num_cols,num_rows,trim_l, trim_w) {
 	web_width = ceil(num_cols/web_spacing);
 	web_length = ceil(num_rows/web_spacing);
@@ -157,29 +176,47 @@ module lite(num_cols,num_rows,trim_l, trim_w) {
 	if(num_rows && num_cols) for(x = [0:1:web_width-1], y = [0:1:web_length-1]) {
 		translate([lite_offset+(hole_diameter+1)/2+(width+hole_spacing)*x,lite_offset+(hole_diameter+1)/2+(length+hole_spacing)*y,lite_thickness]) linear_extrude(height=board_thickness) minkowski() {
 			square([width+((x+1 == web_width)?(trim_w+hole_spacing*(num_cols%web_width)):0), length+((y+1 == web_length)?(trim_l+hole_spacing*(num_rows%web_length)):0)], center = false);
-			circle(d=hole_diameter+1, $fn=12);
+			circle(d=hole_diameter+1, $fn=CIRCLE_SEGMENTS);
 		}
 	}
 }
-// Male locking tab
+
+// Creates male locking tabs that protrude from tile edges
+// Parameters:
+//   length     - Length along which tabs can be placed (mm)
 module tabs(length=board_width_mm) {
 	for(x=tab_position) {
 		if(x+tab_diameter/2 < length)
-		translate([x,0,0]) cylinder(d=tab_diameter-tab_clearance,h=board_thickness, $fn=20);
+		translate([x,0,0]) cylinder(d=tab_diameter-tab_clearance,h=board_thickness, $fn=CYLINDER_SEGMENTS);
 	}
 }
-// female slot for locking tab
+
+// Creates female slots for male tabs to lock into
+// Parameters:
+//   length     - Length along which slots can be placed (mm)
 module slot(length=board_width_mm) {
 	for(x=tab_position) {
-		if(x+tab_diameter/2+1 < length) translate([x,0,-1]) cylinder(d=tab_diameter-tab_clearance,h=board_thickness+2, $fn=20);
+		if(x+tab_diameter/2+1 < length) translate([x,0,-1]) cylinder(d=tab_diameter-tab_clearance,h=board_thickness+2, $fn=CYLINDER_SEGMENTS);
 	}
 }
-// Connector to join female slots
+
+// Connector piece to join two female-slot faces together
+// Creates two cylindrical pegs matching the male tab dimensions
 module connector() {
-	translate([-10,-tab_side,0]) cylinder(d=tab_diameter-tab_clearance,h=board_thickness, $fn=20);
-	translate([-10,tab_side,0]) cylinder(d=tab_diameter-tab_clearance,h=board_thickness, $fn=20);
+	offset = -(tab_diameter * 2);
+	translate([offset,-tab_side,0]) cylinder(d=tab_diameter-tab_clearance,h=board_thickness, $fn=CYLINDER_SEGMENTS);
+	translate([offset,tab_side,0]) cylinder(d=tab_diameter-tab_clearance,h=board_thickness, $fn=CYLINDER_SEGMENTS);
 }
-// Put it all together into a tile
+// Combines pegboard with male tabs to create a complete tile unit
+// Parameters:
+//   rows       - Number of hole rows
+//   cols       - Number of hole columns
+//   board_width_mm  - Total width in mm
+//   board_length_mm - Total length in mm
+//   tab_right  - Right edge tab configuration (passed for drawer mode)
+//   tab_back   - Back edge tab configuration (passed for drawer mode)
+//   qty        - Quantity label to display
+//   tag        - Identifier text for tile type
 module unit(rows=num_rows,cols=num_cols,board_width_mm=board_width_mm,board_length_mm=board_length_mm,tab_right=tab_right,tab_back=tab_back,qty=1,tag="") {
 	if(qty > 0) { 
 		// Generate the pegboard with the specified number of rows and columns
