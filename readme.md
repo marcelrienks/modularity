@@ -138,3 +138,17 @@ drawer = true
 drawer_width = 400, drawer_length = 600
 num_cols = 16, num_rows = 16
 ```
+
+---
+
+## 🙏 Attribution
+
+**Original Creator:** [Akmjoe](https://www.printables.com/@Akmjoe_246598)
+
+This project is derived from the original **Toolgrid Board Generator** published on Printables:
+- **Printables Model:** https://www.printables.com/model/1455970-toolgrid-board-generator/files
+- **Creator Profile:** https://www.printables.com/@Akmjoe_246598
+
+This version (maintained December 2024) includes comprehensive documentation, a detailed code review with improvement roadmap, and enhanced usability features. See [`docs/todo.md`](docs/todo.md) for the complete list of identified improvements and fixes.
+
+**Repository:** https://github.com/marcelrienks/ToolGrid
