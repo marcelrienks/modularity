@@ -38,13 +38,13 @@ Generate modular pegboard-style organizing grids for tool storage. Tiles interlo
    ```
 
 2. **Customize Parameters** (View → Customizer)
-   - `drawer`: true for drawer grid, false for single tile
-   - `num_cols` / `num_rows`: 4-16 holes per tile
-   - `hole_diameter`: Size of tool peg holes
-   - `hole_spacing`: Distance between hole centers
-   - `board_thickness`: Base thickness in mm (6mm minimum)
-   - `lite`: Enable lightweight cross-braces (true/false)
-   - Tab configuration: Set front, back, left, right to male/female/none
+   - `print_mode`: "drawer_grid" for drawer, "single_tile" for single tile
+   - `tile_columns` / `tile_rows`: 4-16 holes per tile
+   - `pin_hole_diameter`: Size of tool peg holes
+   - `hole_center_spacing`: Distance between hole centers
+   - `base_thickness`: Board thickness in mm (6mm minimum)
+   - `use_lightweight`: Enable lightweight cross-braces (true/false)
+   - Tab configuration: Set tab_front, tab_back, tab_left, tab_right to male/female/none
 
 3. **Preview** (Press spacebar or View → Preview)
    - Single tile mode: Shows one tile
@@ -54,43 +54,42 @@ Generate modular pegboard-style organizing grids for tool storage. Tiles interlo
    - Choose filename and location
    - Import into your 3D slicer software
 
-
 ---
 
 ## ⚙️ Parameters
 
-### Mode
-- **`drawer`** (true/false): Drawer grid mode or single tile
-- **`part`** (tiles/connector): Generate tiles or connector only
+### Display Mode
+- **`print_mode`** ("drawer_grid"/"single_tile"): Drawer grid mode or single tile
+- **`generate_part`** ("tiles"/"connector_only"): Generate tiles or connector only
 
-### Drawer
+### Drawer Dimensions
 - **`drawer_width`** (mm): Interior width
 - **`drawer_length`** (mm): Interior length
 
-### Tile Grid
-- **`num_cols`** (4-16): Hole columns per tile
-- **`num_rows`** (4-16): Hole rows per tile
+### Tile Grid Configuration
+- **`tile_columns`** (4-16): Hole columns per tile
+- **`tile_rows`** (4-16): Hole rows per tile
 
-### Holes
-- **`hole_diameter`** (mm): Peg hole size
-- **`hole_spacing`** (mm): Center-to-center distance
+### Hole Settings
+- **`pin_hole_diameter`** (mm): Peg hole size
+- **`hole_center_spacing`** (mm): Center-to-center distance
 
-### Material
-- **`lite`** (true/false): Enable lightweight mode
-- **`board_thickness`** (mm): Base thickness (6mm minimum)
-- **`lite_thickness`** (mm): Cross-brace thickness
-- **`web_spacing`** (4-16): Holes between support webs
+### Material & Weight Reduction
+- **`use_lightweight`** (true/false): Enable lightweight mode
+- **`base_thickness`** (mm): Board thickness (6mm minimum)
+- **`lightweight_thickness`** (mm): Cross-brace thickness
+- **`lightweight_web_spacing`** (4-16): Holes between support webs
 
-### Tabs
+### Interlocking Tabs
 - **`tab_front`**, **`tab_back`**, **`tab_left`**, **`tab_right`**: male/female/none
-- **`tab_diameter`** (mm): Tab hole size
-- **`tab_side`** (mm): Distance from edge to tab center
-- **`tab_clearance`** (mm): Tolerance around male tabs
+- **`tab_hole_diameter`** (mm): Tab hole size
+- **`tab_offset`** (mm): Distance from edge to tab center
+- **`male_tab_clearance`** (mm): Tolerance around male tabs
 
 ### Single Tile Only
 - **`trim_width`** (mm): Add/subtract width (ignored in drawer mode)
 - **`trim_length`** (mm): Add/subtract length (ignored in drawer mode)
-- **`label`**: Optional custom label
+- **`custom_label`**: Optional custom label
 
 ## 📐 Design Reference
 
@@ -110,33 +109,33 @@ Board Length (mm) = num_rows × hole_spacing + trim_length
 
 **Small Pegs (1/4" Pegboard Standard)**
 ```
-hole_diameter = 6.0
-hole_spacing = 10.0
-num_cols = 16, num_rows = 16
-board_thickness = 8
+pin_hole_diameter = 6.0
+hole_center_spacing = 10.0
+tile_columns = 16, tile_rows = 16
+base_thickness = 8
 ```
 
 **Lightweight Setup**
 ```
-lite = true
-lite_thickness = 3
-web_spacing = 6
-board_thickness = 6
+use_lightweight = true
+lightweight_thickness = 3
+lightweight_web_spacing = 6
+base_thickness = 6
 ```
 
 **Wall Display (Interconnected)**
 ```
-drawer = false
-num_cols = 8, num_rows = 8
+print_mode = "single_tile"
+tile_columns = 8, tile_rows = 8
 tab_front = "male", tab_back = "female"
 tab_left = "male", tab_right = "female"
 ```
 
 **Large Drawer Fill**
 ```
-drawer = true
+print_mode = "drawer_grid"
 drawer_width = 400, drawer_length = 600
-num_cols = 16, num_rows = 16
+tile_columns = 16, tile_rows = 16
 ```
 
 ---
