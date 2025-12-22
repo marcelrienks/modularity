@@ -2,59 +2,56 @@
 * Adjustable Board Parameters
 ******************************/
 /* [Display Mode] */
-print_mode = "drawer";// [single_tile, drawer_grid]
+print_mode = "single_tile"; // [single_tile, drawer_grid]
 generate_part = "tiles"; // [tiles, connector_only]
 
 /* [Drawer Dimensions] */
-drawer_width = 231;// Interior width in mm
-drawer_length = 473;// Interior length in mm
+drawer_width = 300; // [100:600]
+drawer_length = 300; // [100:600]
 
 /* [Tile Grid Configuration] */
-tile_columns = 16; // Number of hole columns per tile (4-16)
-tile_rows = 16; // Number of hole rows per tile (4-16)
+tile_columns = 16; // [4:16]
+tile_rows = 16; // [4:16]
 
 /* [Hole Settings] */
-pin_hole_diameter = 4.2; // Tool peg hole diameter in mm
-hole_center_spacing = 9.5;// Center-to-center distance between holes in mm [8:.5:12]
+pin_hole_diameter = 4.2; // [3:8]
+hole_center_spacing = 9.5; // [8:12]
 
 /* [Material & Weight Reduction] */
-use_lightweight = true; // Enable lightweight mode with cross-braces
-base_thickness = 8; // Base board thickness in mm (6mm minimum)
-lightweight_thickness = 4; // Thickness of cross-braces in lightweight mode [2:8]
-lightweight_web_spacing = 8; // Number of holes between support webs [4:2:16]
+use_lightweight = true;
+base_thickness = 8; // [6:12]
+lightweight_thickness = 4; // [2:8]
+lightweight_web_spacing = 8; // [4:16]
 
-/* [Interlocking Tabs - Tiles puzzle together with male tabs locking into female slots] */
-tab_front = "female";// [male, female, none]
-tab_back = "male";// [male, female, none]
-tab_left = "female";// [male, female, none]
-tab_right = "male";// [male, female, none]
+/* [Interlocking Tabs] */
+tab_front = "female"; // [male, female, none]
+tab_back = "male"; // [male, female, none]
+tab_left = "female"; // [male, female, none]
+tab_right = "male"; // [male, female, none]
 
-/* [Tab Configuration - Advanced] */
-tab_hole_diameter = 4; // Diameter of interlocking tab holes in mm
-tab_offset = 1.52; // Distance from edge to tab center in mm
-male_tab_clearance = .1; // Clearance around male tabs (mm) for fit tolerance
+/* [Tab Configuration] */
+tab_hole_diameter = 4; // [2:6]
+tab_offset = 1.52; // [0.5:3]
+male_tab_clearance = 0.1; // [0:0.5]
 
-/* [Single Tile Trim - Only applies in single-tile mode] */
-trim_width = 0;// Add/remove width in mm [-3:8]
-trim_length = 0;// Add/remove length in mm [-3:8]
-custom_label = ""; // Optional label for tiles
+/* [Single Tile Trim] */
+trim_width = 0; // [-3:8]
+trim_length = 0; // [-3:8]
+custom_label = "";
 
 /* [Advanced Parameters] */
-edge_tile_min_width = 12; // Minimum edge tile width in mm before discarding
+edge_tile_min_width = 12; // [5:25]
 
-/* [hidden] */
-/*************************** 
-* Text Rendering Constants
-***************************/
+/* [Hidden] */
+
+// Text Rendering Constants
 TEXT_SIZE = 3;
 TEXT_OFFSET_Y = 0.2;
 TEXT_CHAR_WIDTH = 3;
 CYLINDER_SEGMENTS = 20;
 CIRCLE_SEGMENTS = 12;
 
-/*************************** 
-* Calculated Parameters - DO NOT EDIT
-***************************/
+// Calculated Parameters - DO NOT EDIT
 
 // COMPATIBILITY LAYER: Map new parameter names to internal variables
 // Allows users to use friendly names while maintaining backward compatibility
@@ -150,34 +147,34 @@ module pegboard(rows, cols,
                 translate([board_width_mm-tab_side, 0, 0]) rotate([0,0,90]) slot(length=board_length_mm);
             }
             if(lite) {
-                trim_l = (drawer?r_length%hole_spacing:trim_length);
-                trim_w = (drawer?r_width%hole_spacing:trim_width);
-                lite(num_cols=cols,num_rows=rows,trim_l=trim_l,trim_w=trim_w);
+                trim_l = (drawer ? r_length % hole_spacing : trim_length);
+                trim_w = (drawer ? r_width % hole_spacing : trim_width);
+                lite(num_cols=cols, num_rows=rows, trim_l=trim_l, trim_w=trim_w);
             }
             if(qty) {
-                translate([2, TEXT_OFFSET_Y, board_thickness/2]) rotate([90,0,0]) {
-                    color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=str("x",qty));
+                translate([2, TEXT_OFFSET_Y, board_thickness/2]) rotate([90, 0, 0]) {
+                    color("black") linear_extrude(height=1) text(size=TEXT_SIZE, halign="left", valign="center", text=str("x", qty));
                 }
             }
             if(tag) {
-                if(hole_spacing+len(tag)*TEXT_CHAR_WIDTH > board_width_mm) {
-                    translate([board_width_mm-.2, 2, board_thickness/2]) rotate([90,0,90]) {
-                        color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=tag);
+                if(hole_spacing + len(tag) * TEXT_CHAR_WIDTH > board_width_mm) {
+                    translate([board_width_mm - 0.2, 2, board_thickness/2]) rotate([90, 0, 90]) {
+                        color("black") linear_extrude(height=1) text(size=TEXT_SIZE, halign="left", valign="center", text=tag);
                     }
                 } else {
-                    translate([hole_spacing, TEXT_OFFSET_Y, board_thickness/2]) rotate([90,0,0]) {
-                        color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=tag);
+                    translate([hole_spacing, TEXT_OFFSET_Y, board_thickness/2]) rotate([90, 0, 0]) {
+                        color("black") linear_extrude(height=1) text(size=TEXT_SIZE, halign="left", valign="center", text=tag);
                     }
                 }
             }
             if(label) {
-                if(tab_position.x+len(label)*TEXT_CHAR_WIDTH > board_width_mm) {
-                    translate([board_width_mm-.2, (hole_spacing+len(tag)*TEXT_CHAR_WIDTH > board_width_mm?len(tag)*TEXT_CHAR_WIDTH+2:2), board_thickness/2]) rotate([90,0,90]) {
-                        color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=label);
+                if(tab_position.x + len(label) * TEXT_CHAR_WIDTH > board_width_mm) {
+                    translate([board_width_mm - 0.2, (hole_spacing + len(tag) * TEXT_CHAR_WIDTH > board_width_mm ? len(tag) * TEXT_CHAR_WIDTH + 2 : 2), board_thickness/2]) rotate([90, 0, 90]) {
+                        color("black") linear_extrude(height=1) text(size=TEXT_SIZE, halign="left", valign="center", text=label);
                     }
                 } else {
-                    translate([tab_position.x+3, TEXT_OFFSET_Y, board_thickness/2]) rotate([90,0,0]) {
-                        color("black") linear_extrude(height=1) text(size=TEXT_SIZE,halign="left",valign="center",text=label);
+                    translate([tab_position.x + 3, TEXT_OFFSET_Y, board_thickness/2]) rotate([90, 0, 0]) {
+                        color("black") linear_extrude(height=1) text(size=TEXT_SIZE, halign="left", valign="center", text=label);
                     }
                 }
             }
@@ -286,8 +283,8 @@ if(!drawer && part != "connector") { // Single tile mode
         // Preview: Show grid layout with colors
         // Full tiles
         for (x = [0:1:full_tiles_width-1], y = [0:1:full_tiles_length-1]) {
-            color(((x+y)%2?"red":"blue")) {
-                translate([x*(num_cols * hole_spacing+space),  y*(num_rows * hole_spacing+space),  0]) {
+            color(((x+y)%2 ? "red" : "blue")) {
+                translate([x*(num_cols * hole_spacing+space), y*(num_rows * hole_spacing+space), 0]) {
                     unit(rows=num_rows, cols=num_cols);
                 }
             }
@@ -296,7 +293,7 @@ if(!drawer && part != "connector") { // Single tile mode
         if(remainder_cols > 0) {
             for(y = [0:1:full_tiles_length-1]) {
                 color("yellow") {
-                    translate([full_tiles_width*(num_cols * hole_spacing+space),  y*(num_rows * hole_spacing+space),  0]) {
+                    translate([full_tiles_width*(num_cols * hole_spacing+space), y*(num_rows * hole_spacing+space), 0]) {
                         unit(rows=num_rows, cols=remainder_cols, board_width_mm=actual_remainder_width, tab_right="none");
                     }
                 }
@@ -306,7 +303,7 @@ if(!drawer && part != "connector") { // Single tile mode
         if(remainder_rows > 0) {
             for (x = [0:1:full_tiles_width-1]) {
                 color("green") {
-                    translate([x*(num_cols * hole_spacing+space),  full_tiles_length*(num_rows * hole_spacing+space),  0]) {
+                    translate([x*(num_cols * hole_spacing+space), full_tiles_length*(num_rows * hole_spacing+space), 0]) {
                         unit(rows=remainder_rows, cols=num_cols, board_length_mm=actual_remainder_length, tab_back="none");
                     }
                 }
@@ -315,7 +312,7 @@ if(!drawer && part != "connector") { // Single tile mode
         // Corner tile (if both remainders exist)
         if(remainder_cols > 0 && remainder_rows > 0) {
             color("pink") {
-                translate([full_tiles_width*(num_cols * hole_spacing+space),  full_tiles_length*(num_rows * hole_spacing+space),  0]) {
+                translate([full_tiles_width*(num_cols * hole_spacing+space), full_tiles_length*(num_rows * hole_spacing+space), 0]) {
                     unit(rows=remainder_rows, cols=remainder_cols, board_width_mm=actual_remainder_width, board_length_mm=actual_remainder_length, tab_right="none", tab_back="none");
                 }
             }
@@ -330,7 +327,7 @@ if(!drawer && part != "connector") { // Single tile mode
         
         // Remainder width tiles (right edge)
         if(remainder_cols > 0 && full_tiles_length > 0) {
-            translate([full_tiles_width*(num_cols * hole_spacing),  0,  0]) {
+            translate([full_tiles_width*(num_cols * hole_spacing), 0, 0]) {
                 unit(rows=num_rows, cols=remainder_cols, 
                      board_width_mm=actual_remainder_width, 
                      qty=full_tiles_length, tag="Side-Right", tab_right="none");
@@ -339,7 +336,7 @@ if(!drawer && part != "connector") { // Single tile mode
         
         // Remainder length tiles (bottom edge)
         if(remainder_rows > 0 && full_tiles_width > 0) {
-            translate([0,  full_tiles_length*(num_rows * hole_spacing),  0]) {
+            translate([0, full_tiles_length*(num_rows * hole_spacing), 0]) {
                 unit(rows=remainder_rows, cols=num_cols, 
                      board_length_mm=actual_remainder_length, 
                      qty=full_tiles_width, tag="Side-Back", tab_back="none");
@@ -348,7 +345,7 @@ if(!drawer && part != "connector") { // Single tile mode
         
         // Corner tile (if both remainders exist)
         if(remainder_cols > 0 && remainder_rows > 0) {
-            translate([full_tiles_width*(num_cols * hole_spacing),  full_tiles_length*(num_rows * hole_spacing),  0]) {
+            translate([full_tiles_width*(num_cols * hole_spacing), full_tiles_length*(num_rows * hole_spacing), 0]) {
                 unit(rows=remainder_rows, cols=remainder_cols, 
                      board_width_mm=actual_remainder_width, 
                      board_length_mm=actual_remainder_length, 
