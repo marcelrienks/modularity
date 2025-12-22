@@ -51,6 +51,9 @@ TEXT_CHAR_WIDTH = 3;
 CYLINDER_SEGMENTS = 20;
 CIRCLE_SEGMENTS = 12;
 
+// Tile Spacing Constant
+TILE_SPACING = 0.5;  // Minimum gap between tiles (mm) for clean separation in STL export
+
 // Calculated Parameters - DO NOT EDIT
 
 // COMPATIBILITY LAYER: Map new parameter names to internal variables
@@ -261,7 +264,6 @@ module unit(rows=num_rows,cols=num_cols,board_width_mm=board_width_mm,board_leng
 if(!drawer && part != "connector") { // Single tile mode
     unit(rows=num_rows,cols=num_cols,board_width_mm=board_width_mm,board_length_mm=board_length_mm);
 } else if(drawer && part != "connector") { // Multiple tiles to fit drawer
-    space = ($preview)?0:tab_diameter;
     
     // Calculate number of full tiles that fit
     full_tiles_width = floor(drawer_width/(num_cols * hole_spacing));
@@ -284,7 +286,7 @@ if(!drawer && part != "connector") { // Single tile mode
         // Full tiles
         for (x = [0:1:full_tiles_width-1], y = [0:1:full_tiles_length-1]) {
             color(((x+y)%2 ? "red" : "blue")) {
-                translate([x*(num_cols * hole_spacing+space), y*(num_rows * hole_spacing+space), 0]) {
+                translate([x*(num_cols * hole_spacing+TILE_SPACING), y*(num_rows * hole_spacing+TILE_SPACING), 0]) {
                     unit(rows=num_rows, cols=num_cols);
                 }
             }
@@ -293,7 +295,7 @@ if(!drawer && part != "connector") { // Single tile mode
         if(remainder_cols > 0) {
             for(y = [0:1:full_tiles_length-1]) {
                 color("yellow") {
-                    translate([full_tiles_width*(num_cols * hole_spacing+space), y*(num_rows * hole_spacing+space), 0]) {
+                    translate([full_tiles_width*(num_cols * hole_spacing+TILE_SPACING), y*(num_rows * hole_spacing+TILE_SPACING), 0]) {
                         unit(rows=num_rows, cols=remainder_cols, board_width_mm=actual_remainder_width, tab_right="none");
                     }
                 }
@@ -303,7 +305,7 @@ if(!drawer && part != "connector") { // Single tile mode
         if(remainder_rows > 0) {
             for (x = [0:1:full_tiles_width-1]) {
                 color("green") {
-                    translate([x*(num_cols * hole_spacing+space), full_tiles_length*(num_rows * hole_spacing+space), 0]) {
+                    translate([x*(num_cols * hole_spacing+TILE_SPACING), full_tiles_length*(num_rows * hole_spacing+TILE_SPACING), 0]) {
                         unit(rows=remainder_rows, cols=num_cols, board_length_mm=actual_remainder_length, tab_back="none");
                     }
                 }
@@ -312,7 +314,7 @@ if(!drawer && part != "connector") { // Single tile mode
         // Corner tile (if both remainders exist)
         if(remainder_cols > 0 && remainder_rows > 0) {
             color("pink") {
-                translate([full_tiles_width*(num_cols * hole_spacing+space), full_tiles_length*(num_rows * hole_spacing+space), 0]) {
+                translate([full_tiles_width*(num_cols * hole_spacing+TILE_SPACING), full_tiles_length*(num_rows * hole_spacing+TILE_SPACING), 0]) {
                     unit(rows=remainder_rows, cols=remainder_cols, board_width_mm=actual_remainder_width, board_length_mm=actual_remainder_length, tab_right="none", tab_back="none");
                 }
             }
