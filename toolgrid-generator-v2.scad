@@ -321,25 +321,32 @@ if(!drawer && part != "connector") { // Single tile mode
         // Export: Output as single combined model
         // Full tiles (base)
         if(full_tiles_width > 0 && full_tiles_length > 0) {
-            unit(rows=num_rows, cols=num_cols, 
-                 qty=full_tiles_width*full_tiles_length, tag="Base");
+            for (x = [0:1:full_tiles_width-1], y = [0:1:full_tiles_length-1]) {
+                translate([x*(num_cols * hole_spacing), y*(num_rows * hole_spacing), 0]) {
+                    unit(rows=num_rows, cols=num_cols, tag="Base");
+                }
+            }
         }
         
         // Remainder width tiles (right edge)
         if(remainder_cols > 0 && full_tiles_length > 0) {
-            translate([full_tiles_width*(num_cols * hole_spacing), 0, 0]) {
-                unit(rows=num_rows, cols=remainder_cols, 
-                     board_width_mm=actual_remainder_width, 
-                     qty=full_tiles_length, tag="Side-Right", tab_right="none");
+            for(y = [0:1:full_tiles_length-1]) {
+                translate([full_tiles_width*(num_cols * hole_spacing), y*(num_rows * hole_spacing), 0]) {
+                    unit(rows=num_rows, cols=remainder_cols, 
+                         board_width_mm=actual_remainder_width, 
+                         tag="Side-Right", tab_right="none");
+                }
             }
         }
         
         // Remainder length tiles (bottom edge)
         if(remainder_rows > 0 && full_tiles_width > 0) {
-            translate([0, full_tiles_length*(num_rows * hole_spacing), 0]) {
-                unit(rows=remainder_rows, cols=num_cols, 
-                     board_length_mm=actual_remainder_length, 
-                     qty=full_tiles_width, tag="Side-Back", tab_back="none");
+            for (x = [0:1:full_tiles_width-1]) {
+                translate([x*(num_cols * hole_spacing), full_tiles_length*(num_rows * hole_spacing), 0]) {
+                    unit(rows=remainder_rows, cols=num_cols, 
+                         board_length_mm=actual_remainder_length, 
+                         tag="Side-Back", tab_back="none");
+                }
             }
         }
         
