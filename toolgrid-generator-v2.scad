@@ -52,7 +52,9 @@ CYLINDER_SEGMENTS = 20;
 CIRCLE_SEGMENTS = 12;
 
 // Tile Spacing Constant
-TILE_SPACING = 0.5;  // Minimum gap between tiles (mm) for clean separation in STL export
+// Must accommodate: tab_diameter + male_tab_clearance + 1.5mm clearance
+// Default: 4mm + 0.1mm + 1.5mm = 5.6mm
+TILE_SPACING = 5.6;  // Gap between tiles (mm) to prevent tab interference
 
 // Calculated Parameters - DO NOT EDIT
 
