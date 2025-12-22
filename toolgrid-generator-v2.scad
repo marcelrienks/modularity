@@ -320,12 +320,12 @@ if(!drawer && part != "connector") { // Single tile mode
             }
         }
     } else {
-        // Export: Output as single combined model
+        // Export: Output tiles with spacing for separation
         // Full tiles (base)
         if(full_tiles_width > 0 && full_tiles_length > 0) {
             for (x = [0:1:full_tiles_width-1], y = [0:1:full_tiles_length-1]) {
-                translate([x*(num_cols * hole_spacing), y*(num_rows * hole_spacing), 0]) {
-                    unit(rows=num_rows, cols=num_cols, tag="Base");
+                translate([x*(num_cols * hole_spacing+TILE_SPACING), y*(num_rows * hole_spacing+TILE_SPACING), 0]) {
+                    unit(rows=num_rows, cols=num_cols);
                 }
             }
         }
@@ -333,7 +333,7 @@ if(!drawer && part != "connector") { // Single tile mode
         // Remainder width tiles (right edge)
         if(remainder_cols > 0 && full_tiles_length > 0) {
             for(y = [0:1:full_tiles_length-1]) {
-                translate([full_tiles_width*(num_cols * hole_spacing), y*(num_rows * hole_spacing), 0]) {
+                translate([full_tiles_width*(num_cols * hole_spacing+TILE_SPACING), y*(num_rows * hole_spacing+TILE_SPACING), 0]) {
                     unit(rows=num_rows, cols=remainder_cols, 
                          board_width_mm=actual_remainder_width, 
                          tag="Side-Right", tab_right="none");
@@ -344,7 +344,7 @@ if(!drawer && part != "connector") { // Single tile mode
         // Remainder length tiles (bottom edge)
         if(remainder_rows > 0 && full_tiles_width > 0) {
             for (x = [0:1:full_tiles_width-1]) {
-                translate([x*(num_cols * hole_spacing), full_tiles_length*(num_rows * hole_spacing), 0]) {
+                translate([x*(num_cols * hole_spacing+TILE_SPACING), full_tiles_length*(num_rows * hole_spacing+TILE_SPACING), 0]) {
                     unit(rows=remainder_rows, cols=num_cols, 
                          board_length_mm=actual_remainder_length, 
                          tag="Side-Back", tab_back="none");
@@ -354,7 +354,7 @@ if(!drawer && part != "connector") { // Single tile mode
         
         // Corner tile (if both remainders exist)
         if(remainder_cols > 0 && remainder_rows > 0) {
-            translate([full_tiles_width*(num_cols * hole_spacing), full_tiles_length*(num_rows * hole_spacing), 0]) {
+            translate([full_tiles_width*(num_cols * hole_spacing+TILE_SPACING), full_tiles_length*(num_rows * hole_spacing+TILE_SPACING), 0]) {
                 unit(rows=remainder_rows, cols=remainder_cols, 
                      board_width_mm=actual_remainder_width, 
                      board_length_mm=actual_remainder_length, 
