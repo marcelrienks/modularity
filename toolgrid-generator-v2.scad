@@ -276,8 +276,8 @@ if(!drawer && part != "connector") { // Single tile mode
     remainder_rows = floor(remainder_length / hole_spacing);
     
     // Actual dimensions of remainder tiles
-    actual_remainder_width = remainder_cols * hole_spacing;
-    actual_remainder_length = remainder_rows * hole_spacing;
+     actual_remainder_width = remainder_width;
+     actual_remainder_length = remainder_length;
     
     if($preview) {
         // Preview: Show grid layout with colors
