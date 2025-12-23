@@ -855,17 +855,24 @@ All scripts:
 
 ## 🙏 Attribution
 
-**Original Creator**: [Akmjoe](https://www.printables.com/@Akmjoe_246598)
+**Original ToolGrid Creator**: [Akmjoe](https://www.printables.com/@Akmjoe_246598)
 
 This project is derived from the original **Toolgrid Board Generator** published on Printables:
 - **Printables Model**: https://www.printables.com/model/1455970-toolgrid-board-generator/files
 - **Creator Profile**: https://www.printables.com/@Akmjoe_246598
 
+**Tool Holder Model Examples**: [MaxTheSpy](https://thangs.com/designer/MaxTheSpy)
+
+The tool holder generator scripts (wrench holders, ratchet holders, socket trees, and tool end holders) were built as parametric generators based on design examples and models by MaxTheSpy:
+- **Thangs Profile**: https://thangs.com/designer/MaxTheSpy
+- **Reference**: Used as design foundation for customizable generator scripts
+
 **This Version** (Modularity, December 2024) includes:
 - Comprehensive documentation and parameter guides
-- Two new tool holder scripts (wrench-holder.scad and torque-wrench-holder.scad)
+- Parametric generator scripts for all tool holder types
 - Rotation parameter for angled tool placement
-- Multiple drive size support
+- Multiple drive size and configuration support
 - Enhanced usability and customization examples
+- Complete ToolGrid tile system with lightweight mode support
 
 **Repository**: https://github.com/marcelrienks/modularity
