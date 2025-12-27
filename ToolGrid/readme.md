@@ -267,6 +267,16 @@ The tool holder generator scripts (wrench holders, ratchet holders, socket trees
 - **Thangs Profile**: https://thangs.com/designer/MaxTheSpy
 - **Reference**: Used as design foundation for customizable generator scripts
 
+### Additional Model Attributions
+
+The following Printables models informed the design and features of this system:
+
+- **Akmjoe** – [Toolgrid Walls, Corners, Cam and Tee](https://www.printables.com/model/1462719)
+- **Akmjoe** – [Toolgrid Wrench Holders with Magnets](https://www.printables.com/model/1462702)
+- **Sandfire** – [Tool Grid Holders (screws)](https://www.printables.com/model/563914)
+- **whatrwedoingnow** – [Modular Tool Drawer Storage (Pegs)](https://www.printables.com)
+- **zane beck** – [Toolbox Grid Organizer (Screws) - Grid](https://www.printables.com)
+
 **This Version** (Modularity, December 2024) includes:
 - Comprehensive documentation and parameter guides
 - Parametric generator scripts for all tool holder types
