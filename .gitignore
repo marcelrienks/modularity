@@ -12,14 +12,13 @@
 
 # 3D Model Files (optional - comment out if you want to track STLs)
 # *.stl
-# *.obj
-# *.iges
-# *.iges
+*.obj
+*.iges
+*.iges
 
 # Build artifacts
 *.gcode
 *.png
-*.pdf
 
 # IDE
 .vscode/
@@ -29,4 +28,6 @@
 
 # OS
 Thumbs.db
-models/*.stl
+
+# Stacks
+Stacks/
