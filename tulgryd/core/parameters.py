@@ -1,4 +1,4 @@
-"""Parameter management for Tulorg generator"""
+"""Parameter management for tulgryd generator"""
 
 import json
 from typing import Optional, Dict, Any

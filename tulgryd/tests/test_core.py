@@ -1,4 +1,4 @@
-"""Test suite for Tulorg generator"""
+"""Test suite for tulgryd generator"""
 
 import pytest
 from core.parameters import Parameters

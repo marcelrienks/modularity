@@ -1,7 +1,7 @@
-# Tulorg - Detailed 3D Model Analysis
+# tulgryd - Detailed 3D Model Analysis
 
 ## Overview
-**Model Name:** Tulorg  
+**Model Name:** tulgryd  
 **Version:** v1  
 **Format:** STEP AP214 (AUTOMOTIVE_DESIGN)  
 **Units:** Millimeters (mm)  

@@ -1,4 +1,4 @@
-# Tulorg Generator
+# tulgryd Generator
 
 Parametric 3D model generator for modular tool grid tiles with interlocking edges.
 
