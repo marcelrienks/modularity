@@ -25,6 +25,13 @@ python generate.py --total-width 250 --total-length 180
 python generate.py --single-tile
 ```
 
+**Generate with adjusted hole diameter (compensate for printer tolerance):**
+```bash
+# Adjustment affects total hole diameter (not radius)
+python generate.py --single-tile --hole-adjust 0.2   # Ø4.2mm holes (0.2mm larger)
+python generate.py --single-tile --hole-adjust -0.1  # Ø3.9mm holes (0.1mm smaller)
+```
+
 **Generate custom single tile:**
 ```bash
 python generate.py --single-tile --tile-width 100 --tile-length 45
@@ -68,6 +75,10 @@ Each generation creates a comprehensive `ASSEMBLY_README.md` with:
 **Standard 100×100mm Tile:**
 - Grid: 10×10 holes (100 mounting points)
 - Hole diameter: 4mm (M3 compatible)
+- Hole adjustment: Use `--hole-adjust` to compensate for printer tolerance
+  - Adjusts total hole **diameter** (not radius)
+  - Example: `--hole-adjust 0.2` → Ø4.2mm holes (0.2mm larger diameter)
+  - Example: `--hole-adjust -0.1` → Ø3.9mm holes (0.1mm smaller diameter)
 - Thickness: 6mm
 - Tabs: Ø3.8mm on top/right edges
 - Slots: Ø4.0mm on bottom/left edges

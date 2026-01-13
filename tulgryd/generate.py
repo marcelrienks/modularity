@@ -28,8 +28,9 @@ from core.assembly_guide import AssemblyGuideGenerator
 @click.option('--format', type=click.Choice(['stl', 'step', 'both']), default='stl', help='Output format')
 @click.option('--config', type=click.Path(exists=True), help='JSON config file')
 @click.option('--preset', type=str, help='Use preset configuration')
+@click.option('--hole-adjust', type=float, default=0.0, help='Hole diameter adjustment in mm (e.g., 0.2, -0.1)')
 def generate(total_width, total_length, single_tile, tile_width, tile_length, 
-             output_dir, format, config, preset):
+             output_dir, format, config, preset, hole_adjust):
     """
     tulgryd Generator - Generate modular tool grid tiles
     
@@ -59,9 +60,13 @@ def generate(total_width, total_length, single_tile, tile_width, tile_length,
         else:
             params = Parameters()
         
+        # Apply hole diameter adjustment
+        params.hole_diameter_adjustment = hole_adjust
+        
         # Single tile mode
         if single_tile:
-            click.echo(f"\n🔨 Generating single tile: {tile_length}×{tile_width}mm\n")
+            adjust_text = f" (holes: Ø{params.hole_diameter + hole_adjust:.1f}mm)" if hole_adjust != 0 else ""
+            click.echo(f"\n🔨 Generating single tile: {tile_length}×{tile_width}mm{adjust_text}\n")
             params.set_dimensions(tile_width, tile_length)
             
             # Create output directory
@@ -94,7 +99,8 @@ def generate(total_width, total_length, single_tile, tile_width, tile_length,
             click.echo("Use --single-tile for single tile generation", err=True)
             return 1
         
-        click.echo(f"\n🔨 Generating tile assembly for {total_length}×{total_width}mm\n")
+        adjust_text = f" (holes: Ø{params.hole_diameter + hole_adjust:.1f}mm)" if hole_adjust != 0 else ""
+        click.echo(f"\n🔨 Generating tile assembly for {total_length}×{total_width}mm{adjust_text}\n")
         
         # Calculate layout
         click.echo("Calculating layout...")

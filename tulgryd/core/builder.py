@@ -112,6 +112,9 @@ class ModelBuilder:
         
         p = self.params
         
+        # Calculate adjusted hole diameter
+        adjusted_diameter = p.hole_diameter + p.hole_diameter_adjustment
+        
         # Position grid starting from offset (5mm from corner)
         # Coordinates relative to tile center (CadQuery default)
         start_x = -p.plate_length / 2 + p.offset_x
@@ -123,12 +126,12 @@ class ModelBuilder:
                 y = start_y + row * p.grid_spacing
                 
                 # Check if hole fits within bounds
-                if (x + p.hole_diameter/2 <= p.plate_length/2 and
-                    y + p.hole_diameter/2 <= p.plate_width/2):
+                if (x + adjusted_diameter/2 <= p.plate_length/2 and
+                    y + adjusted_diameter/2 <= p.plate_width/2):
                     
                     hole = (cq.Workplane("XY")
                             .center(x, y)
-                            .circle(p.hole_diameter / 2)
+                            .circle(adjusted_diameter / 2)
                             .extrude(p.plate_thickness))
                     model = model.cut(hole)
         

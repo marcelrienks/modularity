@@ -22,6 +22,7 @@ class Parameters:
         self.offset_x = 5.0
         self.offset_y = 5.0
         self.hole_diameter = 4.0
+        self.hole_diameter_adjustment = 0.0  # Adjustment in mm (e.g., +0.2, -0.1)
         self.cylinder_diameter = 7.0
         
         # Edge features
@@ -98,6 +99,7 @@ class Parameters:
             params.offset_x = ig.get('offset_from_left_edge', params.offset_x)
             params.offset_y = ig.get('offset_from_bottom_edge', params.offset_y)
             params.hole_diameter = ig.get('hole_diameter', params.hole_diameter)
+            params.hole_diameter_adjustment = ig.get('hole_diameter_adjustment', params.hole_diameter_adjustment)
             params.cylinder_diameter = ig.get('cylinder_diameter', params.cylinder_diameter)
         
         # Load edge features
@@ -126,8 +128,13 @@ class Parameters:
             return False, "Plate thickness must be positive"
         
         # Relationship checks
-        if self.cylinder_diameter <= self.hole_diameter:
-            return False, "Cylinder diameter must be larger than hole diameter"
+        adjusted_hole_diameter = self.hole_diameter + self.hole_diameter_adjustment
+        
+        if adjusted_hole_diameter <= 0:
+            return False, f"Adjusted hole diameter ({adjusted_hole_diameter:.1f}mm) must be positive"
+        
+        if self.cylinder_diameter <= adjusted_hole_diameter:
+            return False, f"Cylinder diameter must be larger than adjusted hole diameter ({adjusted_hole_diameter:.1f}mm)"
         
         if self.slot_diameter <= self.tab_diameter:
             return False, "Slot diameter must be larger than tab diameter"
