@@ -1,0 +1,88 @@
+{
+  "geometric_constraints": {
+    "dimensions": {
+      "plate_length": {
+        "min": 50.0,
+        "max": 500.0,
+        "rule": "Must be positive and practical for manufacturing"
+      },
+      "plate_width": {
+        "min": 50.0,
+        "max": 500.0,
+        "rule": "Must be positive and practical for manufacturing"
+      },
+      "plate_thickness": {
+        "min": 3.0,
+        "max": 20.0,
+        "rule": "Must provide structural integrity"
+      },
+      "perimeter_wall_thickness": {
+        "min": 1.0,
+        "max": 10.0,
+        "rule": "Must be less than half of plate dimensions"
+      }
+    },
+    "relationships": {
+      "cylinder_vs_hole": {
+        "rule": "cylinder_diameter > hole_diameter",
+        "reason": "Hole must fit within cylinder"
+      },
+      "slot_vs_tab": {
+        "rule": "slot_diameter > tab_diameter",
+        "reason": "Tabs must fit into slots with clearance",
+        "min_clearance": 0.05
+      },
+      "grid_spacing_vs_hole": {
+        "rule": "grid_spacing > hole_diameter",
+        "reason": "Holes must not overlap"
+      },
+      "grid_spacing_vs_cylinder": {
+        "rule": "grid_spacing > cylinder_diameter",
+        "reason": "Cylinders must not overlap"
+      },
+      "edge_clearance": {
+        "rule": "first_hole_position >= hole_diameter",
+        "reason": "Holes must not intersect perimeter"
+      },
+      "layer_heights": {
+        "rule": "perimeter_wall_height + top_layer_thickness = plate_thickness",
+        "reason": "Layers must sum to total thickness"
+      }
+    },
+    "feature_patterns": {
+      "grid_boundaries": {
+        "rule": "last_hole_position <= plate_dimension - offset",
+        "reason": "Grid must fit within plate boundaries"
+      },
+      "edge_feature_spacing": {
+        "rule": "tab/slot_spacing > tab/slot_diameter",
+        "reason": "Edge features must not overlap"
+      },
+      "corner_clearance": {
+        "rule": "No features at corners (0,0), (L,0), (0,W), (L,W)",
+        "reason": "Corner design specified as sharp 90° with no features"
+      }
+    }
+  },
+  "manufacturing_validation": {
+    "minimum_wall_thickness": 0.8,
+    "minimum_hole_diameter": 1.0,
+    "minimum_feature_spacing": 2.0,
+    "draft_angles": "Not specified - model as designed",
+    "tolerance_class": "Standard 3D printing or CNC milling"
+  },
+  "verification_checklist": [
+    "Perimeter wall outer edge at specified dimensions",
+    "Perimeter wall inner edge = outer - 2*wall_thickness",
+    "Cylinder count = grid_rows * grid_cols",
+    "Hole count = grid_rows * grid_cols",
+    "Tab count = tab_count_per_edge * 2",
+    "Slot count = slot_count_per_edge * 2",
+    "All holes within plate boundaries",
+    "No feature overlap detected",
+    "Tab/slot fit clearance present",
+    "Layers properly united into single solid",
+    "Base structure is open (no solid plate between cylinders)",
+    "Sharp corners with no fillets"
+  ]
+}
