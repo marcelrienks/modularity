@@ -137,14 +137,19 @@ class ModelBuilder:
         p = self.params
         cylinders = []
         
+        # Position grid starting from offset (5mm from corner)
+        # Coordinates relative to tile center (CadQuery default)
+        start_x = -p.plate_length / 2 + p.offset_x
+        start_y = -p.plate_width / 2 + p.offset_y
+        
         for row in range(p.grid_rows):
             for col in range(p.grid_cols):
-                x = p.offset_x + col * p.grid_spacing - p.plate_length / 2
-                y = p.offset_y + row * p.grid_spacing - p.plate_width / 2
+                x = start_x + col * p.grid_spacing
+                y = start_y + row * p.grid_spacing
                 
                 # Check if cylinder fits within bounds
-                if (abs(x) + p.cylinder_diameter/2 <= p.plate_length/2 - p.offset_x and
-                    abs(y) + p.cylinder_diameter/2 <= p.plate_width/2 - p.offset_y):
+                if (x + p.cylinder_diameter/2 <= p.plate_length/2 and
+                    y + p.cylinder_diameter/2 <= p.plate_width/2):
                     
                     cyl = (cq.Workplane("XY")
                            .center(x, y)
@@ -171,14 +176,19 @@ class ModelBuilder:
         
         p = self.params
         
+        # Position grid starting from offset (5mm from corner)
+        # Coordinates relative to tile center (CadQuery default)
+        start_x = -p.plate_length / 2 + p.offset_x
+        start_y = -p.plate_width / 2 + p.offset_y
+        
         for row in range(p.grid_rows):
             for col in range(p.grid_cols):
-                x = p.offset_x + col * p.grid_spacing - p.plate_length / 2
-                y = p.offset_y + row * p.grid_spacing - p.plate_width / 2
+                x = start_x + col * p.grid_spacing
+                y = start_y + row * p.grid_spacing
                 
                 # Check if hole fits within bounds
-                if (abs(x) + p.hole_diameter/2 <= p.plate_length/2 - p.offset_x and
-                    abs(y) + p.hole_diameter/2 <= p.plate_width/2 - p.offset_y):
+                if (x + p.hole_diameter/2 <= p.plate_length/2 and
+                    y + p.hole_diameter/2 <= p.plate_width/2):
                     
                     hole = (cq.Workplane("XY")
                             .center(x, y)
