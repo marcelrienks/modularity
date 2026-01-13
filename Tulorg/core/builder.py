@@ -20,7 +20,7 @@ class ModelBuilder:
         if not is_valid:
             raise ValueError(f"Invalid parameters: {msg}")
         
-        # Step 1: Create perimeter frame with tabs/slots
+        # Step 1: Create perimeter frame (without cutting slots - only outer geometry)
         perimeter = self._create_perimeter_frame()
         
         # Step 2: Create cylinders
@@ -35,14 +35,17 @@ class ModelBuilder:
         top_layer = self._create_top_layer()
         combined = combined.union(top_layer)
         
-        # Step 5: Create holes
+        # Step 5: Create holes (through full thickness)
         combined = self._create_holes(combined)
+        
+        # Step 6: Create edge slots (through full thickness)
+        combined = self._create_edge_slots(combined)
         
         self.model = combined
         return self.model
     
     def _create_perimeter_frame(self) -> cq.Workplane:
-        """Create perimeter frame with integrated tabs and slots"""
+        """Create perimeter frame with integrated tabs (slots created separately)"""
         
         p = self.params
         edge_features = p.calculate_edge_features()
@@ -95,39 +98,6 @@ class ModelBuilder:
                       .extrude(p.plate_thickness))
             tab = tab.cut(cut_box)
             frame = frame.union(tab)
-        
-        # Cut slots on bottom and left edges
-        # Bottom edge slots (Y = -plate_width/2)
-        for x_pos in edge_features['length_positions']:
-            slot_x = x_pos - p.plate_length / 2
-            slot_y = -p.plate_width / 2
-            slot = (cq.Workplane("XY")
-                    .center(slot_x, slot_y)
-                    .circle(p.slot_radius)
-                    .extrude(p.plate_thickness))
-            # Cut half to make semicircle cutout
-            cut_box = (cq.Workplane("XY")
-                      .center(slot_x, slot_y - p.slot_radius)
-                      .rect(p.slot_diameter, p.slot_diameter)
-                      .extrude(p.plate_thickness))
-            slot = slot.cut(cut_box)
-            frame = frame.cut(slot)
-        
-        # Left edge slots (X = -plate_length/2)
-        for y_pos in edge_features['width_positions']:
-            slot_x = -p.plate_length / 2
-            slot_y = y_pos - p.plate_width / 2
-            slot = (cq.Workplane("XY")
-                    .center(slot_x, slot_y)
-                    .circle(p.slot_radius)
-                    .extrude(p.plate_thickness))
-            # Cut half to make semicircle cutout
-            cut_box = (cq.Workplane("XY")
-                      .center(slot_x - p.slot_radius, slot_y)
-                      .rect(p.slot_diameter, p.slot_diameter)
-                      .extrude(p.plate_thickness))
-            slot = slot.cut(cut_box)
-            frame = frame.cut(slot)
         
         return frame
     
@@ -195,6 +165,46 @@ class ModelBuilder:
                             .circle(p.hole_diameter / 2)
                             .extrude(p.plate_thickness))
                     model = model.cut(hole)
+        
+        return model
+    
+    def _create_edge_slots(self, model: cq.Workplane) -> cq.Workplane:
+        """Create edge slots through full thickness"""
+        
+        p = self.params
+        edge_features = p.calculate_edge_features()
+        
+        # Bottom edge slots (Y = -plate_width/2)
+        for x_pos in edge_features['length_positions']:
+            slot_x = x_pos - p.plate_length / 2
+            slot_y = -p.plate_width / 2
+            slot = (cq.Workplane("XY")
+                    .center(slot_x, slot_y)
+                    .circle(p.slot_radius)
+                    .extrude(p.plate_thickness))
+            # Cut half to make semicircle cutout
+            cut_box = (cq.Workplane("XY")
+                      .center(slot_x, slot_y - p.slot_radius)
+                      .rect(p.slot_diameter, p.slot_diameter)
+                      .extrude(p.plate_thickness))
+            slot = slot.cut(cut_box)
+            model = model.cut(slot)
+        
+        # Left edge slots (X = -plate_length/2)
+        for y_pos in edge_features['width_positions']:
+            slot_x = -p.plate_length / 2
+            slot_y = y_pos - p.plate_width / 2
+            slot = (cq.Workplane("XY")
+                    .center(slot_x, slot_y)
+                    .circle(p.slot_radius)
+                    .extrude(p.plate_thickness))
+            # Cut half to make semicircle cutout
+            cut_box = (cq.Workplane("XY")
+                      .center(slot_x - p.slot_radius, slot_y)
+                      .rect(p.slot_diameter, p.slot_diameter)
+                      .extrude(p.plate_thickness))
+            slot = slot.cut(cut_box)
+            model = model.cut(slot)
         
         return model
     
