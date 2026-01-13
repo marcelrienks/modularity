@@ -1,4 +1,4 @@
-# MyToolGrid Generator
+# Tulorg Generator
 
 Parametric 3D model generator for modular tool grid tiles with interlocking edges.
 
@@ -13,34 +13,33 @@ Parametric 3D model generator for modular tool grid tiles with interlocking edge
 
 ## Quick Start
 
-### Installation
-
-```bash
-cd mytoolgrid_generator
-pip install -r requirements.txt
-```
-
 ### Usage Examples
 
 **Generate tiles for a 250×180mm drawer:**
 ```bash
-python generate_model.py --total-width 250 --total-length 180
+python generate.py --total-width 250 --total-length 180
 ```
 
 **Generate single 100×100mm standard tile:**
 ```bash
-python generate_model.py --single-tile
+python generate.py --single-tile
 ```
 
 **Generate custom single tile:**
 ```bash
-python generate_model.py --single-tile --tile-width 100 --tile-length 45
+python generate.py --single-tile --tile-width 100 --tile-length 45
 ```
 
 **Specify output format:**
 ```bash
-python generate_model.py --total-width 250 --total-length 180 --format step
+python generate.py --total-width 250 --total-length 180 --format step
 ```
+
+## Project Structure
+
+- `core/` - Core modules for layout calculation, model building, and assembly guide generation
+- `origin/` - Original model files that this script was built upon
+- `tests/` - Test suite for the generator
 
 ## Output Structure
 
@@ -84,6 +83,8 @@ Each generation creates a comprehensive `ASSEMBLY_README.md` with:
 - CadQuery 2.4+
 - NumPy
 - Click (CLI framework)
+- Jinja2 (templating engine)
+- pytest (testing framework)
 
 ## Command Line Options
 

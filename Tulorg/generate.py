@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MyToolGrid Generator - Main CLI Entry Point
+Tulorg Generator - Main CLI Entry Point
 Generates modular tool grid tiles for custom drawer dimensions
 """
 
@@ -31,18 +31,18 @@ from core.assembly_guide import AssemblyGuideGenerator
 def generate(total_width, total_length, single_tile, tile_width, tile_length, 
              output_dir, format, config, preset):
     """
-    MyToolGrid Generator - Generate modular tool grid tiles
+    Tulorg Generator - Generate modular tool grid tiles
     
     Examples:
     
         # Generate tiles for 250×180mm drawer
-        python generate_model.py --total-width 250 --total-length 180
+        python generate.py --total-width 250 --total-length 180
         
         # Generate single 100×100mm tile
-        python generate_model.py --single-tile
+        python generate.py --single-tile
         
         # Generate custom single tile
-        python generate_model.py --single-tile --tile-width 100 --tile-length 45
+        python generate.py --single-tile --tile-width 100 --tile-length 45
     """
     
     try:

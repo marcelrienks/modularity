@@ -1,7 +1,7 @@
-# MyToolGrid - Detailed 3D Model Analysis
+# Tulorg - Detailed 3D Model Analysis
 
 ## Overview
-**Model Name:** MyToolGrid  
+**Model Name:** Tulorg  
 **Version:** v1  
 **Format:** STEP AP214 (AUTOMOTIVE_DESIGN)  
 **Units:** Millimeters (mm)  

@@ -1,4 +1,4 @@
-"""Parameter management for MyToolGrid generator"""
+"""Parameter management for Tulorg generator"""
 
 import json
 from typing import Optional, Dict, Any

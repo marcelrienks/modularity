@@ -1,4 +1,4 @@
-"""Test suite for MyToolGrid generator"""
+"""Test suite for Tulorg generator"""
 
 import pytest
 from core.parameters import Parameters
