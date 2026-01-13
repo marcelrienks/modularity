@@ -20,32 +20,34 @@ class ModelBuilder:
         if not is_valid:
             raise ValueError(f"Invalid parameters: {msg}")
         
-        # Step 1: Create perimeter frame (with slots cut from perimeter only)
+        # Step 1: Create perimeter frame (without tabs/slots)
         perimeter = self._create_perimeter_frame()
         
         # Step 2: Create top layer
         top_layer = self._create_top_layer()
         combined = perimeter.union(top_layer)
         
-        # Step 3: Cut edge slots through full thickness (before adding cylinders)
+        # Step 3: Add tabs on top and right edges (after full thickness established)
+        combined = self._create_edge_tabs(combined)
+        
+        # Step 4: Cut edge slots through full thickness (before adding cylinders)
         combined = self._create_edge_slots(combined)
         
-        # Step 4: Create and add cylinders
+        # Step 5: Create and add cylinders
         cylinders = self._create_cylinder_grid()
         for cyl in cylinders:
             combined = combined.union(cyl)
         
-        # Step 5: Create holes
+        # Step 6: Create holes
         combined = self._create_holes(combined)
         
         self.model = combined
         return self.model
     
     def _create_perimeter_frame(self) -> cq.Workplane:
-        """Create perimeter frame with integrated tabs (slots created separately)"""
+        """Create perimeter frame (tabs and slots created separately)"""
         
         p = self.params
-        edge_features = p.calculate_edge_features()
         
         # Create outer rectangle
         outer = (cq.Workplane("XY")
@@ -62,39 +64,6 @@ class ModelBuilder:
                  .extrude(p.perimeter_wall_height))
         
         frame = outer.cut(inner)
-        
-        # Add tabs on top and right edges
-        # Top edge tabs (Y = plate_width/2)
-        for x_pos in edge_features['length_positions']:
-            tab_x = x_pos - p.plate_length / 2
-            tab_y = p.plate_width / 2
-            tab = (cq.Workplane("XY")
-                   .center(tab_x, tab_y)
-                   .circle(p.tab_radius)
-                   .extrude(p.plate_thickness))
-            # Cut half to make semicircle
-            cut_box = (cq.Workplane("XY")
-                      .center(tab_x, tab_y + p.tab_radius)
-                      .rect(p.tab_diameter, p.tab_diameter)
-                      .extrude(p.plate_thickness))
-            tab = tab.cut(cut_box)
-            frame = frame.union(tab)
-        
-        # Right edge tabs (X = plate_length/2)
-        for y_pos in edge_features['width_positions']:
-            tab_x = p.plate_length / 2
-            tab_y = y_pos - p.plate_width / 2
-            tab = (cq.Workplane("XY")
-                   .center(tab_x, tab_y)
-                   .circle(p.tab_radius)
-                   .extrude(p.plate_thickness))
-            # Cut half to make semicircle
-            cut_box = (cq.Workplane("XY")
-                      .center(tab_x + p.tab_radius, tab_y)
-                      .rect(p.tab_diameter, p.tab_diameter)
-                      .extrude(p.plate_thickness))
-            tab = tab.cut(cut_box)
-            frame = frame.union(tab)
         
         return frame
     
@@ -162,6 +131,46 @@ class ModelBuilder:
                             .circle(p.hole_diameter / 2)
                             .extrude(p.plate_thickness))
                     model = model.cut(hole)
+        
+        return model
+    
+    def _create_edge_tabs(self, model: cq.Workplane) -> cq.Workplane:
+        """Create tabs on top and right edges through full thickness"""
+        
+        p = self.params
+        edge_features = p.calculate_edge_features()
+        
+        # Top edge tabs (Y = plate_width/2)
+        for x_pos in edge_features['length_positions']:
+            tab_x = x_pos - p.plate_length / 2
+            tab_y = p.plate_width / 2
+            tab = (cq.Workplane("XY")
+                   .center(tab_x, tab_y)
+                   .circle(p.tab_radius)
+                   .extrude(p.plate_thickness))
+            # Cut inner half to make semicircle protruding outward
+            cut_box = (cq.Workplane("XY")
+                      .center(tab_x, tab_y - p.tab_radius)
+                      .rect(p.tab_diameter, p.tab_diameter)
+                      .extrude(p.plate_thickness))
+            tab = tab.cut(cut_box)
+            model = model.union(tab)
+        
+        # Right edge tabs (X = plate_length/2)
+        for y_pos in edge_features['width_positions']:
+            tab_x = p.plate_length / 2
+            tab_y = y_pos - p.plate_width / 2
+            tab = (cq.Workplane("XY")
+                   .center(tab_x, tab_y)
+                   .circle(p.tab_radius)
+                   .extrude(p.plate_thickness))
+            # Cut inner half to make semicircle protruding outward
+            cut_box = (cq.Workplane("XY")
+                      .center(tab_x - p.tab_radius, tab_y)
+                      .rect(p.tab_diameter, p.tab_diameter)
+                      .extrude(p.plate_thickness))
+            tab = tab.cut(cut_box)
+            model = model.union(tab)
         
         return model
     
