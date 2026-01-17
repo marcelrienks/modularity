@@ -8,6 +8,7 @@ import click
 import sys
 from pathlib import Path
 from datetime import datetime
+import cadquery as cq
 
 # Add core to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -16,6 +17,53 @@ from core.parameters import Parameters
 from core.layout_calculator import LayoutCalculator
 from core.builder import ModelBuilder
 from core.assembly_guide import AssemblyGuideGenerator
+
+
+def create_calibration_tile(hole_diameter: float, params: Parameters) -> cq.Workplane:
+    """
+    Create a calibration tile using the exact same logic as normal tiles.
+    Generates 5 through holes in a line, each with a different diameter adjustment.
+    """
+    p = params
+    
+    # Store original dimensions and settings
+    original_width = p.plate_width
+    original_length = p.plate_length
+    original_hole_diameter = p.hole_diameter
+    original_hole_adjustment = p.hole_diameter_adjustment
+    
+    # Create custom parameters for calibration tile
+    cal_width = 50.0
+    cal_length = 80.0
+    p.set_dimensions(cal_width, cal_length)
+    p.hole_diameter = hole_diameter
+    p.hole_diameter_adjustment = 0.0
+    
+    # Calculate hole positions for 5 calibration holes in a line
+    adjustments = [-0.2, -0.1, 0.0, 0.1, 0.2]
+    hole_spacing = 15.0
+    start_x = -p.plate_length / 2 + 12.0
+    y_pos = 0
+    
+    # Create custom holes list with different diameters
+    custom_holes = []
+    for i, adj in enumerate(adjustments):
+        x_pos = start_x + i * hole_spacing
+        actual_diameter = hole_diameter + adj
+        custom_holes.append((x_pos, y_pos, actual_diameter))
+    
+    # Build the tile using ModelBuilder with custom holes
+    builder = ModelBuilder(p)
+    model = builder.build(custom_holes=custom_holes)
+    
+    # Restore original parameters
+    p.plate_width = original_width
+    p.plate_length = original_length
+    p.hole_diameter = original_hole_diameter
+    p.hole_diameter_adjustment = original_hole_adjustment
+    p._recalculate_grid()
+    
+    return model
 
 
 @click.command()
@@ -28,9 +76,11 @@ from core.assembly_guide import AssemblyGuideGenerator
 @click.option('--format', type=click.Choice(['stl', 'step', 'both']), default='stl', help='Output format')
 @click.option('--config', type=click.Path(exists=True), help='JSON config file')
 @click.option('--preset', type=str, help='Use preset configuration')
+@click.option('--hole-diameter', type=float, default=None, help='Hole diameter in mm (default: 4.0 if not specified)')
 @click.option('--hole-adjust', type=float, default=0.0, help='Hole diameter adjustment in mm (e.g., 0.2, -0.1)')
+@click.option('--calibrate', is_flag=True, help='Generate calibration tile (requires --hole-diameter)')
 def generate(total_width, total_length, single_tile, tile_width, tile_length, 
-             output_dir, format, config, preset, hole_adjust):
+             output_dir, format, config, preset, hole_diameter, hole_adjust, calibrate):
     """
     tulgryd Generator - Generate modular tool grid tiles
     
@@ -60,12 +110,54 @@ def generate(total_width, total_length, single_tile, tile_width, tile_length,
         else:
             params = Parameters()
         
-        # Apply hole diameter adjustment
+        # Set hole diameter default if not provided
+        if hole_diameter is None:
+            hole_diameter = 4.0
+        
+        # Apply hole diameter and adjustment
+        params.hole_diameter = hole_diameter
         params.hole_diameter_adjustment = hole_adjust
+        
+        # Calibration mode
+        if calibrate:
+            # Check if hole_diameter was explicitly provided via argument (not just default)
+            import sys
+            if '--hole-diameter' not in sys.argv and not config and not preset:
+                click.echo("Error: --calibrate requires --hole-diameter to be explicitly specified", err=True)
+                return 1
+            
+            click.echo(f"\n🔨 Generating calibration tile for Ø{hole_diameter:.1f}mm\n")
+            
+            # Create output directory
+            output_path = Path(output_dir)
+            output_path.mkdir(parents=True, exist_ok=True)
+            
+            # Build calibration model
+            click.echo("Building calibration tile...")
+            model = create_calibration_tile(hole_diameter, params)
+            
+            # Export
+            filename = f"calibration_tile_Ø{hole_diameter:.1f}mm"
+            
+            if format in ['stl', 'both']:
+                stl_file = output_path / f"{filename}.stl"
+                click.echo(f"Exporting STL: {stl_file}")
+                cq.exporters.export(model, str(stl_file), tolerance=0.01)
+            
+            if format in ['step', 'both']:
+                step_file = output_path / f"{filename}.step"
+                click.echo(f"Exporting STEP: {step_file}")
+                cq.exporters.export(model, str(step_file))
+            
+            click.echo(f"\n✅ Calibration tile generated successfully!")
+            click.echo(f"   Hole diameter: Ø{hole_diameter:.1f}mm")
+            click.echo(f"   Test adjustments: -0.2, -0.1, 0, +0.1, +0.2 mm")
+            click.echo(f"   Output: {output_path.absolute()}\n")
+            return 0
         
         # Single tile mode
         if single_tile:
-            adjust_text = f" (holes: Ø{params.hole_diameter + hole_adjust:.1f}mm)" if hole_adjust != 0 else ""
+            adjust_text = f" (holes: Ø{hole_diameter + hole_adjust:.1f}mm)" if hole_adjust != 0 or hole_diameter != 4.0 else ""
             click.echo(f"\n🔨 Generating single tile: {tile_length}×{tile_width}mm{adjust_text}\n")
             params.set_dimensions(tile_width, tile_length)
             
@@ -99,7 +191,7 @@ def generate(total_width, total_length, single_tile, tile_width, tile_length,
             click.echo("Use --single-tile for single tile generation", err=True)
             return 1
         
-        adjust_text = f" (holes: Ø{params.hole_diameter + hole_adjust:.1f}mm)" if hole_adjust != 0 else ""
+        adjust_text = f" (holes: Ø{hole_diameter + hole_adjust:.1f}mm)" if hole_adjust != 0 or hole_diameter != 4.0 else ""
         click.echo(f"\n🔨 Generating tile assembly for {total_length}×{total_width}mm{adjust_text}\n")
         
         # Calculate layout

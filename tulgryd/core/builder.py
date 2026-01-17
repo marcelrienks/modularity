@@ -12,8 +12,12 @@ class ModelBuilder:
         self.params = params
         self.model = None
     
-    def build(self) -> cq.Workplane:
-        """Build complete tile model"""
+    def build(self, custom_holes=None) -> cq.Workplane:
+        """Build complete tile model
+        
+        Args:
+            custom_holes: Optional list of (x, y, diameter) tuples for custom hole generation
+        """
         
         # Validate parameters
         is_valid, msg = self.params.validate()
@@ -34,12 +38,20 @@ class ModelBuilder:
         combined = self._create_edge_slots(combined)
         
         # Step 5: Create and add cylinders
-        cylinders = self._create_cylinder_grid()
+        if custom_holes:
+            # For custom holes, only create cylinders at those positions
+            cylinders = self._create_custom_cylinders(custom_holes)
+        else:
+            cylinders = self._create_cylinder_grid()
+        
         for cyl in cylinders:
             combined = combined.union(cyl)
         
         # Step 6: Create holes
-        combined = self._create_holes(combined)
+        if custom_holes:
+            combined = self._create_custom_holes(combined, custom_holes)
+        else:
+            combined = self._create_holes(combined)
         
         self.model = combined
         return self.model
@@ -95,6 +107,27 @@ class ModelBuilder:
         
         return cylinders
     
+    def _create_custom_cylinders(self, holes: list) -> list:
+        """Create cylinders for custom hole positions (for calibration mode)
+        
+        Args:
+            holes: List of (x, y, diameter) tuples
+        
+        Returns:
+            List of cylinder workplanes
+        """
+        p = self.params
+        cylinders = []
+        
+        for x, y, _ in holes:
+            cyl = (cq.Workplane("XY")
+                   .center(x, y)
+                   .circle(p.cylinder_diameter / 2)
+                   .extrude(p.perimeter_wall_height))
+            cylinders.append(cyl)
+        
+        return cylinders
+    
     def _create_top_layer(self) -> cq.Workplane:
         """Create top solid layer"""
         
@@ -134,6 +167,24 @@ class ModelBuilder:
                             .circle(adjusted_diameter / 2)
                             .extrude(p.plate_thickness))
                     model = model.cut(hole)
+        
+        return model
+    
+    def _create_custom_holes(self, model: cq.Workplane, holes: list) -> cq.Workplane:
+        """Create custom holes (for calibration mode)
+        
+        Args:
+            model: The workplane to cut holes from
+            holes: List of (x, y, diameter) tuples, coordinates relative to plate center
+        """
+        p = self.params
+        
+        for x, y, diameter in holes:
+            hole = (cq.Workplane("XY")
+                    .center(x, y)
+                    .circle(diameter / 2)
+                    .extrude(p.plate_thickness))
+            model = model.cut(hole)
         
         return model
     

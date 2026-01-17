@@ -10,6 +10,7 @@ Parametric 3D model generator for modular tool grid tiles with interlocking edge
 - ✅ **Auto-Generated Assembly Guide**: Complete instructions with layout diagram
 - ✅ **Multiple Formats**: Export to STL, STEP
 - ✅ **Fully Parametric**: Customize all dimensions via JSON
+- ✅ **Calibration Mode**: Generate test tiles to dial in hole diameter adjustments
 
 ## Quick Start
 
@@ -32,7 +33,15 @@ python generate.py --single-tile --hole-adjust 0.2   # Ø4.2mm holes (0.2mm larg
 python generate.py --single-tile --hole-adjust -0.1  # Ø3.9mm holes (0.1mm smaller)
 ```
 
-**Generate custom single tile:**
+**Generate calibration tile to test hole diameter adjustments:**
+```bash
+# Create a test tile with 5 holes (one for each adjustment: -0.2, -0.1, 0, +0.1, +0.2)
+python generate.py --calibrate --hole-diameter 4.0   # Test standard M3 (4mm)
+python generate.py --calibrate --hole-diameter 3.8   # Test M3 screws
+python generate.py --calibrate --hole-diameter 4.5   # Test M4 screws
+```
+
+**Custom single tile:**
 ```bash
 python generate.py --single-tile --tile-width 100 --tile-length 45
 ```
@@ -40,6 +49,11 @@ python generate.py --single-tile --tile-width 100 --tile-length 45
 **Specify output format:**
 ```bash
 python generate.py --total-width 250 --total-length 180 --format step
+```
+
+**Generate calibration tiles in both formats:**
+```bash
+python generate.py --calibrate --hole-diameter 3.8 --format both
 ```
 
 ## Project Structure
@@ -88,6 +102,32 @@ Each generation creates a comprehensive `ASSEMBLY_README.md` with:
 - Partial grid maintaining 10mm spacing
 - Compatible interlocking features
 
+## Calibration Mode
+
+Use `--calibrate` to generate a test tile for dialing in hole diameter adjustments:
+
+```bash
+python generate.py --calibrate --hole-diameter 3.8
+```
+
+This generates a small rectangular tile with **5 through holes in a line**, each with a different diameter:
+- **Hole 1**: `hole_diameter - 0.2` mm (labeled: -0.2)
+- **Hole 2**: `hole_diameter - 0.1` mm (labeled: -0.1)
+- **Hole 3**: `hole_diameter` mm (labeled: 0)
+- **Hole 4**: `hole_diameter + 0.1` mm (labeled: +0.1)
+- **Hole 5**: `hole_diameter + 0.2` mm (labeled: +0.2)
+
+Each hole is clearly labeled for reference. Print the tile and test screw insertion to determine which adjustment produces the best fit for your specific printer and material, then use that adjustment value for production tiles:
+
+```bash
+python generate.py --single-tile --hole-diameter 3.8 --hole-adjust 0.1
+```
+
+**Requirements for calibration mode:**
+- `--calibrate` flag must be used
+- `--hole-diameter` must be explicitly specified (even if using 4.0mm)
+- Supports all output formats: STL, STEP, or both
+
 ## Requirements
 
 - Python 3.8+
@@ -110,6 +150,9 @@ Options:
   --format [stl|step|both]    Output format (default: stl)
   --config PATH               JSON config file
   --preset TEXT               Use preset configuration
+  --hole-diameter FLOAT       Hole diameter in mm (default: 4.0 if not specified)
+  --hole-adjust FLOAT         Hole diameter adjustment in mm (e.g., 0.2, -0.1)
+  --calibrate                 Generate calibration tile (requires --hole-diameter)
   --help                      Show this message and exit
 ```
 
