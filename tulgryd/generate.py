@@ -56,34 +56,6 @@ def create_calibration_tile(hole_diameter: float, params: Parameters) -> cq.Work
     builder = ModelBuilder(p)
     model = builder.build(custom_holes=custom_holes)
     
-    # Add text labels engraved on the underside of top layer, next to cylinders
-    for i, adj in enumerate(adjustments):
-        x_pos = start_x + i * hole_spacing
-        actual_diameter = hole_diameter + adj
-        
-        # Create text showing diameter and adjustment
-        label_diameter = f"Ø{actual_diameter:.1f}"
-        if i == 2:  # Middle hole
-            label_adj = "base"
-        else:
-            label_adj = f"{adj:+.1f}"
-        
-        try:
-            # Position text on the underside of the top layer (at perimeter wall height)
-            # This creates text at the junction between the perimeter wall and top layer
-            text_workplane = cq.Workplane("XY").workplane(offset=p.perimeter_wall_height)
-            
-            # Engrave diameter text (below hole, line 1)
-            text_obj = text_workplane.center(x_pos, y_pos - 3.5).text(label_diameter, fontsize=1.8, distance=-0.4, font="sans-serif")
-            model = model.cut(text_obj)
-            
-            # Engrave adjustment text (below hole, line 2)
-            text_obj2 = text_workplane.center(x_pos, y_pos - 5.5).text(label_adj, fontsize=1.2, distance=-0.4, font="sans-serif")
-            model = model.cut(text_obj2)
-        except Exception as e:
-            # Text rendering is optional, don't fail if it doesn't work
-            pass
-    
     # Restore original parameters
     p.plate_width = original_width
     p.plate_length = original_length
