@@ -111,13 +111,13 @@ python generate.py --calibrate --hole-diameter 3.8
 ```
 
 This generates a small rectangular tile with **5 through holes in a line**, each with a different diameter:
-- **Hole 1**: `hole_diameter - 0.2` mm (labeled: -0.2)
-- **Hole 2**: `hole_diameter - 0.1` mm (labeled: -0.1)
-- **Hole 3**: `hole_diameter` mm (labeled: 0)
-- **Hole 4**: `hole_diameter + 0.1` mm (labeled: +0.1)
-- **Hole 5**: `hole_diameter + 0.2` mm (labeled: +0.2)
+- **Hole 1**: `hole_diameter - 0.2` mm
+- **Hole 2**: `hole_diameter - 0.1` mm
+- **Hole 3**: `hole_diameter` mm
+- **Hole 4**: `hole_diameter + 0.1` mm
+- **Hole 5**: `hole_diameter + 0.2` mm
 
-Each hole is clearly labeled for reference. Print the tile and test screw insertion to determine which adjustment produces the best fit for your specific printer and material, then use that adjustment value for production tiles:
+Print the tile and test screw insertion to determine which hole diameter produces the best fit for your specific printer and material, then use that adjustment value for production tiles:
 
 ```bash
 python generate.py --single-tile --hole-diameter 3.8 --hole-adjust 0.1
