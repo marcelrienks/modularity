@@ -33,7 +33,7 @@ def create_calibration_tile(hole_diameter: float, params: Parameters) -> cq.Work
     original_hole_adjustment = p.hole_diameter_adjustment
     
     # Create custom parameters for calibration tile
-    cal_width = 50.0
+    cal_width = 25.0
     cal_length = 80.0
     p.set_dimensions(cal_width, cal_length)
     p.hole_diameter = hole_diameter
