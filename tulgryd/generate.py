@@ -56,7 +56,7 @@ def create_calibration_tile(hole_diameter: float, params: Parameters) -> cq.Work
     builder = ModelBuilder(p)
     model = builder.build(custom_holes=custom_holes)
     
-    # Add text labels on top surface for each hole
+    # Add text labels engraved on top surface for each hole
     for i, adj in enumerate(adjustments):
         x_pos = start_x + i * hole_spacing
         actual_diameter = hole_diameter + adj
@@ -69,13 +69,16 @@ def create_calibration_tile(hole_diameter: float, params: Parameters) -> cq.Work
             label_adj = f"{adj:+.1f}"
         
         try:
-            # Position text above the hole on the top surface
-            text_workplane = cq.Workplane("XY").workplane(offset=p.plate_thickness + 0.5)
-            text_obj = text_workplane.center(x_pos, y_pos + 2.0).text(label_diameter, fontsize=2, distance=0.3, font="sans-serif")
-            model = model.union(text_obj)
+            # Position text on the top surface, below the holes
+            text_workplane = cq.Workplane("XY").workplane(offset=p.plate_thickness - 0.2)
             
-            text_obj2 = text_workplane.center(x_pos, y_pos - 1.5).text(label_adj, fontsize=1.5, distance=0.3, font="sans-serif")
-            model = model.union(text_obj2)
+            # Engrave diameter text (below hole, line 1)
+            text_obj = text_workplane.center(x_pos, y_pos - 3.5).text(label_diameter, fontsize=1.8, distance=-0.3, font="sans-serif")
+            model = model.cut(text_obj)
+            
+            # Engrave adjustment text (below hole, line 2)
+            text_obj2 = text_workplane.center(x_pos, y_pos - 5.5).text(label_adj, fontsize=1.2, distance=-0.3, font="sans-serif")
+            model = model.cut(text_obj2)
         except Exception as e:
             # Text rendering is optional, don't fail if it doesn't work
             pass
