@@ -56,6 +56,30 @@ def create_calibration_tile(hole_diameter: float, params: Parameters) -> cq.Work
     builder = ModelBuilder(p)
     model = builder.build(custom_holes=custom_holes)
     
+    # Add text labels on top surface for each hole
+    for i, adj in enumerate(adjustments):
+        x_pos = start_x + i * hole_spacing
+        actual_diameter = hole_diameter + adj
+        
+        # Create text showing diameter and adjustment
+        label_diameter = f"Ø{actual_diameter:.1f}"
+        if i == 2:  # Middle hole
+            label_adj = "base"
+        else:
+            label_adj = f"{adj:+.1f}"
+        
+        try:
+            # Position text above the hole on the top surface
+            text_workplane = cq.Workplane("XY").workplane(offset=p.plate_thickness + 0.5)
+            text_obj = text_workplane.center(x_pos, y_pos + 2.0).text(label_diameter, fontsize=2, distance=0.3, font="sans-serif")
+            model = model.union(text_obj)
+            
+            text_obj2 = text_workplane.center(x_pos, y_pos - 1.5).text(label_adj, fontsize=1.5, distance=0.3, font="sans-serif")
+            model = model.union(text_obj2)
+        except Exception as e:
+            # Text rendering is optional, don't fail if it doesn't work
+            pass
+    
     # Restore original parameters
     p.plate_width = original_width
     p.plate_length = original_length
