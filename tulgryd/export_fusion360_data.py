@@ -1,21 +1,14 @@
 #!/usr/bin/env python3
 """
-Fusion 360 Model Export Script - Unified CLI & Add-In Version
+Fusion 360 Model Export Add-In
 
-Dual-mode script that works both as:
-1. Command-line tool (when run standalone)
-2. Fusion 360 Add-In (when run from Scripts panel)
-
-CLI Usage:
-    python export_fusion360_data.py <f3d_file_path> [model_name]
+Fusion 360 Add-In script that exports complete design data from the active model.
 
 Add-In Usage:
-    Run from Fusion 360 Tools > Add-ins > Scripts and Add-ins > Scripts > Right-click > Run
-
-Examples:
-    python export_fusion360_data.py "/path/to/model.f3d"           # CLI: Export all models
-    python export_fusion360_data.py "/path/to/model.f3d" handles   # CLI: Export specific model
-    (Run from Fusion UI for interactive Add-In mode)
+    1. Open a .f3d design file in Fusion 360
+    2. Go to Tools > Add-ins > Scripts and Add-ins > Scripts tab
+    3. Right-click this script > Run
+    4. Select output directory for exported JSON files
 """
 
 import sys
@@ -35,68 +28,42 @@ except ImportError:
 class FusionExporter:
     """Exports complete design data from Fusion 360 .f3d files."""
     
-    def __init__(self, f3d_path=None, model_name=None, ui=None):
+    def __init__(self, ui):
         """
-        Initialize exporter.
+        Initialize exporter (Add-In mode only).
         
         Args:
-            f3d_path: Full path to .f3d file (CLI mode). None for Add-In mode.
-            model_name: Optional specific model/body name to export.
-            ui: Fusion UI object (for Add-In mode dialogs).
+            ui: Fusion UI object for dialogs and messaging.
         """
-        self.f3d_path = Path(f3d_path) if f3d_path else None
-        self.model_name = model_name
         self.ui = ui
-        self.mode = "addon" if ui else "cli"
-        self.script_dir = Path(__file__).parent
+        self.script_dir = None
         self.design = None
         self.models_exported = []
     
     def log(self, message, is_error=False):
-        """Log message (UI dialog for Add-In, print for CLI)."""
-        if self.mode == "addon" and self.ui:
-            self.ui.messageBox(message)
-        else:
-            if is_error:
-                print(f"✗ {message}")
-            else:
-                print(message)
+        """Log message to UI dialog."""
+        self.ui.messageBox(message)
     
     def validate_inputs(self):
-        """Validate f3d file exists and is accessible (CLI mode only)."""
-        if self.mode == "cli":
-            if not self.f3d_path.exists():
-                raise FileNotFoundError(f"F3D file not found: {self.f3d_path}")
-            if not self.f3d_path.suffix.lower() == '.f3d':
-                raise ValueError(f"File must be .f3d format, got: {self.f3d_path.suffix}")
-            print(f"✓ F3D file found: {self.f3d_path}")
+        """Validate design is loaded."""
+        if not self.design:
+            raise ValueError("No active design")
     
     def load_design(self):
-        """Load Fusion 360 design from f3d file."""
+        """Load active Fusion 360 design."""
         if not FUSION_API_AVAILABLE:
             raise RuntimeError("Fusion 360 API not available")
         
         try:
-            if self.mode == "cli":
-                # CLI mode: Open f3d file
-                app = adsk.core.Application.get()
-                documents = app.documents
-                doc = documents.open(str(self.f3d_path), False)
-                self.design = adsk.fusion.Design.cast(doc.product)
-            else:
-                # Add-In mode: Get active design
-                app = adsk.core.Application.get()
-                product = app.activeProduct
-                if not product:
-                    raise ValueError("No active document")
-                self.design = adsk.fusion.Design.cast(product)
-                self.f3d_path = Path(self.design.parentDocument.filePath) if self.design.parentDocument else None
+            app = adsk.core.Application.get()
+            product = app.activeProduct
+            if not product:
+                raise ValueError("No active document. Please open a design file first.")
+            self.design = adsk.fusion.Design.cast(product)
             
             if not self.design:
                 raise ValueError("Document is not a Fusion 360 design")
             
-            if self.mode == "cli":
-                print(f"✓ Design loaded: {self.design.name}")
             return True
         except Exception as e:
             raise RuntimeError(f"Failed to load design: {str(e)}")
@@ -114,8 +81,7 @@ class FusionExporter:
             
             return components
         except Exception as e:
-            if self.mode == "cli":
-                print(f"Warning: Error retrieving components: {str(e)}")
+            self.log(f"Warning: Error retrieving components: {str(e)}")
             return []
     
     def extract_user_parameters(self):
@@ -131,8 +97,7 @@ class FusionExporter:
                     'type': 'user_parameter'
                 })
         except Exception as e:
-            if self.mode == "cli":
-                print(f"Warning: Error extracting user parameters: {str(e)}")
+            self.log(f"Warning: Error extracting user parameters: {str(e)}")
         return user_params
     
     def extract_reference_parameters(self):
@@ -149,8 +114,7 @@ class FusionExporter:
                         'type': 'reference_parameter'
                     })
         except Exception as e:
-            if self.mode == "cli":
-                print(f"Warning: Error extracting reference parameters: {str(e)}")
+            self.log(f"Warning: Error extracting reference parameters: {str(e)}")
         return ref_params
     
     def extract_timeline(self):
@@ -167,8 +131,7 @@ class FusionExporter:
                     'is_suppressed': event.isSuppressed
                 })
         except Exception as e:
-            if self.mode == "cli":
-                print(f"Warning: Error extracting timeline: {str(e)}")
+            self.log(f"Warning: Error extracting timeline: {str(e)}")
         return timeline_list
     
     def extract_sketches(self, component):
@@ -200,8 +163,7 @@ class FusionExporter:
                 }
                 sketches.append(sketch_entry)
         except Exception as e:
-            if self.mode == "cli":
-                print(f"Warning: Error extracting sketches from {component.name}: {str(e)}")
+            self.log(f"Warning: Error extracting sketches from {component.name}: {str(e)}")
         return sketches
     
     def extract_features(self, component):
@@ -231,8 +193,7 @@ class FusionExporter:
                 except:
                     pass
         except Exception as e:
-            if self.mode == "cli":
-                print(f"Warning: Error extracting features from {component.name}: {str(e)}")
+            self.log(f"Warning: Error extracting features from {component.name}: {str(e)}")
         return features
     
     def extract_components(self):
@@ -264,17 +225,13 @@ class FusionExporter:
         try:
             process_components(self.design.rootComponent)
         except Exception as e:
-            if self.mode == "cli":
-                print(f"Warning: Error extracting components: {str(e)}")
+            self.log(f"Warning: Error extracting components: {str(e)}")
         
         return components_list
     
     def export_model(self, component):
         """Export complete data for a single model/component."""
         model_name = component.name
-        
-        if self.mode == "cli":
-            print(f"  Extracting data for: {model_name}")
         
         # Extract all data
         user_params = self.extract_user_parameters()
@@ -290,7 +247,7 @@ class FusionExporter:
                 'exported_date': datetime.now().isoformat(),
                 'fusion_360_api': 'Autodesk Fusion 360 API',
                 'model_name': model_name,
-                'source_f3d': str(self.f3d_path) if self.f3d_path else 'Unknown',
+                'source_f3d': str(self.design.parentDocument.filePath) if self.design.parentDocument else 'Unknown',
                 'document_path': self.design.parentDocument.filePath if self.design.parentDocument else 'Unknown'
             },
             'user_parameters': user_params,
@@ -332,9 +289,6 @@ class FusionExporter:
             with open(output_file, 'w', encoding='utf-8') as f:
                 json.dump(export_data, f, indent=2, ensure_ascii=False)
             
-            if self.mode == "cli":
-                print(f"  ✓ Exported to: {output_file}")
-            
             self.models_exported.append({
                 'name': model_name,
                 'path': str(output_file),
@@ -344,61 +298,27 @@ class FusionExporter:
             })
             return True
         except Exception as e:
-            if self.mode == "cli":
-                print(f"  ✗ Error saving export: {str(e)}")
-            else:
-                self.log(f"Error saving export: {str(e)}", is_error=True)
+            self.log(f"Error saving export: {str(e)}")
             return False
     
     def run(self):
         """Execute export process."""
         try:
-            if self.mode == "cli":
-                print("=" * 60)
-                print("Fusion 360 Model Export - CLI")
-                print("=" * 60)
-            
             # Validate inputs
             self.validate_inputs()
             
             # Load design
             self.load_design()
             
-            if self.model_name:
-                # Export specific model
-                if self.mode == "cli":
-                    print(f"\nExporting specific model: {self.model_name}")
-                
-                found = False
-                for component in self.get_all_components():
-                    if component.name == self.model_name:
-                        self.export_model(component)
-                        found = True
-                        break
-                
-                if not found:
-                    msg = f"Model '{self.model_name}' not found in design"
-                    if self.mode == "cli":
-                        print(f"✗ {msg}")
-                    else:
-                        self.log(msg, is_error=True)
-                    return False
-            else:
-                # Export all models
-                if self.mode == "cli":
-                    print("\nExporting all models from design...")
-                
-                components = self.get_all_components()
-                if not components:
-                    msg = "No models/components found in design"
-                    if self.mode == "cli":
-                        print(f"✗ {msg}")
-                    else:
-                        self.log(msg, is_error=True)
-                    return False
-                
-                for component in components:
-                    self.export_model(component)
+            # Export all models
+            components = self.get_all_components()
+            if not components:
+                msg = "No models/components found in design"
+                self.log(msg)
+                return False
+            
+            for component in components:
+                self.export_model(component)
             
             # Summary
             self.print_summary()
@@ -406,49 +326,24 @@ class FusionExporter:
         
         except Exception as e:
             msg = f"Error: {str(e)}"
-            if self.mode == "cli":
-                print(f"\n✗ {msg}")
-            else:
-                self.log(msg, is_error=True)
+            self.log(msg)
             return False
     
     def print_summary(self):
-        """Print export summary."""
-        if self.mode == "addon":
-            # For Add-In: show in dialog
-            if not self.models_exported:
-                self.log("No models exported.")
-                return
-            
-            summary = "Export Complete!\n\n"
-            summary += f"Models exported: {len(self.models_exported)}\n\n"
-            for model in self.models_exported:
-                summary += f"• {model['name']}.json\n"
-                summary += f"  Path: {model['path']}\n"
-                summary += f"  Parameters: {model['parameters']}\n"
-                summary += f"  Sketches: {model['sketches']}\n"
-                summary += f"  Features: {model['features']}\n\n"
-            self.log(summary)
-        else:
-            # For CLI: print to console
-            print("\n" + "=" * 60)
-            print("EXPORT SUMMARY")
-            print("=" * 60)
-            
-            if not self.models_exported:
-                print("No models exported.")
-                return
-            
-            print(f"Models exported: {len(self.models_exported)}\n")
-            for model in self.models_exported:
-                print(f"  {model['name']}.json")
-                print(f"    Path: {model['path']}")
-                print(f"    Parameters: {model['parameters']}")
-                print(f"    Sketches: {model['sketches']}")
-                print(f"    Features: {model['features']}")
-                print()
-            
-            print("=" * 60)
+        """Print export summary to UI dialog."""
+        if not self.models_exported:
+            self.log("No models exported.")
+            return
+        
+        summary = "Export Complete!\n\n"
+        summary += f"Models exported: {len(self.models_exported)}\n\n"
+        for model in self.models_exported:
+            summary += f"• {model['name']}.json\n"
+            summary += f"  Path: {model['path']}\n"
+            summary += f"  Parameters: {model['parameters']}\n"
+            summary += f"  Sketches: {model['sketches']}\n"
+            summary += f"  Features: {model['features']}\n\n"
+        self.log(summary)
 
 
 def run(context):
@@ -465,37 +360,11 @@ def run(context):
             ui.messageBox('Export cancelled.')
             return
         
-        # Create exporter in Add-In mode
-        exporter = FusionExporter(f3d_path=None, model_name=None, ui=ui)
+        # Create exporter
+        exporter = FusionExporter(ui)
         exporter.script_dir = Path(dlg.folder)
         exporter.run()
         
     except Exception as ex:
         if ui:
             ui.messageBox(f'Error: {str(ex)}')
-
-
-def main():
-    """Main entry point for CLI mode."""
-    if len(sys.argv) < 2:
-        print("Fusion 360 Model Export - CLI & Add-In")
-        print("\nCLI Usage:")
-        print("  python export_fusion360_data.py <f3d_file_path> [model_name]")
-        print("\nExamples:")
-        print("  python export_fusion360_data.py '/path/to/model.f3d'")
-        print("  python export_fusion360_data.py '/path/to/model.f3d' handles")
-        print("\nAdd-In Mode:")
-        print("  Run from Fusion 360: Tools > Add-ins > Scripts and Add-ins > Scripts > Right-click > Run")
-        sys.exit(1)
-    
-    f3d_path = sys.argv[1]
-    model_name = sys.argv[2] if len(sys.argv) > 2 else None
-    
-    exporter = FusionExporter(f3d_path, model_name)
-    success = exporter.run()
-    
-    sys.exit(0 if success else 1)
-
-
-if __name__ == '__main__':
-    main()

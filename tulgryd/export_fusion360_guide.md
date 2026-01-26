@@ -1,28 +1,18 @@
-# Fusion 360 Export Script Guide
+# Fusion 360 Export Add-In Guide
 
 **Location:** `/Users/marcelrienks/make/modularity/tulgryd/export_fusion360_data.py`
 
-Unified script that works in **CLI mode** (command-line) or **Add-In mode** (Fusion 360 UI).
-Both modes produce identical JSON output.
+Fusion 360 Add-In script that exports complete design data from the currently open model.
 
 ---
 
 ## Quick Start
 
-### CLI Mode
-```bash
-# Export all models
-python export_fusion360_data.py "/path/to/model.f3d"
-
-# Export specific model
-python export_fusion360_data.py "/path/to/model.f3d" model_name
-```
-
-### Add-In Mode
-1. Open .f3d file in Fusion 360
-2. Tools > Add-ins > Scripts and Add-ins > Scripts tab
-3. Right-click `export_fusion360_data` > Run
-4. Select output directory
+1. Open a `.f3d` design file in Fusion 360
+2. Go to **Tools > Add-ins > Scripts and Add-ins**
+3. Select the **Scripts** tab
+4. Right-click `export_fusion360_data` > **Run**
+5. Select the directory where you want to save the exported JSON files
 
 ---
 
@@ -36,8 +26,6 @@ Each model exports a JSON file containing:
 - **Features** - Extrude, Hole, Shell, Mirror, Chamfer, Fillet, Pattern, Thread
 - **Components** - Component/body hierarchy
 - **Metadata** - Export date, source file path
-
----
 
 ## Output Structure
 
@@ -63,40 +51,52 @@ tulgryd/
 
 ## Usage Examples
 
-### CLI: Export All Models
-```bash
-python export_fusion360_data.py "~/tulgryd/handles/origin/tulgryd handles.f3d"
-```
-Creates:
-- `handle_grip/origin/handle_grip.json`
-- `handle_base/origin/handle_base.json`
+### Export All Models
+When you run the Add-In, it will export all models/components from the open design file:
 
-### CLI: Export Specific Model
-```bash
-python export_fusion360_data.py "~/tulgryd/handles/origin/tulgryd handles.f3d" handle_grip
 ```
-Creates:
-- `handle_grip/origin/handle_grip.json`
+model_name_1/
+└── origin/
+    └── model_name_1.json
+model_name_2/
+└── origin/
+    └── model_name_2.json
+```
+
+Each JSON file contains complete design data for that model.
+
+---
+
+## Output Location
+
+The script prompts you to select a directory. Exported files will be created in that directory with the structure:
+
+```
+your_selected_directory/
+├── model_name_1/
+│   └── origin/
+│       └── model_name_1.json
+└── model_name_2/
+    └── origin/
+        └── model_name_2.json
+```
 
 ---
 
 ## Troubleshooting
 
-**File not found:**
-- Use absolute path (e.g., `/Users/user/path/to/file.f3d`)
-- Verify file exists
-
-**Model not found:**
-- Export without model name to see all available models
-- Check spelling (case-sensitive)
-
 **Script doesn't appear in Add-In list:**
-- Copy to: `~/Library/Application Support/Autodesk/Fusion 360/API/Python/Samples/`
-- Restart Fusion 360
+1. Copy `export_fusion360_data.py` to: `~/Library/Application Support/Autodesk/Fusion 360/API/Python/Samples/`
+2. Restart Fusion 360
+3. Go to Tools > Add-ins > Scripts and Add-ins > Scripts tab
 
-**No active document (Add-In mode):**
-- Open a .f3d design file first
-- Then run script from Scripts panel
+**No active document:**
+- Open a `.f3d` design file first
+- Then run the script from the Scripts panel
+
+**Export cancelled:**
+- The script was cancelled from the folder selection dialog
+- Run it again and select a valid output directory
 
 ---
 
