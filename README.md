@@ -2,7 +2,7 @@
 
 A collection of custom implementations and tools for the **MultiBoard** and **ToolGrid** modular workshop organization systems.
 
-*Note: The project naming intentionally uses creative spellings ("multyboord" and "tulgryd") as homages to these excellent open-source systems.*
+*Note: The project naming intentionally uses creative spellings ("multyboord" and "tulgryd") as homages to these excellent systems.*
 
 ## Project Structure
 
