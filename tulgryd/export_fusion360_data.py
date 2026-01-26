@@ -321,9 +321,10 @@ class FusionExporter:
             }
         }
         
-        # Create output directory
-        output_dir = self.script_dir / model_name
-        output_dir.mkdir(exist_ok=True)
+        # Create output directories: model_name/origin/
+        model_dir = self.script_dir / model_name
+        output_dir = model_dir / "origin"
+        output_dir.mkdir(parents=True, exist_ok=True)
         
         # Write JSON file
         output_file = output_dir / f"{model_name}.json"

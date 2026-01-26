@@ -46,9 +46,11 @@ Each model exports a JSON file containing:
 tulgryd/
 ├── export_fusion360_data.py
 ├── model_name_1/
-│   └── model_name_1.json
+│   └── origin/
+│       └── model_name_1.json
 └── model_name_2/
-    └── model_name_2.json
+    └── origin/
+        └── model_name_2.json
 ```
 
 ### File Behavior
@@ -66,15 +68,15 @@ tulgryd/
 python export_fusion360_data.py "~/tulgryd/handles/origin/tulgryd handles.f3d"
 ```
 Creates:
-- `handle_grip/handle_grip.json`
-- `handle_base/handle_base.json`
+- `handle_grip/origin/handle_grip.json`
+- `handle_base/origin/handle_base.json`
 
 ### CLI: Export Specific Model
 ```bash
 python export_fusion360_data.py "~/tulgryd/handles/origin/tulgryd handles.f3d" handle_grip
 ```
 Creates:
-- `handle_grip/handle_grip.json`
+- `handle_grip/origin/handle_grip.json`
 
 ---
 
