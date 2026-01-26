@@ -1,12 +1,4 @@
-# tulgryd - Detailed 3D Model Analysis
-
-## Overview
-**Model Name:** tulgryd  
-**Version:** v1  
-**Format:** STEP AP214 (AUTOMOTIVE_DESIGN)  
-**Units:** Millimeters (mm)  
-
----
+# tulgryd tiles - Detailed 3D Model Analysis
 
 ## Overall Dimensions
 

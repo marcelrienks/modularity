@@ -1,0 +1,186 @@
+{
+  "coordinate_calculations": {
+    "base_geometry": {
+      "description": "Calculate base dimensions from primary parameters",
+      "square_base": {
+        "origin": [0, 0, 0],
+        "center": ["handle_diameter / 2", "handle_diameter / 2"],
+        "footprint": "Square, derived from grip walls (radius + 3mm on each side)",
+        "solid_construction": "Solid throughout except for through-holes",
+        "note": "Square footprint derives from grip outer dimensions, ensures stable mounting on tiles"
+      },
+      "attachment_holes": {
+        "count": 2,
+        "location": "Center of square base (concentric, overlapping)",
+        "center_x": "handle_diameter / 2",
+        "center_y": "handle_diameter / 2",
+        "hole_1_small": {
+          "diameter": 4.5,
+          "radius": 2.25,
+          "extrusion": "Through entire model (bottom to top)",
+          "description": "Small through-hole piercing full height - primary mounting point"
+        },
+        "hole_2_large": {
+          "diameter": 7.5,
+          "radius": 3.75,
+          "extrusion": "Upward through top section only, offset 4.5mm",
+          "creates_countersink": true,
+          "chamfer": "1.3mm chamfered lip at top",
+          "description": "Large mounting hole with countersunk chamfered lip - alternative/secondary mounting"
+        }
+      }
+    },
+    "grip_geometry": {
+      "description": "Shelled cylindrical grip with 3mm walls, created via mirroring and shelling",
+      "sketch_origin": "Centered on handle_diameter circle midpoint",
+      "construction_method": [
+        "1. Create circular sketch (radius = handle_diameter/2)",
+        "2. Define wall boundaries at (radius + 3mm) from edge",
+        "3. Extrude half-section upward to full handle_height",
+        "4. Mirror across vertical axis through center to create full grip",
+        "5. Shell operation: 3mm walls on front, sides, and top",
+        "6. Creates 4-section hollow grip (front open, 3 walls remain)"
+      ],
+      "hollow_structure": {
+        "front": "Open (no wall)",
+        "sides": "3mm walls",
+        "top": "3mm wall",
+        "interior": "Hollow cavity for ergonomic grip"
+      },
+      "diameter": "handle_diameter (26mm)",
+      "radius": "handle_diameter / 2 (13mm)",
+      "outer_radius": "handle_radius + 3.0 (16mm for 26mm diameter)",
+      "height": "handle_height (33mm)",
+      "wall_thickness": "3.0mm (constant)",
+      "tilt_angle": "25 degrees backward away from open front",
+      "tilt_direction": "Away from open front section (backward lean)"
+    }
+  },
+  "profile_sketches": {
+    "base_profile": {
+      "description": "2D sketch for square base",
+      "shape": "square_rectangle",
+      "points": [
+        [0, 0],
+        ["handle_diameter", 0],
+        ["handle_diameter", "handle_diameter"],
+        [0, "handle_diameter"]
+      ],
+      "holes": "Two circles at center: Ø4.5mm and Ø7.5mm (concentric or offset per design)"
+    },
+    "grip_profile": {
+      "description": "2D profile section for cylindrical handle with slope",
+      "type": "circle_with_slope",
+      "circle_radius": "handle_diameter / 2",
+      "center": ["handle_diameter / 2", "Y_center"],
+      "height": "handle_height",
+      "slope_angle": 25.0,
+      "extrusion_path": "Follows slope angle for 3D grip"
+    }
+  },
+  "extrusion_operations": {
+    "step1_grip_sketch": {
+      "operation": "Create sketch",
+      "profile": "Circular sketch (radius = handle_diameter/2) with wall boundaries at (radius+3mm)",
+      "center": "handle_diameter circle midpoint",
+      "result": "2D profile for grip walls and cavity"
+    },
+    "step2_half_grip_extrusion": {
+      "operation": "Extrude",
+      "profile": "Half of grip sketch (one side)",
+      "direction": "+Z (upward)",
+      "distance": "handle_height (33mm)",
+      "tilt": "25 degrees backward (away from open front)",
+      "result": "Half-cylindrical grip section"
+    },
+    "step3_mirror_full_grip": {
+      "operation": "Mirror",
+      "profile": "Half-grip body",
+      "mirror_axis": "Vertical line through handle_diameter circle center",
+      "result": "Complete cylindrical grip section"
+    },
+    "step4_shell_grip": {
+      "operation": "Shell (hollow out)",
+      "source": "Complete grip cylinder",
+      "front_wall_removal": "Remove front wall completely (creates open front)",
+      "wall_thickness": "3.0mm (applied to remaining sides, top)",
+      "result": "Hollow grip with 3 walls: 2 sides + 1 top, open front face"
+    },
+    "step5_extrude_base": {
+      "operation": "Extrude",
+      "profile": "Square base face (derived from grip outer footprint)",
+      "direction": "-Z (downward)",
+      "distance": "handle_height (parameter used as base extrusion distance)",
+      "result": "Square base section extending downward"
+    },
+    "step6_through_holes": {
+      "operation": "Hole features",
+      "small_hole": {
+        "diameter": 4.5,
+        "extrusion": "Through all (entire model height)",
+        "depth": "Full height from bottom base through top grip",
+        "description": "Primary mounting hole"
+      },
+      "large_hole": {
+        "diameter": 7.5,
+        "extrusion": "Through top section only, with 4.5mm offset upward",
+        "creates": "Countersunk mount with chamfered lip",
+        "chamfer": "1.3mm chamfer radius at top edge",
+        "description": "Alternative mounting hole with countersink"
+      }
+    }
+  },
+  "boolean_operations": {
+    "union": {
+      "description": "Unite base and grip sections into single solid",
+      "components": [
+        "square_base_body",
+        "cylindrical_grip_body"
+      ],
+      "result": "Single unified solid with base and grip"
+    },
+    "subtraction": {
+      "description": "Remove material for mounting holes",
+      "from": "unified_body",
+      "subtract": [
+        "Ø4.5mm through-hole at center",
+        "Ø7.5mm through-hole at center"
+      ],
+      "result": "Final handle with mounting holes"
+    }
+  },
+  "calculation_sequences": {
+    "primary_parameter_flow": [
+      "Input: handle_diameter (26mm default) - PRIMARY DRIVING PARAMETER",
+      "Input: handle_height (33mm default) - SECONDARY SCALING PARAMETER",
+      "Calculate: handle_radius = handle_diameter / 2 (13mm)",
+      "Calculate: outer_wall_radius = handle_radius + 3.0mm (16mm for grip walls)",
+      "Calculate: grip_midpoint = [handle_diameter/2, handle_diameter/2] (13, 13)",
+      "Hardcoded: slope_angle = 25 degrees (backward tilt from open front)",
+      "Hardcoded: wall_thickness = 3.0mm (shelled grip walls)",
+      "Hardcoded: grip_edge_offset = 3.0mm (distance from diameter circle to inner wall)",
+      "Hardcoded: small_hole_diameter = 4.5mm (through-all mounting hole)",
+      "Hardcoded: large_hole_diameter = 7.5mm (countersunk mounting hole)",
+      "Hardcoded: large_hole_offset = 4.5mm (upward extrusion creating countersink)",
+      "Hardcoded: chamfer_radius = 1.3mm (all edges including large hole lip)",
+      "Create circular sketch centered on handle_diameter midpoint",
+      "Create half-grip profile with wall boundaries",
+      "Extrude half-grip upward with 25° backward tilt to handle_height",
+      "Mirror half-grip across vertical axis to create complete grip",
+      "Shell grip: remove front wall, keep 3mm walls on sides and top",
+      "Extrude square base downward from grip footprint by handle_height distance",
+      "Create 4.5mm through-hole (bottom to top)",
+      "Create 7.5mm countersunk hole (through top with 4.5mm offset, 1.3mm chamfer)",
+      "Union/combine all bodies into single solid",
+      "Final model: Grip + Base + Mounting holes"
+    ]
+  },
+  "geometry_notes": {
+    "scaling_behavior": "Handle scales proportionally with handle_diameter parameter",
+    "height_behavior": "Handle height independent of diameter - allows custom proportions",
+    "slope_invariant": "25° slope angle remains constant regardless of parameter changes",
+    "hole_invariant": "Hole diameters (4.5mm, 7.5mm) remain constant regardless of parameter changes",
+    "base_proportions": "Square base always equals handle diameter - ensures stable mounting",
+    "hole_positioning": "Both holes centered on square base for symmetrical mounting"
+  }
+}
