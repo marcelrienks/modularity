@@ -170,7 +170,3 @@ Generate Models with Custom Parameters
 - **ToolGrid System** - Community-driven project with contributions from makers worldwide
 - **Crowd-Sourced Models** - Various creators (attributions in ToolGrid directory)
 - **This Repository** - Custom implementations and tools by Marcel Rienks
-
----
-
-*These systems represent the power of open-source design. Contribute your own models back to these communities!*
