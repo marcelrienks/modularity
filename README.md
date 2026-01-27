@@ -49,24 +49,27 @@ python tulgryd/tiles/generate.py --total-width 250 --total-length 180
 python tulgryd/tiles/generate.py --calibrate --hole-diameter 4.0
 ```
 
-### 📁 [`Fusion360Export/`](./Fusion360Export/)
+### 📁 [`fissionreactor/`](./fissionreactor/)
 
-**Fusion 360 Add-In** for extracting and documenting design data from open models.
+**Fusion 360 Add-In** for extracting and documenting design data from open models. Part of the AI-enabled workflow for converting hand-designed models into parameterized Python generators.
 
 **What it does:**
 - Exports complete design data (parameters, sketches, features, timeline) from any `.f3d` file
-- Generates structured JSON metadata
-- Helps with design documentation and building parameterized generators
+- Gathers user context via questionnaire
+- Generates structured JSON metadata (model data, context, parameters, constraints)
+- Enables creation of parameterized code generators via AI
 
 **Usage:**
 1. Open a design file in Fusion 360
 2. Tools > Add-ins > Scripts and Add-ins > Scripts tab
 3. Right-click the script > Run
-4. Select output directory
+4. Answer questionnaire to capture design context
+5. Select output directory
 
-**Note:** This is an optional utility for design analysis. The core tulgryd generators work independently.
+**Workflow:**
+Model Export → User Context → Metadata Standardization → AI Code Generation → Parameterized Script
 
-**Documentation:** See [`Fusion360Export/README.md`](./Fusion360Export/README.md) for detailed usage
+**Documentation:** See [`fissionreactor/README.md`](./fissionreactor/README.md) for detailed usage
 
 ### 📁 [`ToolGrid/`](./ToolGrid/)
 
@@ -103,34 +106,36 @@ A curated collection of community-sourced 3D models for the **ToolGrid** system,
 
 ## Fusion 360 Integration
 
-**Optional Design Export Tool:**
+**AI-Enabled Model Parameterization Workflow:**
 
-The [Fusion360Export](./Fusion360Export/) Add-In extracts complete design data from Fusion 360 models:
+The [fissionreactor](./fissionreactor/) Add-In enables extraction and conversion of Fusion 360 models into parameterized Python generators:
 
 1. **Export:** Extract complete design data (parameters, sketches, features, timeline) from any `.f3d` file
-2. **Document:** Generate comprehensive metadata describing the model structure
-3. **Parameterize:** Use exported data to create Python scripts that generate models with different parameters
+2. **Context:** Gather user input about design intent, purpose, constraints via questionnaire
+3. **Standardize:** Generate JSON metadata in consistent format for AI consumption
+4. **Generate:** AI uses metadata to create Python scripts that generate models with parameter variations
 
 **Workflow:**
 ```
 Fusion 360 Design (.f3d)
         ↓
-Fusion360Export Add-In
+fissionreactor Add-In (export + questionnaire)
         ↓
-Design Data (JSON)
+Design Data + Context (JSON files)
         ↓
-Create Parameterized Python Script
+AI Generates Parameterized Python Script
         ↓
 Generate Models with Custom Parameters
 ```
 
 **Use Cases:**
-- Convert hand-designed models to parameterized generators
+- Convert hand-designed tiles to parameterized generators
 - Create tool holder variations with different dimensions
 - Generate models programmatically with CLI arguments
 - Version control design parameters and construction logic
+- Archive design intent alongside models
 
-**Learn More:** See [`Fusion360Export/README.md`](./Fusion360Export/README.md)
+**Learn More:** See [`fissionreactor/README.md`](./fissionreactor/README.md)
 
 ## Getting Started
 

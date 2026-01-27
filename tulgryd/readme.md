@@ -44,11 +44,11 @@ python tiles/generate.py --calibrate --hole-diameter 4.0
 
 ## About the Fusion 360 Source Files
 
-The `tulgryd.f3d` file contains the master design. For documentation or parameterization work, you can extract design data using the **Fusion360Export** tool:
+The `tulgryd.f3d` file contains the master design. For documentation or parameterization work, you can extract design data using the **fissionreactor** tool:
 
-- See [`../Fusion360Export/`](../Fusion360Export/) for the export Add-In
+- See [`../fissionreactor/`](../fissionreactor/) for the export Add-In
 - Requires Fusion 360 to be running with the design file open
-- Generates JSON metadata for analysis or code generation
+- Generates JSON metadata for analysis or AI-based code generation
 
 This is optional—the core tulgryd generators work independently.
 
@@ -96,8 +96,8 @@ For more details on tile generation, see `tiles/` directory.
 
 ## Learn More
 
-- **Parent Project:** See [`../README.md`](../README.md) for overview of Modularity project
-- **Fusion 360 Export Tool:** See [`../Fusion360Export/`](../Fusion360Export/) for design data extraction
+- **tulgryd** - Parametric tile and tool holder generation system
+- **fissionreactor** - Fusion 360 Add-In for model export and AI-enabled parameterization
 - **ToolGrid System:** Learn about the base system at [toolgrid.io](https://toolgrid.io/) (if available)
 
 ---
