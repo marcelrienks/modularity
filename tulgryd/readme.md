@@ -8,7 +8,7 @@ tulgryd is a collection of:
 
 1. **Models** - Parametric and pre-built 3D models for ToolGrid tiles and tool holders
 2. **Generator Scripts** - Python utilities to programmatically create customized models with specific dimensions
-3. **Design Data** - Complete design information extracted from Fusion 360 source files
+3. **Design Files** - Fusion 360 source models for reference and modification
 
 This allows you to:
 - Generate custom pegboard tiles for your exact workshop dimensions
@@ -20,16 +20,14 @@ This allows you to:
 
 ```
 tulgryd/
-├── tiles/                          # Tile generation system
-│   ├── generate.py                # Main CLI tool for tile generation
-│   ├── core/                      # Core modules (layout, modeling, assembly)
-│   └── origin/                    # Original hand-designed ToolGrid tiles
-├── handles/                        # Custom tool holder models
-│   ├── origin/                    # Original designs
-│   └── (generated models)         # Output from generator scripts
-├── export_fusion360_data.py       # Fusion 360 export utility (separate)
-├── export_fusion360_guide.md      # Guide for export tool
-└── tulgryd.f3d                    # Master design file (Fusion 360)
+├── tiles/                    # Tile generation system
+│   ├── generate.py          # Main CLI tool for tile generation
+│   ├── core/                # Core modules (layout, modeling, assembly)
+│   └── origin/              # Original hand-designed ToolGrid tiles
+├── handles/                  # Custom tool holder models
+│   ├── origin/              # Original designs
+│   └── (generated models)   # Output from generator scripts
+└── tulgryd.f3d              # Master design file (Fusion 360)
 ```
 
 ## Quick Start
@@ -44,26 +42,15 @@ python tiles/generate.py --total-width 250 --total-length 180
 python tiles/generate.py --calibrate --hole-diameter 4.0
 ```
 
-### Export Design Data (Optional)
+## About the Fusion 360 Source Files
 
-The `export_fusion360_data.py` tool is included to help extract design data from Fusion 360 files for documentation and future parameterization:
+The `tulgryd.f3d` file contains the master design. For documentation or parameterization work, you can extract design data using the **Fusion360Export** tool:
 
-1. Open a design file in Fusion 360
-2. Tools > Add-ins > Scripts and Add-ins > Scripts tab
-3. Right-click `export_fusion360_data` > Run
-4. Select output directory
+- See [`../Fusion360Export/`](../Fusion360Export/) for the export Add-In
+- Requires Fusion 360 to be running with the design file open
+- Generates JSON metadata for analysis or code generation
 
-See [`export_fusion360_guide.md`](./export_fusion360_guide.md) for detailed usage.
-
-## About the Fusion 360 Export Tool
-
-The `export_fusion360_data.py` script is a **separate utility** included for design documentation purposes. It is not part of the core tulgryd system but rather a helper Add-In that:
-
-- Extracts complete design data (parameters, sketches, features, timeline) from the active `.f3d` file in Fusion 360
-- Outputs structured JSON metadata about the models
-- Enables conversion of hand-designed models into parameterized generators
-
-**Note:** This tool requires Fusion 360 to be running with a design file open. It is optional—the core tulgryd generators work independently.
+This is optional—the core tulgryd generators work independently.
 
 ## Generator Scripts
 
@@ -110,7 +97,7 @@ For more details on tile generation, see `tiles/` directory.
 ## Learn More
 
 - **Parent Project:** See [`../README.md`](../README.md) for overview of Modularity project
-- **Fusion 360 Export:** See [`export_fusion360_guide.md`](./export_fusion360_guide.md)
+- **Fusion 360 Export Tool:** See [`../Fusion360Export/`](../Fusion360Export/) for design data extraction
 - **ToolGrid System:** Learn about the base system at [toolgrid.io](https://toolgrid.io/) (if available)
 
 ---

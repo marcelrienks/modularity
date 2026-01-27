@@ -21,8 +21,8 @@ A **parametric system** for creating modular pegboard tiles and custom tool hold
 
 **Components:**
 - **Tiles:** Parametric pegboard tile generator for custom workshop storage layouts
-- **Tool Holders:** Custom-designed handles, grips, and organizers (e.g., handles for tool drawers)
-- **Fusion 360 Export:** Automated conversion of Fusion 360 models into parameterized Python scripts
+- **Tool Holders:** Custom-designed handles, grips, and organizers
+- **Design Files:** Fusion 360 source models for reference and modification
 
 **Features:**
 - Input total dimensions → Generate optimized tile layout automatically
@@ -30,15 +30,13 @@ A **parametric system** for creating modular pegboard tiles and custom tool hold
 - Export to STL or STEP formats
 - Calibration mode for printer tolerance testing
 - Full assembly guides with layout diagrams
-- **Fusion 360 Integration:** Export complete model data (parameters, sketches, features, timeline) from .f3d files for conversion into parameterized scripts
 
 **What's here?**
 - `tiles/generate.py` - CLI tool for tile generation
 - `tiles/core/` - Core modules (layout calculation, model building, assembly guides)
 - `tiles/origin/` - Original hand-designed ToolGrid system
 - `handles/` - Custom tool holder models (grips, organizers, etc.)
-- `export_fusion360_data.py` - Unified script (CLI + Add-In) to extract complete design data from Fusion 360 models
-- `export_fusion360_guide.md` - Guide for using the export script
+- `tulgryd.f3d` - Master design file (Fusion 360)
 
 **Documentation:** See [`tulgryd/README.md`](./tulgryd/README.md) for complete usage guide
 
@@ -51,14 +49,24 @@ python tulgryd/tiles/generate.py --total-width 250 --total-length 180
 python tulgryd/tiles/generate.py --calibrate --hole-diameter 4.0
 ```
 
-**Quick Start - Fusion 360 Export:**
-```bash
-# Export all models from a Fusion 360 file
-python tulgryd/export_fusion360_data.py "/path/to/model.f3d"
+### 📁 [`Fusion360Export/`](./Fusion360Export/)
 
-# Export specific model
-python tulgryd/export_fusion360_data.py "/path/to/model.f3d" model_name
-```
+**Fusion 360 Add-In** for extracting and documenting design data from open models.
+
+**What it does:**
+- Exports complete design data (parameters, sketches, features, timeline) from any `.f3d` file
+- Generates structured JSON metadata
+- Helps with design documentation and building parameterized generators
+
+**Usage:**
+1. Open a design file in Fusion 360
+2. Tools > Add-ins > Scripts and Add-ins > Scripts tab
+3. Right-click the script > Run
+4. Select output directory
+
+**Note:** This is an optional utility for design analysis. The core tulgryd generators work independently.
+
+**Documentation:** See [`Fusion360Export/README.md`](./Fusion360Export/README.md) for detailed usage
 
 ### 📁 [`ToolGrid/`](./ToolGrid/)
 
@@ -95,34 +103,34 @@ A curated collection of community-sourced 3D models for the **ToolGrid** system,
 
 ## Fusion 360 Integration
 
-**Automated Model Export & Parameterization:**
+**Optional Design Export Tool:**
 
-The tulgryd system includes tools to convert Fusion 360 models into parameterized Python scripts:
+The [Fusion360Export](./Fusion360Export/) Add-In extracts complete design data from Fusion 360 models:
 
-1. **Export:** Extract complete design data from any .f3d file (parameters, sketches, features, timeline, components)
-2. **Document:** Generate comprehensive metadata describing the model structure and construction
-3. **Parameterize:** Use metadata to create Python scripts that generate exact copies with different parameter values
+1. **Export:** Extract complete design data (parameters, sketches, features, timeline) from any `.f3d` file
+2. **Document:** Generate comprehensive metadata describing the model structure
+3. **Parameterize:** Use exported data to create Python scripts that generate models with different parameters
 
 **Workflow:**
 ```
 Fusion 360 Design (.f3d)
         ↓
-export_fusion360_data.py (CLI or Add-In)
+Fusion360Export Add-In
         ↓
 Design Data (JSON)
         ↓
-Parameterized Python Script
+Create Parameterized Python Script
         ↓
 Generate Models with Custom Parameters
 ```
 
 **Use Cases:**
-- Convert tile designs to parameterized generators
+- Convert hand-designed models to parameterized generators
 - Create tool holder variations with different dimensions
 - Generate models programmatically with CLI arguments
 - Version control design parameters and construction logic
 
-**Learn More:** See [`tulgryd/export_fusion360_guide.md`](./tulgryd/export_fusion360_guide.md)
+**Learn More:** See [`Fusion360Export/README.md`](./Fusion360Export/README.md)
 
 ## Getting Started
 
