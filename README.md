@@ -51,25 +51,66 @@ python tulgryd/tiles/generate.py --calibrate --hole-diameter 4.0
 
 ### 📁 [`fissionreactor/`](./fissionreactor/)
 
-**Fusion 360 Add-In** for extracting and documenting design data from open models. Part of the AI-enabled workflow for converting hand-designed models into parameterized Python generators.
+**AI-Enabled Fusion 360 Workflow** for converting hand-designed models into parameterized Python code generators.
 
-**What it does:**
-- Exports complete design data (parameters, sketches, features, timeline) from any `.f3d` file
-- Gathers user context via questionnaire
-- Generates structured JSON metadata (model data, context, parameters, constraints)
-- Enables creation of parameterized code generators via AI
+**Intentions:**
+- Transform manual CAD designs into automated, parameter-driven code
+- Preserve design intent alongside geometry
+- Enable rapid generation of model variations
+- Bridge the gap between design and code through structured metadata
+- Archive complete design context for future reference or AI consumption
 
-**Usage:**
-1. Open a design file in Fusion 360
+**What It Does:**
+1. **Export:** Extracts complete design data from `.f3d` files (parameters, sketches, features, timeline)
+2. **Capture Context:** Gathers design intent through 28-question questionnaire
+3. **Standardize:** Transforms export + context into structured JSON metadata
+4. **Enable Generation:** Creates AI-ready package for generating parameterized Python scripts
+
+**Key Features:**
+- Fusion 360 Add-In (no external tools required)
+- Automated export of model parameters and feature timeline
+- Comprehensive questionnaire capturing design decisions and constraints
+- JSON-based metadata output for AI processing
+- Validation and error checking throughout workflow
+
+**Typical Workflow (15-30 minutes):**
+```
+Fusion 360 Design (.f3d)
+         ↓ (5 min)
+Export Design Data (model.json)
+         ↓ (15-30 min)
+Answer Questionnaire (context.json)
+         ↓ (1 min)
+Transform to Metadata (5 JSON files)
+         ↓
+Send to AI for Code Generation
+         ↓
+Receive Parameterized Python Script
+```
+
+**Use Cases:**
+- Convert static tile designs to parameterized generators (e.g., ToolGrid tiles)
+- Create tool holder variations with custom dimensions
+- Generate multiple model versions from single design source
+- Version control design parameters and construction logic
+- Document design rationale alongside code
+
+**Installation:**
+```bash
+# Copy script to Fusion 360 directory
+cp fissionreactor/export_fusion360_data.py \
+  ~/Library/Application\ Support/Autodesk/Fusion\ 360/API/Python/Samples/
+# Restart Fusion 360
+```
+
+**Quick Start:**
+1. Open design in Fusion 360
 2. Tools > Add-ins > Scripts and Add-ins > Scripts tab
-3. Right-click the script > Run
-4. Answer questionnaire to capture design context
-5. Select output directory
+3. Right-click `export_fusion360_data` > Run
+4. Complete questionnaire (see `questionnaire_example.json` for reference)
+5. Package output files and send to AI
 
-**Workflow:**
-Model Export → User Context → Metadata Standardization → AI Code Generation → Parameterized Script
-
-**Documentation:** See [`fissionreactor/README.md`](./fissionreactor/README.md) for detailed usage
+**Documentation:** See [`fissionreactor/README.md`](./fissionreactor/README.md) for complete usage guide and workflow details
 
 ### 📁 [`ToolGrid/`](./ToolGrid/)
 
@@ -106,36 +147,58 @@ A curated collection of community-sourced 3D models for the **ToolGrid** system,
 
 ## Fusion 360 Integration
 
-**AI-Enabled Model Parameterization Workflow:**
+**AI-Enabled Model Parameterization with fissionreactor:**
 
-The [fissionreactor](./fissionreactor/) Add-In enables extraction and conversion of Fusion 360 models into parameterized Python generators:
+The [fissionreactor](./fissionreactor/) Add-In enables extraction and conversion of Fusion 360 models into parameterized Python generators. This workflow bridges the gap between manual CAD design and automated code generation.
 
-1. **Export:** Extract complete design data (parameters, sketches, features, timeline) from any `.f3d` file
-2. **Context:** Gather user input about design intent, purpose, constraints via questionnaire
-3. **Standardize:** Generate JSON metadata in consistent format for AI consumption
-4. **Generate:** AI uses metadata to create Python scripts that generate models with parameter variations
+**The Three-Phase Workflow:**
 
-**Workflow:**
+1. **Phase 1: Design Export**
+   - Extract complete design data from `.f3d` file
+   - Captures parameters, sketches, bodies, features, and timeline
+   - Generates `model.json` with geometry and construction data
+
+2. **Phase 2: Design Context**
+   - Answer 28-question questionnaire about design decisions
+   - Captures intent, constraints, use cases, and variations
+   - Generates `context.json` with human-readable context
+
+3. **Phase 3: AI Code Generation**
+   - Transform model + context into standardized metadata
+   - Send to AI (with provided metadata format)
+   - Receive parameterized Python script that reproduces model with variations
+
+**Workflow Diagram:**
 ```
-Fusion 360 Design (.f3d)
-        ↓
-fissionreactor Add-In (export + questionnaire)
-        ↓
-Design Data + Context (JSON files)
-        ↓
-AI Generates Parameterized Python Script
-        ↓
-Generate Models with Custom Parameters
+┌─ Fusion 360 Design (.f3d) ─┐
+│  (Manual CAD model)        │
+└────────────┬────────────────┘
+             ↓
+     fissionreactor Add-In
+             ↓
+    ┌────────┴────────┐
+    ↓                 ↓
+model.json      context.json
+(Parameters)    (Design Intent)
+    ↓                 ↓
+    └────────┬────────┘
+             ↓
+     5 Metadata Files
+   (parameters, features,
+    sketches, constraints,
+     variations)
+             ↓
+    AI Code Generation
+             ↓
+Parameterized Python Script
+(generate models with custom params)
+             ↓
+Production Models (.STL)
 ```
 
-**Use Cases:**
-- Convert hand-designed tiles to parameterized generators
-- Create tool holder variations with different dimensions
-- Generate models programmatically with CLI arguments
-- Version control design parameters and construction logic
-- Archive design intent alongside models
+**Outcome:** Models that were manually designed once can now be generated infinitely with different parameters—enabling scalable, version-controlled, documented design workflows.
 
-**Learn More:** See [`fissionreactor/README.md`](./fissionreactor/README.md)
+**Learn More:** See [`fissionreactor/README.md`](./fissionreactor/README.md) for detailed documentation, questionnaire guide, and examples.
 
 ## Getting Started
 

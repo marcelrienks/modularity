@@ -1,0 +1,68 @@
+{
+  "context_metadata": {
+    "version": "1.0",
+    "created_date": "2026-01-27T09:00:00Z",
+    "model_name": "ShelfBracket_v1",
+    "description": "User responses to design context questionnaire for parameterized code generation"
+  },
+
+  "purpose": {
+    "purpose_primary": "Modular shelving system component",
+    "purpose_use_case": "Corner bracket to support shelves in a parametric shelving system. Used to hold vertical posts and horizontal shelves. Needs to support moderate loads (up to 20kg per bracket in typical use).",
+    "purpose_context": "Part of a larger modular shelving assembly system. Works with vertical posts (40x40mm aluminum) and horizontal shelf components. This is the corner connector piece."
+  },
+
+  "design_intent": {
+    "intent_critical_features": "Four M3 mounting holes in corners (3.2mm diameter). These must be positioned exactly to align with post connector holes. Wall thickness minimum 2mm for structural strength. All internal edges rounded at least 1mm to prevent stress concentration.",
+    "intent_design_decisions": "Tapered walls (thicker near mounting points, thinner in middle sections) to reduce weight while maintaining strength. Reinforcement ribs on internal faces to improve stiffness. Corner radii set at 1.5mm minimum for FDM print quality (smaller radii tend to fail).",
+    "intent_aesthetic": "Smooth external surfaces for professional appearance. Symmetrical design makes it work equally well in any orientation. No sharp edges for safety when handling."
+  },
+
+  "parameters": {
+    "param_primary": "Base width: 100-300mm (varies based on shelf width). Base depth: fixed at 150mm (connects to post). Thickness: fixed at 10mm (structural requirement). Corner radius: 1.5-3mm (aesthetic, can vary slightly).",
+    "param_relationships": "Height of mounting boss is always 15% of the base width. The spacing between the four mounting holes is derived from post connector patterns. Wall thickness in thin sections is always 2mm regardless of base dimensions.",
+    "param_scaling": "Width can vary from 100-300mm in 10mm increments. Depth stays fixed at 150mm (post standard spacing). All other features scale proportionally with width changes. Hole positions stay relative to corners."
+  },
+
+  "constraints": {
+    "constraint_tolerances": "Mounting hole diameters: 3.2 ± 0.1mm (must accommodate M3 bolts). Wall thickness: 2.0 ± 0.2mm minimum (any thinner becomes unreliable). Corner radius: 1.5 ± 0.5mm (tolerances loose for aesthetic feature).",
+    "constraint_minimum": "Minimum wall thickness: 1.5mm (below this, parts break in use). Minimum hole diameter: 3mm (printer nozzle limits). Minimum feature size: 0.4mm (printer resolution). Minimum width: 50mm (must accommodate four holes with 10mm inset).",
+    "constraint_rules": "All fillets must be >= 1mm for reliable 3D printing. Walls must be at least 2mm thick everywhere to avoid flex/breakage. Mounting holes must always be exactly in the four corners. Pattern spacing cannot be less than 5mm between features.",
+    "constraint_dependencies": "The height of mounting bosses depends on base width (15% ratio). Hole spacing depends on the post connector standard. Reinforcement ribs only extend to 80% of the width (leave margin at edges)."
+  },
+
+  "materials": {
+    "material_type": "PLA plastic (Prusament PLA Pro or equivalent)",
+    "material_fabrication": "FDM 3D printing on Prusa i3 MK3S+. Layer height: 0.15mm. Infill: 15% gyroid. Support: tree supports where needed.",
+    "material_considerations": "No draft angles needed (not molded). PLA shrinks slightly (0.3-0.5%) after cooling. Minimum wall thickness 1.5mm for reliability. Sharp corners/edges fail first under load, so all corners rounded. Overhangs less than 45° print reliably without support.",
+    "material_finish": "Post-print processing: Remove support structures, sand smooth any rough edges with 220 grit sandpaper. Optional: UV stabilizer coating to prevent yellowing. No painting (keep natural PLA finish)."
+  },
+
+  "assembly": {
+    "assembly_structure": "This is a single solid body with no subcomponents. It mounts to vertical posts via M3 bolts through the four corner holes.",
+    "assembly_instructions": "1. Position bracket at desired height on vertical post. 2. Insert M3 bolts through the four mounting holes. 3. Tighten bolts firmly but do not over-tighten (PLA can strip). 4. Slide shelf onto the bracket support surfaces. 5. For left/right combinations, flip bracket 180° to match post orientation.",
+    "assembly_fasteners": "Four M3 x 20mm stainless steel bolts with washers and nylon lock nuts. Washers help distribute load and prevent bolt head crushing into PLA.",
+    "assembly_difficulty": "Simple"
+  },
+
+  "variations": {
+    "var_planned": "Three standard sizes for different shelf widths: Small (100mm) for compact shelves, Medium (200mm) for standard shelves, Large (300mm) for wide shelves. Also planned: left/right handed versions (mirror images). Future: material variations (flexible TPU version for adjustable shelves).",
+    "var_examples": "Small bracket: width 100mm. Medium bracket: width 200mm. Large bracket: width 300mm. Left-hand: normal orientation. Right-hand: mirrored 180° (same part, different mounting).",
+    "var_parameters": "Only the base width parameter varies between sizes. Depth (150mm), thickness (10mm), and all hole positions remain constant. This means a single parameterized script can generate all size variations."
+  },
+
+  "materials_section": {
+    "material_type": "PLA plastic",
+    "material_fabrication": "FDM 3D printing",
+    "material_considerations": "Minimum wall thickness 1.5mm, supports needed for overhangs > 45°",
+    "material_finish": "Remove supports, light sanding, optional UV stabilizer"
+  },
+
+  "metadata": {
+    "meta_name": "ShelfBracket_v1",
+    "meta_version": "1.0",
+    "meta_author": "Marcel Rienks",
+    "meta_date": "2026-01-27",
+    "meta_notes": "This is a prototype bracket for the modular shelving system. Design assumes use with standard aluminum posts and shelf components. Future iterations should explore load testing to verify 20kg capacity. Consider adding adjustment features for height variations."
+  }
+}

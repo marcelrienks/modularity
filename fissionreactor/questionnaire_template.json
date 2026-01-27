@@ -1,0 +1,286 @@
+{
+  "questionnaire_metadata": {
+    "version": "1.0",
+    "description": "User context questionnaire for AI-enabled parameterized code generation",
+    "created_date": "2026-01-27",
+    "purpose": "Gather design intent, constraints, and context to enable AI to generate parameterized scripts"
+  },
+  
+  "sections": [
+    {
+      "section_id": "purpose",
+      "section_title": "Model Purpose & Use Case",
+      "description": "Understand the design intent and primary application",
+      "questions": [
+        {
+          "id": "purpose_primary",
+          "question": "What is the primary purpose of this model?",
+          "help_text": "e.g., 'Functional part for 3D printing', 'Assembly component', 'Prototype', 'Structural element'",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "purpose_use_case",
+          "question": "Describe the use case or application",
+          "help_text": "How will this be used? What problem does it solve?",
+          "type": "text_long",
+          "required": true
+        },
+        {
+          "id": "purpose_context",
+          "question": "Is this part of a larger assembly or system?",
+          "help_text": "If yes, describe the assembly and how this model fits in",
+          "type": "text_long",
+          "required": false
+        }
+      ]
+    },
+
+    {
+      "section_id": "design_intent",
+      "section_title": "Design Intent & Key Features",
+      "description": "Understand non-obvious design decisions and critical features",
+      "questions": [
+        {
+          "id": "intent_critical_features",
+          "question": "What are the critical features that MUST remain unchanged?",
+          "help_text": "e.g., 'Threaded holes for M3 screws', 'Snap-fit features', 'Specific wall thickness for durability'",
+          "type": "text_long",
+          "required": true
+        },
+        {
+          "id": "intent_design_decisions",
+          "question": "Are there non-obvious design decisions that AI should understand?",
+          "help_text": "e.g., 'Tapered walls for draft angle', 'Reinforcement ribs for strength', 'Specific fillet radii for aesthetics'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "intent_aesthetic",
+          "question": "Are aesthetic/visual elements important?",
+          "help_text": "e.g., 'Curved surfaces for ergonomics', 'Symmetrical design', 'Specific chamfers for finish'",
+          "type": "text_long",
+          "required": false
+        }
+      ]
+    },
+
+    {
+      "section_id": "parameters",
+      "section_title": "Key Dimensions & Parameters",
+      "description": "Identify which dimensions are most important for parameterization",
+      "questions": [
+        {
+          "id": "param_primary",
+          "question": "What are the 3-5 most important dimensions?",
+          "help_text": "List key dimensions that define the model's size/shape. Include parameter names if they exist in Fusion 360",
+          "type": "text_long",
+          "required": true
+        },
+        {
+          "id": "param_relationships",
+          "question": "Are there dimensional relationships or dependencies?",
+          "help_text": "e.g., 'Hole spacing is always 10% of base width', 'Wall thickness is 5% of depth', 'All fillets are 2mm'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "param_scaling",
+          "question": "How should this model scale for different sizes?",
+          "help_text": "e.g., 'All dimensions scale proportionally', 'Holes stay same size, walls scale', 'Only length varies'",
+          "type": "text_long",
+          "required": false
+        }
+      ]
+    },
+
+    {
+      "section_id": "constraints",
+      "section_title": "Design Constraints & Tolerances",
+      "description": "Define limits, tolerances, and design rules",
+      "questions": [
+        {
+          "id": "constraint_tolerances",
+          "question": "What tolerances or acceptable variation ranges exist?",
+          "help_text": "e.g., 'Hole diameters ±0.1mm', 'Wall thickness 1-2mm', 'Fillet radius 1-3mm'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "constraint_minimum",
+          "question": "What are the minimum/maximum dimensions?",
+          "help_text": "e.g., 'Minimum wall thickness 1mm', 'Maximum overall height 200mm', 'Minimum hole diameter 3mm'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "constraint_rules",
+          "question": "Are there design rules that must always be followed?",
+          "help_text": "e.g., 'All fillets must be >= 1mm', 'Walls must be at least 2mm thick', 'Spacing between holes >= 5mm'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "constraint_dependencies",
+          "question": "Are there inter-feature dependencies or constraints?",
+          "help_text": "e.g., 'Holes are always centered', 'Patterns must maintain spacing', 'Chamfers depend on wall thickness'",
+          "type": "text_long",
+          "required": false
+        }
+      ]
+    },
+
+    {
+      "section_id": "materials",
+      "section_title": "Materials & Fabrication",
+      "description": "Understand material properties and fabrication method implications",
+      "questions": [
+        {
+          "id": "material_type",
+          "question": "What material(s) will this be made from?",
+          "help_text": "e.g., 'PLA plastic (3D print)', 'Aluminum (CNC)', 'Steel (machined)', 'Resin (cast)'",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "material_fabrication",
+          "question": "What fabrication method will be used?",
+          "help_text": "e.g., 'FDM 3D printing', 'SLS printing', 'CNC machining', 'Injection molding', 'Manual machining'",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "material_considerations",
+          "question": "Are there material-specific design considerations?",
+          "help_text": "e.g., 'Needs draft angles for molding', 'Support structures needed', 'Wall thickness for strength', 'Stress concentration concerns'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "material_finish",
+          "question": "Is post-processing or finishing required?",
+          "help_text": "e.g., 'Support removal', 'Sanding', 'Painting', 'Heat treatment', 'Assembly'",
+          "type": "text_long",
+          "required": false
+        }
+      ]
+    },
+
+    {
+      "section_id": "assembly",
+      "section_title": "Assembly & Sub-components",
+      "description": "Understand assembly structure and part relationships",
+      "questions": [
+        {
+          "id": "assembly_structure",
+          "question": "How many parts/bodies are in this model?",
+          "help_text": "e.g., '1 solid body', '3 separate parts', '5 components with assembly'",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "assembly_instructions",
+          "question": "Are assembly instructions needed? Describe the assembly process",
+          "help_text": "e.g., 'Insert part A into slot, secure with bolt B, tighten screw C'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "assembly_fasteners",
+          "question": "What fasteners or connectors are used?",
+          "help_text": "e.g., 'M3 bolts', 'Snap fits', 'Glue', 'Press fit', 'Screws'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "assembly_difficulty",
+          "question": "How difficult is assembly?",
+          "help_text": "Simple (snap together), Moderate (need tools), Complex (specialized assembly)",
+          "type": "select",
+          "options": ["Simple", "Moderate", "Complex", "Not applicable"],
+          "required": false
+        }
+      ]
+    },
+
+    {
+      "section_id": "variations",
+      "section_title": "Variations & Configurations",
+      "description": "Understand intended use cases and parameter variations",
+      "questions": [
+        {
+          "id": "var_planned",
+          "question": "Are variations/configurations of this model planned?",
+          "help_text": "e.g., 'Different sizes (S/M/L)', 'Different material versions', 'Left/right hand versions'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "var_examples",
+          "question": "Provide specific examples of variations",
+          "help_text": "e.g., 'Small: 50x50x25mm, Medium: 100x100x50mm, Large: 200x200x100mm'",
+          "type": "text_long",
+          "required": false
+        },
+        {
+          "id": "var_parameters",
+          "question": "Which parameters should vary between configurations?",
+          "help_text": "e.g., 'Width, depth, height scale proportionally', 'Hole count changes, spacing stays constant'",
+          "type": "text_long",
+          "required": false
+        }
+      ]
+    },
+
+    {
+      "section_id": "metadata",
+      "section_title": "Model Metadata",
+      "description": "General information about the model",
+      "questions": [
+        {
+          "id": "meta_name",
+          "question": "Model name or part number",
+          "help_text": "e.g., 'Handle_v2', 'Tile_connector', 'Support_bracket'",
+          "type": "text",
+          "required": true
+        },
+        {
+          "id": "meta_version",
+          "question": "Current version or revision",
+          "help_text": "e.g., 'v1.0', 'Rev B', 'Prototype 3'",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "meta_author",
+          "question": "Designer or author name",
+          "help_text": "Who designed this model?",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "meta_date",
+          "question": "Design date",
+          "help_text": "When was this design created/finalized?",
+          "type": "text",
+          "required": false
+        },
+        {
+          "id": "meta_notes",
+          "question": "Additional notes or context",
+          "help_text": "Anything else the AI should know about this model",
+          "type": "text_long",
+          "required": false
+        }
+      ]
+    }
+  ],
+
+  "answer_formats": {
+    "text": "Single line text input",
+    "text_long": "Multi-line text input",
+    "select": "Dropdown selection from predefined options",
+    "checkbox": "Multiple selection from options",
+    "number": "Numeric input"
+  }
+}

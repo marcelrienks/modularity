@@ -1,145 +1,81 @@
 # fission reactor
 
-Fusion 360 Add-In for exporting complete design data and gathering context for AI-enabled parameterized code generation.
+AI-enabled Fusion 360 workflow: export design data → answer questionnaire → get parameterized Python code.
+
+---
 
 ## Overview
 
-**fission reactor** is a Fusion 360 workflow tool that enables conversion of hand-designed models into parameterized Python generators. It combines design export, user context gathering, and metadata standardization to feed AI with everything needed to generate working code.
+**Two integrated workflows:**
+1. **Export & Extraction** - Export model data from Fusion 360, transform into standardized metadata
+2. **Questionnaire** - Capture design intent through 28 questions, combine with export data
 
-**Core Features:**
-- Export complete model data (parameters, sketches, features, timeline)
-- Gather design context via interactive questionnaire
-- Generate standardized JSON metadata
-- Create AI-ready context packages
-- Enable parameterized script generation via AI
+**Result:** AI-ready context package for generating parameterized code that reproduces your model with variations.
 
-## Use Cases
+---
 
-- **Design Documentation** - Capture complete model metadata and intent
-- **Parameterization** - Extract design data for AI-based code generation
-- **Version Control** - Store design parameters and features as JSON
-- **Analysis** - Programmatically inspect model structure and features
-- **AI Workflow** - Feed AI with standardized context for script generation
+## Files
 
-## Workflow
+| File | Purpose |
+|------|---------|
+| `export_fusion360_guide.md` | How to export data and transform into metadata (Parts 1 & 2) |
+| `questionnaire_guide.md` | How to answer questionnaire and map responses to metadata |
+| `questionnaire_template.json` | 28 questions in 8 sections (machine-readable) |
+| `questionnaire_example.json` | Real shelf bracket example (all questions answered) |
+| `export_fusion360_data.py` | Fusion 360 Add-In script |
 
-```
-1. User Opens Design in Fusion 360
-2. Run fission reactor Add-In
-3. Answer Questionnaire (design intent, constraints, etc.)
-4. Select Output Directory
-5. Get Structured JSON Files:
-   - model.json (design data)
-   - context.json (user responses)
-   - metadata.json (standardized format)
-   - parameters.json (formatted for code gen)
-   - constraints.json (design limits)
-6. Feed Context Package to AI
-7. AI Generates Parameterized Python Script
-8. Script Generates Models with Parameter Variations
-```
+---
 
-## Quick Start
+## Quick Start (5 Steps)
 
-1. Open a `.f3d` design file in Fusion 360
-2. Go to **Tools > Add-ins > Scripts and Add-ins**
-3. Select the **Scripts** tab
-4. Right-click `export_fusion360_data` > **Run**
-5. Select output directory
+**Step 1:** Prepare model in Fusion 360 (named parameters, logical feature order)
 
-The script will export all models and create a complete context package:
+**Step 2:** Export data
+- Tools > Add-ins > Scripts and Add-ins > Scripts tab
+- Right-click `export_fusion360_data` > Run
+- Select output directory → generates `model.json`
+- See `export_fusion360_guide.md` Part 1 for details
 
-```
-your_selected_directory/
-├── model_name_1/
-│   ├── origin/
-│   │   └── model_name_1.json (design data)
-│   ├── context.json (user questionnaire responses)
-│   ├── metadata.json (standardized metadata)
-│   ├── parameters.json (formatted parameters)
-│   └── constraints.json (design constraints)
-└── model_name_2/
-    ├── origin/
-    │   └── model_name_2.json
-    ├── context.json
-    ├── metadata.json
-    ├── parameters.json
-    └── constraints.json
-```
+**Step 3:** Answer questionnaire
+- Complete all 28 questions (15-30 minutes)
+- Reference: `questionnaire_example.json` for example answers
+- See `questionnaire_guide.md` for question explanations
+- Result: `context.json`
 
-All files together form an **AI-ready context package** for code generation.
+**Step 4:** Transform to metadata
+- Combine `model.json` + `context.json` → 5 metadata files
+- See `export_fusion360_guide.md` Part 2 for algorithm & validation
+
+**Step 5:** Send to AI
+- Package: model.json, context.json, + 5 metadata files
+- Prompt AI: "Generate parameterized Python code to reproduce this model with variations based on the metadata"
+
+---
 
 ## Installation
 
-### Option 1: Manual Installation
 Copy `export_fusion360_data.py` to:
 ```
 ~/Library/Application Support/Autodesk/Fusion 360/API/Python/Samples/
 ```
-
-Then restart Fusion 360. The script will appear in the Scripts tab.
-
-### Option 2: Direct Use
-Place the script in any accessible location and browse to it from the Scripts panel.
-
-## Files
-
-- `export_fusion360_data.py` - Main Add-In script (currently exports design data only)
-- `readme.md` - This file
-- `export_fusion360_guide.md` - Detailed usage guide
-
-## Next Development
-
-The following features are planned to complete the AI-enabled workflow:
-
-1. **Questionnaire Integration** - Interactive prompts for design context
-2. **Metadata Generation** - Standardized JSON files for parameters, constraints, assembly
-3. **Context Package** - Complete bundle of all export files for AI consumption
-4. **AI Integration Guide** - How to use exported context with ChatGPT/Claude for code generation
-
-See [../todo.md](../todo.md) for the full roadmap.
-
-## Documentation
-
-- `export_fusion360_guide.md` - Add-In usage instructions
-- See `../README.md` for project context
-
-## Requirements
-
-- Fusion 360 (any recent version with Python API support)
-- A `.f3d` design file open in Fusion 360
-
-## Output Formats
-
-**Current Export (model.json):**
-
-```json
-{
-  "export_metadata": { "exported_date", "model_name", "source_f3d", ... },
-  "user_parameters": [...],
-  "reference_parameters": [...],
-  "timeline": { "events": [...] },
-  "sketches": { "sketches": [...] },
-  "features": { "features": [...] },
-  "components": { "components": [...] },
-  "summary": { ... }
-}
-```
-
-**Planned Additions:**
-- `context.json` - User responses to questionnaire
-- `metadata.json` - Standardized model metadata
-- `parameters.json` - Formatted parameters for code generation
-- `constraints.json` - Design constraints and limits
-
-## Next Steps
-
-1. Review exported design file
-2. Plan questionnaire for design context
-3. Define standardized metadata schema
-4. Create AI integration guide
-5. Generate first parameterized script
+Restart Fusion 360. Script appears in Scripts tab.
 
 ---
 
-Part of the **Modularity** project - AI-enabled tools for workshop organization systems.
+## Support
+
+**Q: Why the questionnaire?**
+A: AI can extract geometry but not design intent. Questionnaire captures "why" decisions were made.
+
+**Q: How long?**
+A: Export ~5 min, questionnaire 15-30 min, transform ~1 min.
+
+**Q: What if I don't know an answer?**
+A: Leave blank. More detail = better code. AI makes reasonable assumptions.
+
+**Q: Can I modify questions?**
+A: Yes. Edit `questionnaire_template.json`. Guide explains each category.
+
+---
+
+More info: **Fusion 360 API Docs** - https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/
