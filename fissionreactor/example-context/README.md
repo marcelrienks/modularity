@@ -1,4 +1,4 @@
-# Task 3: AI-Ready Context Package
+# AI-Ready Context Package
 
 ## Overview
 
@@ -66,41 +66,87 @@ Complete constraint specification:
 
 ## Success Criteria - What Makes a Package "AI-Ready"
 
-A context package is "AI-ready" if it satisfies these criteria:
+A context package is "AI-ready" if it satisfies these criteria across three validation tiers:
 
-### ✅ Completeness
-- [ ] All 5 JSON files present and valid
-- [ ] No critical information missing (use questionnaire_guide.md to verify all questions answered)
-- [ ] All parameters documented with ranges and constraints
-- [ ] All design decisions explained in context and metadata
+### Tier 1: Package Completeness ✅
 
-### ✅ Consistency
-- [ ] No contradictions between model.json, context.json, and metadata.json
-- [ ] Parameter names consistent across all files
-- [ ] Constraint values match documented specifications
-- [ ] Design rules match actual model construction
+**All necessary files are present and valid:**
+- [ ] All 5 JSON files present (model, context, metadata, parameters, constraints)
+- [ ] Valid JSON syntax in each file (no unclosed braces or quotes)
+- [ ] File sizes reasonable (model: 5-20KB, metadata: 10-30KB, parameters: 5-15KB, constraints: 10-30KB)
+- [ ] Metadata headers complete (version, date, source_file, model_name)
+- [ ] Total package size 30-100KB (indicates sufficient detail)
 
-### ✅ Actionability for AI
-- [ ] Parameters are truly parameterized (not hard-coded values)
-- [ ] Constraints are specific and enforceable (not vague)
-- [ ] Design intent is clear (not ambiguous)
-- [ ] Relationships between parameters documented
-- [ ] CLI interface defined (what arguments, what outputs)
-- [ ] Validation rules specified (how to check if generated model is valid)
+**Verification:** Run JSON validator on each file, check file sizes, confirm headers present.
 
-### ✅ CadQuery Code Generation Ready
-- [ ] Code structure specified (function signatures, helper functions)
-- [ ] Parameter validation rules provided (ranges, dependencies)
-- [ ] Output format specified (STEP, STL, with filenames)
-- [ ] Feature order matches Fusion 360 timeline
-- [ ] All sketches and features can be translated to CadQuery equivalents
+### Tier 2: Data Consistency ✅
 
-### ✅ Documentation
-- [ ] All files have metadata headers with version, date, source
-- [ ] Each parameter has clear purpose and impact explanation
-- [ ] Each constraint has violation risk and recovery strategy
-- [ ] Examples provided (CLI commands, parameter variations, output files)
-- [ ] README explains what AI should do with each file
+**The 5 files agree about what the model is:**
+- [ ] Model name identical across all files (no spelling variations)
+- [ ] All parameters appear in model.json, metadata.json, and parameters.json with same names, ranges, units, and defaults
+- [ ] All 12 features appear consistently across model.json and metadata.json
+- [ ] All constraints in constraints.json match design intent from context.json
+- [ ] Material type consistent between context.json and metadata.json
+- [ ] No contradictory constraints (e.g., width ranges don't conflict)
+
+**Verification:** Cross-reference parameter names and values across files, verify constraint values align.
+
+### Tier 3: AI Actionability ✅
+
+**AI can actually use this to generate code:**
+
+**Parameters are truly parameterized:**
+- [ ] Features use parameter names, not hard-coded numbers (e.g., "BaseThickness" not "10")
+- [ ] Derived parameters have formulas specified (e.g., RibSpacing = BaseWidth * 0.25)
+- [ ] Parameter ranges are correct (min < default < max, steps divide range evenly)
+- [ ] At least one parameter varies meaningfully (not all fixed or trivial)
+
+**Constraints are specific and enforceable:**
+- [ ] Constraints have numerical thresholds (not vague like "reasonable size")
+- [ ] Constraints have enforcement methods (code validation rules, not just descriptions)
+- [ ] Constraints tagged with severity (CRITICAL/HIGH/MEDIUM, not unlabeled)
+- [ ] Each constraint explains failure consequences (what breaks if violated)
+- [ ] At least one structural constraint present (model fails without it, not just formatting)
+
+**Design intent is clear:**
+- [ ] Purpose explicitly stated (not generic like "a bracket")
+- [ ] Load/stress requirements documented (rated capacity, failure modes)
+- [ ] Design trade-offs explained (why each decision was made)
+- [ ] Critical features marked as non-negotiable (must always be true)
+- [ ] Planned variations described (what, how many, how to generate)
+
+**Code generation is specified:**
+- [ ] Function signatures specified (input parameters, output format, return type)
+- [ ] CLI interface fully defined (argument names, example commands, defaults)
+- [ ] Validation logic specified in code format (not prose)
+- [ ] Feature implementation hints provided (which features are which operations)
+- [ ] Helper functions identified (sketches, pattern algorithms)
+
+**Verification:** Read parameters.json—can you build a CLI from it? Read constraints.json—can you write validation code? Read metadata.json—do design decisions make sense? Can you trace feature construction in model.json?
+
+### Tier 3 Advanced: AI Tested ✅ (Validation After Code Generation)
+
+**Does AI actually generate working code?**
+- [ ] Generated code runs without syntax errors
+- [ ] CLI accepts all documented parameters
+- [ ] Invalid parameters rejected with clear error messages
+- [ ] Output files valid (can open in CAD software, are solid geometry)
+- [ ] Generated models match original for default parameters (within 0.5mm)
+- [ ] Model variations work correctly (constraints honored across all variations)
+
+**Quick Readiness Check (5 minutes):**
+```
+☐ All 5 JSON files present and valid
+☐ Same parameter names everywhere
+☐ Same model name everywhere
+☐ No contradictory constraints
+☐ At least 1 parameter varies (min < max)
+☐ At least 1 structural constraint
+☐ Design intent clear (purpose + load requirements)
+☐ Code generation specs provided (function sig, CLI args)
+☐ Validation rules in code format
+```
+If all checked → **Ready for AI.**
 
 ## What AI Should Do With This Package
 
@@ -136,6 +182,13 @@ When given this complete context package, AI should:
    - Complete `generate_shelfbracket.py` file
    - With all features, validation, and CLI
    - Ready to use immediately
+
+**Result:** AI should be able to generate working parameterized code that:
+- Reproduces the original model with default parameters
+- Accepts all documented CLI arguments
+- Validates inputs against all constraints
+- Generates correct model variations
+- Produces valid STEP/STL files
 
 ## Usage Example
 
@@ -210,3 +263,81 @@ This context package follows key principles:
 - `../questionnaire_guide.md` - How to fill out context questionnaire
 - `../export_fusion360_guide.md` - How to export design data from Fusion 360
 - `../README.md` - fissionreactor overview and workflow
+- `../AI-REQUIREMENTS.md` - Detailed requirements for AI systems (what information is needed)
+- `../SUCCESS-CRITERIA.md` - Complete validation framework and scoring rubric
+- `../TASK-3-SUMMARY.md` - Implementation overview and integration guide
+
+## Common Failures to Avoid
+
+When creating your own context package:
+
+### ❌ Parameters Not Truly Variable
+```
+BAD:  "BaseWidth": {"min": 200, "max": 200}  (no range)
+GOOD: "BaseWidth": {"min": 100, "max": 300}  (meaningful variation)
+```
+
+### ❌ Constraints Too Vague
+```
+BAD:  "Note": "Holes should be reasonable size"
+GOOD: "Holes must be 3.2 ± 0.1mm diameter (M3 bolt fit tolerance)"
+```
+
+### ❌ Design Intent Missing
+```
+BAD:  "Purpose": "A bracket"
+GOOD: "Corner bracket for modular shelving, connects aluminum posts to shelves, supports 20kg load per bracket"
+```
+
+### ❌ Code Generation Specs Incomplete
+```
+BAD:  "Parameters": ["width", "height"]
+GOOD: Includes cli_arg (--width), validation rule, default, range, step
+```
+
+### ❌ Features in Wrong Order
+```
+BAD:  Features listed: Tapered Walls, Base Extrude, Holes  (not construction order)
+GOOD: Features listed: Base Extrude, Holes, Tapers, Fillets  (matches Fusion 360 timeline)
+```
+
+## How to Create Your Own Package
+
+1. **Export your model** using fissionreactor export script → `model.json`
+2. **Answer questionnaire** using questionnaire_guide.md → `context.json`
+3. **Create metadata.json** by combining model + context, using metadata.json from this example as template
+4. **Create parameters.json** specifying CLI interface and validation rules
+5. **Create constraints.json** documenting all design rules and limits
+6. **Validate** using the Quick Readiness Check above (5 minutes)
+7. **Send to AI** with prompt: "Generate parameterized CadQuery script per these specifications"
+
+## Troubleshooting
+
+### If AI generates code but models are wrong:
+→ Likely missing constraint information. Check constraints.json completeness.
+
+### If AI generates code with poor validation:
+→ Likely missing validation rules. Check parameters.json has validation field.
+
+### If AI generates code but features are missing:
+→ Likely feature timeline incomplete. Check model.json has all features in correct order.
+
+### If generated code doesn't match original model:
+→ Likely parameter specification wrong. Check parameters.json min/max/default values match Fusion 360.
+
+## Scoring: Is Your Package Ready?
+
+| Criterion | Points |
+|-----------|--------|
+| Tier 1: All 5 files present & valid | 10 pts |
+| Tier 2: Parameter consistency | 20 pts |
+| Tier 2: Constraint consistency | 10 pts |
+| Tier 3: Parameters parameterized | 14 pts |
+| Tier 3: Constraints enforceable | 14 pts |
+| Tier 3: Design intent clear | 14 pts |
+| Tier 3: Code specs complete | 14 pts |
+
+**Score: 0-30** = Not ready (missing major sections)
+**Score: 31-60** = Partially ready (needs clarification)
+**Score: 61-85** = Mostly ready (minor gaps)
+**Score: 86-100** = Production ready (AI can generate working code)
