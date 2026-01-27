@@ -1,6 +1,6 @@
 # TODO - Modularity Project
 
-## Fusion360Export - Completion & Enhancement
+## fission reactor - Completion & Enhancement
 
 ### Goal
 Create a fully functional, AI-enabled workflow that converts hand-designed Fusion 360 models into parameterized Python generators.
@@ -90,8 +90,31 @@ Create a fully functional, AI-enabled workflow that converts hand-designed Fusio
 - ✓ Process is documented and repeatable
 - ✓ Example end-to-end workflow exists
 
+## Pilot Projects
+
+### A. Export & Document Tiles Metadata
+- [ ] Export tulgryd tiles design data (use current export script)
+- [ ] Create metadata/context files for tiles
+- [ ] DO NOT modify the working tiles/generate.py script
+- [ ] Document tile parameterization in metadata
+- [ ] Archive metadata with design file for reference
+- **Note:** This is documentation only - generation script remains unchanged
+
+### B. Export & Generate Handles (Complete Workflow)
+- [ ] Export tulgryd handles design data from tulgryd.f3d
+- [ ] Create complete context package (questionnaire + metadata + constraints)
+- [ ] Document handle design intent and parameters
+- [ ] Generate AI-ready context package
+- [ ] Use context package to create parameterized handle generator script
+- [ ] Validate generated script produces handles matching original
+- [ ] Document workflow as reference implementation
+- **Goal:** Complete end-to-end example of export → metadata → code generation
+
+---
+
 ## Notes
 
 - Focus on making AI's job easier by providing structured, complete context
 - Standardization is key—consistent file formats and metadata enable reliable code generation
 - This is an iterative process; first export may need refinement based on generation results
+- Pilot projects will validate the workflow before full fission reactor feature implementation
