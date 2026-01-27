@@ -1,0 +1,289 @@
+{
+  "constraints_for_code_generation": {
+    "version": "1.0",
+    "generated_date": "2026-01-27T09:15:00Z",
+    "model_name": "ShelfBracket_v1",
+    "description": "Design constraints and validation rules for code generation and model variation",
+
+    "constraint_categories": {
+      "tolerance_constraints": {
+        "category": "Manufacturing & Fit Tolerances",
+        "priority": "CRITICAL",
+        "source": "Post-print assembly requirements",
+
+        "constraints": [
+          {
+            "name": "Mounting hole diameter tolerance",
+            "parameter": "MountingHoleDiameter",
+            "value": "3.2 mm",
+            "tolerance": "±0.1 mm (3.1-3.3 mm acceptable)",
+            "reason": "Must accommodate M3 bolts with sufficient clearance for assembly",
+            "enforcement": "Validate after generation: measure holes in test print",
+            "risk_if_violated": "Bolts won't fit or will be too loose, assembly fails",
+            "mitigation": "Add 0.2mm to hole diameter for FDM shrinkage if needed"
+          },
+          {
+            "name": "Wall thickness at thin sections",
+            "parameter": "MinWallThickness",
+            "value": "2.0 mm",
+            "tolerance": "±0.2 mm (1.8-2.2 mm acceptable)",
+            "reason": "Must support 20kg load without permanent deformation",
+            "enforcement": "Measure walls in test print with calipers",
+            "risk_if_violated": "Bracket flexes excessively or fails under load",
+            "mitigation": "Increase infill percentage if walls too thin in print"
+          },
+          {
+            "name": "External corner radius tolerance",
+            "parameter": "CornerRadius",
+            "value": "1.5 mm",
+            "tolerance": "±0.5 mm (1.0-2.0 mm acceptable)",
+            "reason": "Aesthetic and stress concentration prevention",
+            "enforcement": "Visual inspection after print",
+            "risk_if_violated": "Sharper corners may fail under stress",
+            "mitigation": "If corners too sharp, increase radius parameter"
+          }
+        ]
+      },
+
+      "structural_constraints": {
+        "category": "Load & Strength Requirements",
+        "priority": "CRITICAL",
+        "source": "Design intent - load-bearing bracket",
+
+        "constraints": [
+          {
+            "name": "Minimum wall thickness",
+            "parameter": "MinWallThickness",
+            "value": "1.5 mm minimum",
+            "reason": "Below this, PLA parts fail under 20kg sustained load",
+            "enforcement": "Code validation: reject any parameter < 1.5mm",
+            "risk_if_violated": "Part breaks during use",
+            "test_criteria": "Load test: 20kg weight applied for 24 hours without visible deformation"
+          },
+          {
+            "name": "Hole diameter minimum",
+            "parameter": "MountingHoleDiameter",
+            "value": "3.0 mm minimum",
+            "reason": "Printer nozzle limits and M3 bolt clearance",
+            "enforcement": "Code validation: reject any parameter < 3.0mm",
+            "risk_if_violated": "Holes don't print or bolt won't fit",
+            "test_criteria": "Bolt insertion test: M3 bolt slides smoothly through hole"
+          },
+          {
+            "name": "Overall bracket stiffness",
+            "description": "Reinforcement ribs prevent flexing",
+            "implementation": "RibHeight >= 3mm and ribs spaced at BaseWidth * 0.25",
+            "test_criteria": "Vertical deflection < 5mm under 20kg load at bracket span"
+          }
+        ]
+      },
+
+      "fdm_printability_constraints": {
+        "category": "3D Printer Capabilities",
+        "priority": "HIGH",
+        "source": "Prusa i3 MK3S+ specifications",
+
+        "constraints": [
+          {
+            "name": "Minimum feature size",
+            "value": "0.4 mm",
+            "reason": "Typical FDM printer layer resolution",
+            "applies_to": "All edges, holes, and thin features",
+            "enforcement": "Pre-generation check: validate all dimensions >= 0.4mm",
+            "risk_if_violated": "Features don't print or print unreliably"
+          },
+          {
+            "name": "Minimum fillet radius",
+            "parameter": "CornerRadius (and all internal radii)",
+            "value": "1.0 mm minimum",
+            "reason": "Sharper radii cause print failures due to sharp corners",
+            "enforcement": "Code validation: all internal fillets >= 1.0mm, external >= CornerRadius",
+            "risk_if_violated": "Sharp corners fail and crack during/after printing"
+          },
+          {
+            "name": "Overhang angle limit",
+            "value": "45 degrees maximum",
+            "reason": "Overhangs steeper than 45° require support structures",
+            "applies_to": "All external surfaces",
+            "enforcement": "Geometry check: ensure no overhangs > 45° on model surfaces",
+            "mitigation": "If overhangs present, use tree supports"
+          },
+          {
+            "name": "Bridge length limit",
+            "value": "10 mm maximum",
+            "reason": "Bridges longer than 10mm tend to sag or break",
+            "applies_to": "Any horizontal feature spanning across gaps",
+            "enforcement": "Geometry check for bridges",
+            "mitigation": "Reduce support structure removal or add internal supports"
+          }
+        ]
+      },
+
+      "design_rule_constraints": {
+        "category": "Design Logic & Relationships",
+        "priority": "HIGH",
+        "source": "Model construction sequence",
+
+        "constraints": [
+          {
+            "name": "Mounting hole position rule",
+            "rule": "All four mounting holes MUST be positioned exactly in corners with 10mm inset",
+            "enforcement": "Hardcoded in code generation - no parameter",
+            "why_not_parameterized": "Corner holes must align with post connector holes (fixed standard)",
+            "code_check": "Verify hole positions: (10, 10), (W-10, 10), (10, D-10), (W-10, D-10)"
+          },
+          {
+            "name": "Base depth fixed",
+            "rule": "BaseDepth must ALWAYS be exactly 150mm",
+            "enforcement": "Hardcoded constant - no parameter",
+            "why_not_parameterized": "Must match aluminum post standard spacing",
+            "code_check": "Assert BaseDepth == 150 before generation"
+          },
+          {
+            "name": "Rib spacing relationship",
+            "rule": "RibSpacing = BaseWidth * 0.25 (derived, not independent)",
+            "enforcement": "Code calculates: rib_spacing = BaseWidth * 0.25",
+            "why_relationship": "Scales ribs proportionally with width",
+            "code_check": "Validate: actual rib spacing = width / 4"
+          },
+          {
+            "name": "Mounting boss height relationship",
+            "rule": "MountingBossHeight = BaseWidth * 0.15 (derived)",
+            "enforcement": "Code calculates: boss_height = BaseWidth * 0.15",
+            "why_relationship": "Boss scales proportionally with bracket width",
+            "code_check": "Validate: boss height = width * 0.15"
+          },
+          {
+            "name": "Wall taper factor fixed",
+            "rule": "Taper factor must ALWAYS be 0.85",
+            "enforcement": "Hardcoded constant",
+            "why_not_parameterized": "Specific design decision for this model",
+            "code_check": "Assert taper_factor == 0.85 in body generation"
+          },
+          {
+            "name": "Rib extension limit",
+            "rule": "Reinforcement ribs extend to 80% of width (20mm margin at edges)",
+            "enforcement": "Code calculation: rib_max_width = BaseWidth * 0.8",
+            "why_rule": "Prevents ribs interfering with edge mounting areas",
+            "code_check": "Validate: rib geometry width = BaseWidth * 0.8"
+          }
+        ]
+      },
+
+      "parameter_dependency_constraints": {
+        "category": "Parameter Interdependencies",
+        "priority": "MEDIUM",
+        "source": "Model construction relationships",
+
+        "constraints": [
+          {
+            "name": "Width affects boss height",
+            "relationship": "MountingBossHeight = BaseWidth * 0.15",
+            "implication": "Increasing width also increases boss height",
+            "code_handling": "Derived automatically - no user input needed"
+          },
+          {
+            "name": "Width affects rib spacing",
+            "relationship": "RibSpacing = BaseWidth * 0.25",
+            "implication": "Wider brackets get wider-spaced ribs",
+            "code_handling": "Derived automatically - no user input needed"
+          },
+          {
+            "name": "Hole diameter affects hole spacing",
+            "relationship": "Hole positions fixed at corners but inset = min(10, BaseWidth * 0.1)",
+            "implication": "Very narrow widths get different hole positions",
+            "enforcement": "Validate: minimum width must be 50mm (allows 10mm inset on all sides)"
+          },
+          {
+            "name": "Wall thickness affects rib prominence",
+            "relationship": "Thin walls (1.5mm) = more prominent ribs needed",
+            "implication": "Thicker walls reduce rib necessity",
+            "note": "Not enforced by code but documented for user understanding"
+          }
+        ]
+      },
+
+      "variation_constraints": {
+        "category": "Planned Parameter Variations",
+        "priority": "MEDIUM",
+        "source": "Design intent - planned size variants",
+
+        "constraints": [
+          {
+            "name": "Width variation",
+            "parameter": "BaseWidth",
+            "standard_sizes": [
+              {"name": "Small", "value": 100, "use_case": "Compact 2-shelf unit"},
+              {"name": "Medium", "value": 200, "use_case": "Standard 3-shelf unit"},
+              {"name": "Large", "value": 300, "use_case": "Wide 4-shelf unit"}
+            ],
+            "recommendation": "All variations use single parameterized script - change BaseWidth only"
+          },
+          {
+            "name": "Handedness variation",
+            "type": "mirroring",
+            "options": [
+              {"name": "Left-hand", "description": "Normal orientation"},
+              {"name": "Right-hand", "description": "Mirrored 180°"}
+            ],
+            "implementation": "Add --mirror flag to code generation"
+          }
+        ]
+      },
+
+      "quality_assurance_constraints": {
+        "category": "Post-Generation Validation",
+        "priority": "HIGH",
+        "source": "Code generation success criteria",
+
+        "qa_checks": [
+          {
+            "check": "Body count",
+            "validates": "Exactly 1 solid body created",
+            "code": "assert len(model.val().solids()) == 1"
+          },
+          {
+            "check": "Hole verification",
+            "validates": "All 4 mounting holes are through-holes",
+            "code": "assert model.faces('>Z').edges().count() == 4 for hole edges"
+          },
+          {
+            "check": "Volume reasonability",
+            "validates": "Model volume between 50,000-150,000 mm³",
+            "code": "volume = model.val().volume(); assert 50000 <= volume <= 150000"
+          },
+          {
+            "check": "Dimension matching",
+            "validates": "Bounding box matches parameter expectations",
+            "code": "bbox = model.val().boundingBox(); assert bbox.xlen ≈ BaseWidth ±2mm"
+          },
+          {
+            "check": "Wall thickness",
+            "validates": "Minimum wall thickness >= MinWallThickness parameter",
+            "code": "Measure model cross-section, verify walls >= MinWallThickness"
+          }
+        ]
+      }
+    },
+
+    "constraint_violations_and_recovery": {
+      "violation_severity": {
+        "CRITICAL": {
+          "description": "Violating these constraints will result in model failure or non-functionality",
+          "examples": ["MinWallThickness < 1.5mm", "MountingHoleDiameter < 3.0mm"],
+          "recovery": "Reject code generation and inform user with specific error message"
+        },
+        "HIGH": {
+          "description": "Violating these will likely cause issues but model may still function",
+          "examples": ["CornerRadius < 1.5mm", "Overhang > 60°"],
+          "recovery": "Warn user and suggest parameter adjustment"
+        },
+        "MEDIUM": {
+          "description": "Violating these may cause minor issues or require post-processing",
+          "examples": ["Bridge length > 10mm", "Feature size < 0.5mm"],
+          "recovery": "Log warning, allow generation but document issue"
+        }
+      }
+    }
+  }
+}

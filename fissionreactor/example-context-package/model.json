@@ -1,0 +1,276 @@
+{
+  "export_metadata": {
+    "version": "1.0",
+    "exported_date": "2026-01-27T09:00:00Z",
+    "source_file": "ShelfBracket_v1.f3d",
+    "fusion360_version": "2.0.x",
+    "export_method": "fissionreactor_add_in"
+  },
+
+  "model": {
+    "name": "ShelfBracket_v1",
+    "description": "Corner bracket for modular shelving system. Connects vertical posts to horizontal shelves with adjustable width.",
+    "part_count": 1,
+    "body_count": 1,
+    "feature_count": 12,
+    "parameter_count": 8
+  },
+
+  "parameters": [
+    {
+      "name": "BaseWidth",
+      "type": "length",
+      "value": 200,
+      "unit": "mm",
+      "min": 100,
+      "max": 300,
+      "step": 10,
+      "used_in_features": ["Base Extrude", "Mounting Boss Height", "Rib Spacing"]
+    },
+    {
+      "name": "BaseDepth",
+      "type": "length",
+      "value": 150,
+      "unit": "mm",
+      "min": 150,
+      "max": 150,
+      "step": null,
+      "used_in_features": ["Base Extrude"],
+      "note": "Fixed - must align with post standard"
+    },
+    {
+      "name": "BaseThickness",
+      "type": "length",
+      "value": 10,
+      "unit": "mm",
+      "min": 8,
+      "max": 12,
+      "step": 1,
+      "used_in_features": ["Base Extrude", "Tapered Walls"]
+    },
+    {
+      "name": "CornerRadius",
+      "type": "length",
+      "value": 1.5,
+      "unit": "mm",
+      "min": 1.5,
+      "max": 3,
+      "step": 0.5,
+      "used_in_features": ["Corner Fillet External"],
+      "note": "Minimum 1.5mm for FDM print reliability"
+    },
+    {
+      "name": "MountingHoleDiameter",
+      "type": "length",
+      "value": 3.2,
+      "unit": "mm",
+      "min": 3,
+      "max": 3.5,
+      "step": 0.1,
+      "used_in_features": ["Mounting Holes Sketch", "Hole Pocket"]
+    },
+    {
+      "name": "MinWallThickness",
+      "type": "length",
+      "value": 2,
+      "unit": "mm",
+      "min": 1.5,
+      "max": 3,
+      "step": 0.5,
+      "used_in_features": ["Tapered Walls", "Thin Sections"],
+      "note": "Structural minimum - do not reduce below 1.5mm"
+    },
+    {
+      "name": "RibHeight",
+      "type": "length",
+      "value": 5,
+      "unit": "mm",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "used_in_features": ["Reinforcement Ribs"]
+    },
+    {
+      "name": "RibSpacing",
+      "type": "expression",
+      "value": "BaseWidth * 0.25",
+      "unit": "mm",
+      "description": "Dynamic: ribs spaced at 25% intervals of base width"
+    }
+  ],
+
+  "sketches": [
+    {
+      "name": "BaseProfile",
+      "type": "2D",
+      "plane": "XY",
+      "geometry": [
+        {"type": "rectangle", "width": "BaseWidth", "depth": "BaseDepth", "corner_radius": "CornerRadius"}
+      ],
+      "constraints_count": 6,
+      "fully_constrained": true
+    },
+    {
+      "name": "MountingHoles",
+      "type": "2D",
+      "plane": "XY",
+      "geometry": [
+        {"type": "circle", "diameter": "MountingHoleDiameter", "position": [10, 10], "description": "Top-left hole"},
+        {"type": "circle", "diameter": "MountingHoleDiameter", "position": ["BaseWidth - 10", 10], "description": "Top-right hole"},
+        {"type": "circle", "diameter": "MountingHoleDiameter", "position": [10, "BaseDepth - 10"], "description": "Bottom-left hole"},
+        {"type": "circle", "diameter": "MountingHoleDiameter", "position": ["BaseWidth - 10", "BaseDepth - 10"], "description": "Bottom-right hole"}
+      ],
+      "constraints_count": 12,
+      "fully_constrained": true
+    },
+    {
+      "name": "RibPattern",
+      "type": "2D",
+      "plane": "XY",
+      "geometry": [
+        {"type": "rectangle", "width": 3, "depth": "BaseDepth * 0.8", "spacing": "RibSpacing"}
+      ],
+      "pattern_type": "linear_array",
+      "pattern_count": 4,
+      "constraints_count": 5,
+      "fully_constrained": true
+    }
+  ],
+
+  "features": [
+    {
+      "index": 1,
+      "name": "Base Extrude",
+      "type": "extrude",
+      "profile": "BaseProfile",
+      "distance": "BaseThickness",
+      "direction": "normal",
+      "operation": "new_body"
+    },
+    {
+      "index": 2,
+      "name": "Mounting Boss Height",
+      "type": "extrude",
+      "profile": "derived",
+      "distance": "BaseWidth * 0.15",
+      "direction": "positive",
+      "operation": "join",
+      "note": "Height driven by base width"
+    },
+    {
+      "index": 3,
+      "name": "Tapered Walls",
+      "type": "scale",
+      "reference": "Base Extrude",
+      "scale_factor": 0.85,
+      "center": "derived",
+      "note": "Reduces material in middle sections"
+    },
+    {
+      "index": 4,
+      "name": "Mounting Holes",
+      "type": "pocket",
+      "profile": "MountingHoles",
+      "depth": "through_all",
+      "operation": "cut"
+    },
+    {
+      "index": 5,
+      "name": "Reinforcement Ribs",
+      "type": "extrude",
+      "profile": "RibPattern",
+      "distance": "RibHeight",
+      "direction": "negative",
+      "operation": "join"
+    },
+    {
+      "index": 6,
+      "name": "Corner Fillet External",
+      "type": "fillet",
+      "radius": "CornerRadius",
+      "edges": "external_edges",
+      "operation": "modify"
+    },
+    {
+      "index": 7,
+      "name": "Edge Fillet Internal",
+      "type": "fillet",
+      "radius": 1,
+      "edges": "internal_edges",
+      "operation": "modify"
+    },
+    {
+      "index": 8,
+      "name": "Thin Wall Chamfer",
+      "type": "chamfer",
+      "size": 0.2,
+      "edges": "thin_wall_edges",
+      "operation": "modify"
+    },
+    {
+      "index": 9,
+      "name": "Shell Operation",
+      "type": "shell",
+      "thickness": "MinWallThickness",
+      "remove_faces": "none",
+      "operation": "modify"
+    },
+    {
+      "index": 10,
+      "name": "Hole Draft",
+      "type": "draft",
+      "angle": 0.5,
+      "direction": "hole_axis",
+      "operation": "modify"
+    },
+    {
+      "index": 11,
+      "name": "Press Fit Surface",
+      "type": "offset_face",
+      "offset": 0.1,
+      "operation": "modify"
+    },
+    {
+      "index": 12,
+      "name": "Final Fillet",
+      "type": "fillet",
+      "radius": 0.5,
+      "edges": "selected",
+      "operation": "modify"
+    }
+  ],
+
+  "bodies": [
+    {
+      "name": "ShelfBracket",
+      "type": "solid",
+      "feature_count": 12,
+      "appearance": {
+        "color": "RGB(200, 200, 200)",
+        "material": "PLA",
+        "opacity": 1.0
+      }
+    }
+  ],
+
+  "dimensions": {
+    "bounding_box": {
+      "x_min": 0,
+      "x_max": 200,
+      "y_min": 0,
+      "y_max": 150,
+      "z_min": 0,
+      "z_max": 40
+    },
+    "volume_mm3": 95000,
+    "surface_area_mm2": 28500
+  },
+
+  "export_notes": [
+    "All parameters are dimensional and fully constrained",
+    "Feature timeline follows logical construction sequence",
+    "All sketches fully constrained and dimensioned",
+    "Model uses parametric expressions for derived dimensions",
+    "No suppressed or faulty features"
+  ]
+}
