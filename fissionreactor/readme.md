@@ -128,6 +128,33 @@ python transform_metadata.py example-context/
 
 ---
 
+### Step 4a: Validate Your Data (Recommended)
+
+Before sending to AI, validate that all data is complete and correct:
+
+```bash
+python validate_workflow.py your_model_dir/
+```
+
+**Output example:**
+```
+✓ PASSED (7 checks)
+  ✓ context.json: All required sections present
+  ✓ Metadata files: metadata.json - Unified model info
+  ✓ Metadata files: parameters.json - Code generation ready
+  ✓ Metadata files: constraints.json - Design rules
+```
+
+**What gets validated:**
+- ✓ Export data (model.json) structure
+- ✓ Questionnaire completeness (context.json)
+- ✓ Generated metadata files format
+- ✓ Code generation readiness
+
+Fix any errors before proceeding. Warnings are non-critical but recommended to address.
+
+**See:** `validation_guide.md` for detailed validation information
+
 ### Step 5: Send to AI for Code Generation
 
 Send these 7 files to Claude, GPT, or another LLM:
@@ -213,6 +240,7 @@ Use this as a reference when creating your own context package.
 | 2 | Fusion 360 Add-In | Run in Fusion 360 UI | .f3d file | `model.json` |
 | 3 | Text editor | Edit JSON file | 28 questions | `context.json` |
 | 4 | Python script | `python transform_metadata.py dir/` | model.json + context.json | 5 metadata files |
+| 4a | Validator | `python validate_workflow.py dir/` | All data files | Validation report |
 | 5 | Your LLM | Copy/paste files + prompt | 7 JSON files | `generate_model.py` |
 | 6 | Python script | `python generate_model.py [args]` | CLI arguments | STEP/STL files |
 
@@ -234,7 +262,9 @@ fissionreactor/
 │
 ├── Phase 3: Metadata Transformation
 │   ├── transform_metadata.py          # Transformation script
-│   └── transform_metadata_guide.md    # How to use transformation
+│   ├── transform_metadata_guide.md    # How to use transformation
+│   ├── validate_workflow.py           # Validation framework
+│   └── validation_guide.md            # How to validate data
 │
 ├── example-context/                   # Complete working example
 │   ├── README.md                      # Package validation guide
