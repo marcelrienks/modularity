@@ -263,9 +263,8 @@ This context package follows key principles:
 - `../questionnaire_guide.md` - How to fill out context questionnaire
 - `../export_fusion360_guide.md` - How to export design data from Fusion 360
 - `../README.md` - fissionreactor overview and workflow
-- `../AI-REQUIREMENTS.md` - Detailed requirements for AI systems (what information is needed)
-- `../SUCCESS-CRITERIA.md` - Complete validation framework and scoring rubric
-- `../TASK-3-SUMMARY.md` - Implementation overview and integration guide
+- `../transform_metadata_guide.md` - How to use the metadata transformation tool
+- `../generator-guide/generation-guide.md` - How to generate parameterized code
 
 ## Common Failures to Avoid
 
