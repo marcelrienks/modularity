@@ -81,6 +81,16 @@ Create a fully functional, AI-enabled workflow that converts hand-designed Fusio
 - AI integration documentation
 - Parameter handling patterns
 
+## Code Quality & Production Readiness
+
+- [ ] **CRITICAL:** Execute fissionreactor resolution plan (docs/resolution_plan.md)
+  - **P0 (Breaking Issues - 5h):** Export directory structure, schema mismatch, validation gaps, offline testing
+  - **P1 (Major Gaps - 13h):** JSON schemas, code generation tool, unit tests, code quality
+  - **P2 (Polish - 6h):** Expanded docs, developer guide, dry-run mode, migration guide
+  - **Status:** Plan documented, ready for implementation
+  - **Target:** 65/100 → 90/100 readiness score
+  - See: `fissionreactor/docs/project_review.md` (20 issues) and `fissionreactor/docs/resolution_plan.md` (12-task fix plan)
+
 ## Success Criteria
 
 - ✓ Questionnaire captures all necessary context
@@ -89,6 +99,7 @@ Create a fully functional, AI-enabled workflow that converts hand-designed Fusio
 - ✓ Generated scripts produce models matching originals
 - ✓ Process is documented and repeatable
 - ✓ Example end-to-end workflow exists
+- [ ] Code readiness reaches 90/100 (production quality)
 
 ## Pilot Projects
 
