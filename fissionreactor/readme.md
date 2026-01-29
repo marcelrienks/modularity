@@ -1,414 +1,313 @@
-# fissionreactor - AI-Enabled CAD Parameterization Workflow
+# fissionreactor
 
-Transform hand-designed Fusion 360 models into parameterized Python code generators.
+Transform Fusion 360 CAD models into parameterized Python code generators with AI.
 
-**Quick summary:** Design → Export + Questionnaire → Transform metadata → Send to AI → Get parameterized Python code → Use with custom parameters
-
----
-
-## Complete Process (Visual Overview)
+## Quick Start (7 Steps, ~45 min total)
 
 ```
-Step 1: Design in Fusion 360
-         ↓
-Step 2: Export (5 min) → model.json
-         ↓
-Step 3: Questionnaire (15-30 min) → context.json
-         ↓
-Step 4: Transform (1 min, automated) → 5 metadata files
-         ↓
-Step 5: Send to AI (2 min) → AI processes
-         ↓
-Step 6: Receive code → generate_yourmodel.py
-         ↓
-Step 7: Test & use (10 min) → STEP/STL files
-
-Timeline: ~45 minutes total (excluding your design time)
+1. Design model in Fusion 360 (with named parameters)
+   ↓
+2. Export design data → model.json
+   ↓
+3. Answer questionnaire → context.json
+   ↓
+4. Transform metadata → 5 AI-ready JSON files
+   ↓
+5. Send to AI (Claude/GPT) with context package
+   ↓
+6. Receive parameterized Python code
+   ↓
+7. Test & generate STEP/STL files with custom parameters
 ```
 
----
+## What You Get
 
-## How It Works (5 Minutes to Understand)
+A Python script that:
+- Generates your CAD model with any custom parameters
+- Validates inputs against design constraints
+- Exports to STEP or STL format
+- Works with CLI arguments: `python generate_model.py --width 100 --output model.step`
 
-1. **Design** a model in Fusion 360 with named parameters
-2. **Export** the design data using the included Add-In script
-3. **Answer** a 28-question questionnaire about your design
-4. **Transform** the data into AI-ready metadata files (automated)
-5. **Send** to AI (Claude, GPT, etc.) for code generation
-6. **Use** the generated Python script to make variations with custom parameters
+## Installation
 
-**Result:** A complete, working Python generator that produces your model with any parameters you specify.
-
----
-
-## Getting Started: Step-by-Step
-
-### Step 1: Prepare Your Model in Fusion 360
-
-Design your model with:
-- ✓ Named parameters (don't hard-code dimensions)
-- ✓ Features organized in construction order
-- ✓ Documented constraints and design intent
-
-**Example:** ShelfBracket_v1 with parameters: Width (100-300mm), Depth (150mm fixed), Thickness (8-12mm), CornerRadius, etc.
-
-See `example-context/` for a real working example.
-
----
-
-### Step 2: Export Design Data from Fusion 360
-
-**Install the Add-In:**
 ```bash
-# macOS
+# Copy export script to Fusion 360 (macOS example)
 cp export_fusion360_data.py ~/Library/Application\ Support/Autodesk/Fusion\ 360/API/Python/Samples/
 
-# Windows
-copy export_fusion360_data.py "%APPDATA%\Autodesk\Fusion 360\API\Python\Samples\"
-
-# Linux
-cp export_fusion360_data.py ~/.Autodesk/Fusion\ 360/API/Python/Samples/
+# Required: Python 3.6+, CadQuery
+pip install cadquery
 ```
 
-**Run the Export:**
-1. Restart Fusion 360
-2. Open your design file (.f3d)
-3. Go to: `Tools > Add-ins > Scripts and Add-ins > Scripts tab`
-4. Right-click `export_fusion360_data` → `Run`
-5. Select output directory
-6. You'll get: `model.json` (complete design data)
+## How It Works
 
-**See:** `export_fusion360_guide.md` for details
+| Phase | Tool | Input | Output | Time |
+|-------|------|-------|--------|------|
+| 1 | Fusion 360 | CAD design | Prepared model | — |
+| 2 | export_fusion360_data.py | .f3d file | model.json | 5 min |
+| 3 | Questionnaire | Design intent | context.json | 15-30 min |
+| 4 | transform_metadata.py | model + context | 5 metadata files | 1 min |
+| 5 | AI (Claude/GPT) | Context package | generate_model.py | 2-5 min |
+| 6 | Python + CadQuery | CLI arguments | STEP/STL files | 10 min |
 
----
+## Core Concept
 
-### Step 3: Answer the Questionnaire
+**Problem:** AI can see geometry but not *why* it was designed that way.
 
-Complete all 28 questions in 8 sections (15-30 minutes):
+**Solution:** Provide both:
+- **model.json** — What was designed (geometry, features, parameters)
+- **context.json** — Why it was designed (intent, constraints, variations)
 
-| Section | What You Answer | Example |
-|---------|----------------|---------|
-| Purpose | What is this for? | "Corner bracket for modular shelving" |
-| Design Intent | What's critical? | "Four M3 mounting holes must be exact" |
-| Parameters | Which dimensions vary? | "Width 100-300mm, depth fixed 150mm" |
-| Constraints | What are the limits? | "Minimum wall 1.5mm or it breaks" |
-| Materials | What material and method? | "PLA plastic, FDM 3D printing" |
-| Assembly | How does it fit together? | "Bolts to aluminum posts with M3 fasteners" |
-| Variations | What sizes do you need? | "Small (100mm), Medium (200mm), Large (300mm)" |
-| Metadata | Who, when, version? | "Author: You, Date: Today, v1.0" |
+Together, AI generates better parameterized code.
 
-**Output:** `context.json` (your design intent + constraints)
-
-**See:** `questionnaire_guide.md` for help answering questions, or `questionnaire_example.json` for a completed example.
-
----
-
-### Step 4: Transform Metadata (Automated)
-
-Run the transformation script to generate AI-ready files:
-
-```bash
-python transform_metadata.py your_model_dir/
-```
-
-This combines `model.json` + `context.json` and generates 5 standardized files:
-- `metadata.json` — Model info + design intent
-- `parameters.json` — CLI arguments + validation rules
-- `constraints.json` — Design rules and limits
-- `features.json` — Feature timeline
-- `assembly.json` — Component structure
-
-**Example:**
-```bash
-python transform_metadata.py example-context/
-# Generates 5 new files in example-context/
-```
-
-**See:** `transform_metadata_guide.md` for full documentation
-
----
-
-### Step 4a: Validate Your Data (Recommended)
-
-Before sending to AI, validate that all data is complete and correct:
-
-```bash
-python validate_workflow.py your_model_dir/
-```
-
-**Output example:**
-```
-✓ PASSED (7 checks)
-  ✓ context.json: All required sections present
-  ✓ Metadata files: metadata.json - Unified model info
-  ✓ Metadata files: parameters.json - Code generation ready
-  ✓ Metadata files: constraints.json - Design rules
-```
-
-**What gets validated:**
-- ✓ Export data (model.json) structure
-- ✓ Questionnaire completeness (context.json)
-- ✓ Generated metadata files format
-- ✓ Code generation readiness
-
-Fix any errors before proceeding. Warnings are non-critical but recommended to address.
-
-**See:** `validation_guide.md` for detailed validation information
-
-### Step 5: Send to AI for Code Generation
-
-Send these 7 files to Claude, GPT, or another LLM:
-1. `model.json` (original export)
-2. `context.json` (your questionnaire)
-3. `metadata.json` (generated)
-4. `parameters.json` (generated)
-5. `constraints.json` (generated)
-6. `features.json` (generated)
-7. `assembly.json` (generated)
-
-**Example prompt:**
-```
-I'm providing a complete context package for ShelfBracket_v1. 
-Generate a complete parameterized CadQuery Python script that:
-
-1. Accepts all parameters from parameters.json as CLI arguments
-2. Validates inputs against constraints.json (pre-generation)
-3. Builds model following the feature timeline from model.json
-4. Validates output (post-generation)
-5. Exports to STEP or STL format
-
-Use generator-guide/generate_shelfbracket_example.py as a reference for code structure.
-```
-
-**See:** `generator-guide/generation-guide.md` for detailed code generation guide
-
----
-
-### Step 6: Test the Generated Script
-
-The AI will return `generate_{yourmodel}.py`. Test it:
-
-```bash
-# Test basic functionality
-python generate_shelfbracket.py --help
-
-# Generate default model
-python generate_shelfbracket.py
-
-# Test with custom parameters
-python generate_shelfbracket.py --width 100 --output small.step
-python generate_shelfbracket.py --width 300 --output large.step
-
-# Test error handling (should reject invalid parameters)
-python generate_shelfbracket.py --wall-thickness 0.5 --output test.step
-```
-
-**Validation checklist:**
-- ✓ Script runs without errors
-- ✓ Default parameters produce valid model
-- ✓ Model opens in CAD software
-- ✓ Dimensions match original (±0.5mm)
-- ✓ All features present in correct order
-- ✓ Parameter variations work correctly
-- ✓ Invalid parameters rejected with helpful errors
-
----
-
-## Example: Complete Workflow
-
-The `example-context/` directory shows the complete flow for ShelfBracket_v1:
-
-```
-example-context/
-├── model.json            ← Exported from Fusion 360
-├── context.json          ← Questionnaire answers
-├── metadata.json         ← Generated by transform_metadata.py
-├── parameters.json       ← Generated by transform_metadata.py
-├── constraints.json      ← Generated by transform_metadata.py
-├── features.json         ← Generated by transform_metadata.py
-└── assembly.json         ← Generated by transform_metadata.py
-```
-
-Use this as a reference when creating your own context package.
-
----
-
-## Quick Reference: Tool Usage
-
-| Step | Tool | Command | Input | Output |
-|------|------|---------|-------|--------|
-| 2 | Fusion 360 Add-In | Run in Fusion 360 UI | .f3d file | `model.json` |
-| 3 | Text editor | Edit JSON file | 28 questions | `context.json` |
-| 4 | Python script | `python transform_metadata.py dir/` | model.json + context.json | 5 metadata files |
-| 4a | Validator | `python validate_workflow.py dir/` | All data files | Validation report |
-| 5 | Your LLM | Copy/paste files + prompt | 7 JSON files | `generate_model.py` |
-| 6 | Python script | `python generate_model.py [args]` | CLI arguments | STEP/STL files |
-
----
-
-## Directory Structure
+## File Structure
 
 ```
 fissionreactor/
 ├── README.md                          # This file
-├── COMPLETION_SUMMARY.md              # Implementation details
+├── export_fusion360_data.py           # Phase 2: Fusion 360 export script
+├── questionnaire_template.json        # Phase 3: Design questionnaire
+├── questionnaire_example.json         # Phase 3: Completed example
+├── transform_metadata.py              # Phase 4: Metadata transformation
+├── validate_workflow.py               # Optional: Validation framework
+├── template_generator.py              # Phase 5: Code generation template
 │
-├── Phase 2: Export & Questionnaire
-│   ├── export_fusion360_data.py       # Fusion 360 Add-In script
-│   ├── export_fusion360_guide.md      # How to use export script
-│   ├── questionnaire_template.json    # 28-question template
-│   ├── questionnaire_guide.md         # How to answer questions
-│   └── questionnaire_example.json     # Completed example
+├── docs/                              # Detailed documentation
+│   ├── export_fusion360_guide.md      # How to export from Fusion 360
+│   ├── questionnaire_guide.md         # How to answer questionnaire
+│   ├── transform_metadata_guide.md    # How to run transformation
+│   ├── validation_guide.md            # How to validate data
+│   ├── generator-guide_README.md      # Code generation overview
+│   ├── generator-guide_generation-guide.md   # Detailed generation workflow
+│   └── generator-guide_naming-conventions.md # Code naming standards
 │
-├── Phase 3: Metadata Transformation
-│   ├── transform_metadata.py          # Transformation script
-│   ├── transform_metadata_guide.md    # How to use transformation
-│   ├── validate_workflow.py           # Validation framework
-│   └── validation_guide.md            # How to validate data
-│
-├── example-context/                   # Complete working example
-│   ├── README.md                      # Package validation guide
-│   ├── model.json                     # Design data export
-│   ├── context.json                   # Questionnaire responses
-│   ├── metadata.json                  # (Generated by transform script)
-│   ├── parameters.json                # (Generated by transform script)
-│   ├── constraints.json               # (Generated by transform script)
-│   ├── features.json                  # (Generated by transform script)
-│   └── assembly.json                  # (Generated by transform script)
-│
-└── generator-guide/                   # Phase 4: Code Generation
-    ├── README.md                      # Generator overview
-    ├── generation-guide.md            # Detailed generation workflow
-    ├── template_generator.py          # Reusable code skeleton
-    ├── generate_shelfbracket_example.py # Working example
-    └── naming-conventions.md          # Code naming standards
+└── examples/                          # Complete working example (ShelfBracket_v1)
+    ├── README.md                      # Example guide & checklist
+    ├── model.json                     # Exported from Fusion 360
+    ├── context.json                   # Questionnaire answers
+    ├── metadata.json                  # Generated metadata
+    ├── parameters.json                # Generated parameters
+    ├── constraints.json               # Generated constraints
+    ├── features.json                  # Generated features
+    └── generate_shelfbracket_example.py # Working code example
 ```
 
----
+## Step-by-Step Guide
 
-## Installation & Dependencies
+### Step 1: Prepare Model in Fusion 360
 
-**Python Requirements:**
-- Python 3.6+ (for running transform_metadata.py)
-- CadQuery (for generated scripts): `pip install cadquery`
+Design with:
+- Named parameters (e.g., Width, Depth, Thickness)
+- Features in construction order
+- Clear design constraints
 
-**Fusion 360 Requirements:**
-- Fusion 360 with Python API enabled
-- Permission to write to Fusion 360 scripts directory
+See `examples/` for a real model.
 
----
+### Step 2: Export Design Data
+
+1. Copy `export_fusion360_data.py` to Fusion 360 scripts directory (see docs/)
+2. Open your .f3d file
+3. Run script: `Tools > Add-ins > Scripts and Add-ins > Scripts > export_fusion360_data > Run`
+4. Get: `model.json`
+
+**Details:** `docs/export_fusion360_guide.md`
+
+### Step 3: Complete Questionnaire
+
+Edit `questionnaire_template.json` to answer 28 questions about:
+- Purpose & use case
+- Design intent & critical features
+- Key dimensions & parameter relationships
+- Constraints & tolerances
+- Materials & fabrication
+- Assembly & sub-components
+- Planned variations
+- Metadata (author, version, date)
+
+Get: `context.json`
+
+**Details:** `docs/questionnaire_guide.md`
+
+### Step 4: Transform Metadata
+
+```bash
+python transform_metadata.py path/to/your/model/
+```
+
+Generates 5 AI-ready files:
+- `metadata.json` — Model info & design intent
+- `parameters.json` — Code generation ready (CLI specs, validation)
+- `constraints.json` — Design rules & limits
+- `features.json` — Feature timeline
+- `assembly.json` — Component structure
+
+**Details:** `docs/transform_metadata_guide.md`
+
+### Step 5: Validate (Optional)
+
+```bash
+python validate_workflow.py path/to/your/model/
+```
+
+Checks that all files are complete and consistent before sending to AI.
+
+**Details:** `docs/validation_guide.md`
+
+### Step 6: Send to AI
+
+Provide all 7 files (model.json + context.json + 5 metadata files) with prompt:
+
+```
+Generate a complete parameterized CadQuery Python script that:
+1. Accepts all parameters from parameters.json as CLI arguments
+2. Validates inputs against constraints.json
+3. Builds model following the feature timeline from model.json
+4. Validates output (post-generation)
+5. Exports to STEP or STL format
+
+Use template_generator.py as reference for code structure.
+See examples/generate_shelfbracket_example.py for a working example.
+```
+
+**Details:** `docs/generator-guide_generation-guide.md`
+
+### Step 7: Test Generated Code
+
+```bash
+# Test help
+python generate_mymodel.py --help
+
+# Generate with default parameters
+python generate_mymodel.py
+
+# Test with custom parameters
+python generate_mymodel.py --width 100 --output small.step
+
+# Test error handling (should reject invalid params)
+python generate_mymodel.py --wall-thickness 0.5 --output test.step
+```
+
+Verify:
+- ✓ Script runs without errors
+- ✓ Default parameters match original model
+- ✓ Model opens in CAD software
+- ✓ Dimensions correct (±0.5mm tolerance)
+- ✓ All features present in correct order
+- ✓ Parameter variations work
+- ✓ Invalid parameters rejected with clear errors
+
+## Example Workflow
+
+The `examples/` directory shows the complete flow for ShelfBracket_v1:
+
+```bash
+cd examples/
+
+# View the context package
+ls -la *.json
+
+# Example: Generate models with different widths
+python generate_shelfbracket_example.py --width 100 --output small.step
+python generate_shelfbracket_example.py --width 200 --output medium.step
+python generate_shelfbracket_example.py --width 300 --output large.step
+```
+
+## Key Concepts
+
+### Parameters vs Constraints
+
+- **Parameters** (parameters.json) — Dimensions that vary with CLI arguments
+- **Constraints** (constraints.json) — Rules that parameters must follow (min/max, tolerances, dependencies)
+
+Example:
+```json
+"BaseWidth": {
+  "min": 100, "max": 300, "default": 200,      // Parameter
+  "constraint": "Must be multiple of 10"         // Constraint
+}
+```
+
+### The 5 Metadata Files
+
+| File | Purpose |
+|------|---------|
+| metadata.json | Unified model info + design intent |
+| parameters.json | Code generation specs (CLI, defaults, ranges) |
+| constraints.json | Design validation rules |
+| features.json | Feature sequence & dependencies |
+| assembly.json | Component structure & fasteners |
+
+Together, these files form an **AI-ready context package** that AI systems can use to generate working code.
 
 ## Troubleshooting
 
-### Export Script Not Appearing
-- Copy `export_fusion360_data.py` to the correct Fusion 360 Scripts directory
-- Restart Fusion 360 completely
-- Look in: `Tools > Add-ins > Scripts and Add-ins > Scripts tab`
+**Export script doesn't appear in Fusion 360:**
+- Verify script is in correct directory
+- Restart Fusion 360
+- Check: `Tools > Add-ins > Scripts and Add-ins > Scripts`
 
-### Transformation Fails
+**Transformation fails:**
 ```bash
-# Verify required files exist
-ls -la your_model_dir/
-# Should show both model.json and context.json
+# Verify files exist
+ls -la your_model_dir/model.json your_model_dir/context.json
 
 # Validate JSON syntax
 python3 -m json.tool your_model_dir/model.json
 python3 -m json.tool your_model_dir/context.json
 ```
 
-### Generated Code Doesn't Run
-1. Ensure Python 3.8+ is installed: `python --version`
-2. Install CadQuery: `pip install cadquery`
-3. Verify context package is complete (all 7 JSON files)
-4. Check that AI included validation code in generated script
+**Generated code doesn't run:**
+1. Install CadQuery: `pip install cadquery`
+2. Verify context package is complete (all 7 JSON files)
+3. Check AI included validation code in generated script
 
-### Generated Models Don't Match Original
-- Compare your context.json to `example-context/context.json`
-- Add more detail to design intent and constraints sections
-- Verify all parameters are correctly specified in parameters.json
-
----
-
-## Testing & Validation
-
-The transformation script has been thoroughly tested:
-
-| Test | Status | Details |
-|------|--------|---------|
-| Script execution | ✅ PASS | Runs without errors |
-| Transform input | ✅ PASS | Loads model.json + context.json correctly |
-| JSON generation | ✅ PASS | All 5 files generated and valid |
-| Edge cases | ✅ PASS | Handles formula strings, null values, type mismatches |
-| In-place transform | ✅ PASS | Works in-place (same directory) |
-| Separate output | ✅ PASS | Works with different output directory |
-| JSON validation | ✅ PASS | All outputs parse as valid JSON |
-| Output quality | ✅ PASS | File sizes reasonable (13.6 KB total) |
-
----
+**Generated models don't match original:**
+- Verify all parameters in parameters.json have correct min/max/default
+- Check that all features from model.json are implemented
+- Compare context.json to examples/context.json for completeness
 
 ## FAQ
 
 **Q: Do I need to know Python?**  
-A: No. The generated script is fully usable with just CLI arguments. No programming needed.
+A: No. The generated script works with just CLI arguments. No programming needed.
 
-**Q: How long does the whole workflow take?**  
-A: Export (5 min) + Questionnaire (15-30 min) + Transformation (1 min, automatic) + AI generation (2-5 min) = **~45 minutes total**
+**Q: How long does it take?**  
+A: Export (5 min) + Questionnaire (15-30 min) + Transform (1 min) + AI generation (2-5 min) = ~45 minutes total.
 
-**Q: Why the questionnaire? Can't AI just look at the model?**  
-A: AI sees geometry but not *why* it was designed that way. The questionnaire captures critical constraints, load requirements, material limits, and planned variations. This makes generated code 10-100x better.
+**Q: Why the questionnaire?**  
+A: AI sees geometry but not design intent. The questionnaire provides critical context: why decisions were made, what constraints matter, what variations are needed.
 
 **Q: Can I edit the generated code?**  
-A: Yes! The generated code is yours to modify. Or re-run the transformation and AI generation if you change the context package.
+A: Yes! It's yours to modify. Or regenerate by updating the context package.
 
-**Q: What if my model is very complex?**  
-A: fissionreactor works best for 10-50 parameters and 10-20 features. More complex models may need custom handling or breaking into sub-models.
+**Q: What's the complexity limit?**  
+A: Works best for 10-50 parameters and 10-20 features. More complex models may need breaking into sub-models.
 
-**Q: Can I use this for non-3D-printing models?**  
-A: Yes! Adapt the questionnaire and constraints for your fabrication method (CNC, injection molding, casting, etc.). The workflow stays the same.
+## Documentation
 
----
+- **Export:** `docs/export_fusion360_guide.md`
+- **Questionnaire:** `docs/questionnaire_guide.md`
+- **Transformation:** `docs/transform_metadata_guide.md`
+- **Validation:** `docs/validation_guide.md`
+- **Code Generation:** `docs/generator-guide_generation-guide.md`
+- **Naming Conventions:** `docs/generator-guide_naming-conventions.md`
+- **Example:** `examples/README.md`
 
-## Implementation Status
+## Status
 
-**Phase 1:** Design ✅ (Your responsibility)  
-**Phase 2:** Export + Questionnaire ✅ (export_fusion360_data.py + templates)  
-**Phase 3:** Metadata Transformation ✅ (transform_metadata.py - fully functional)  
-**Phase 4:** AI Code Generation ✅ (generation-guide + examples)  
-**Phase 5:** Testing ✅ (documented in generator-guide)  
+✅ Phase 1: Design (your responsibility)  
+✅ Phase 2: Export + Questionnaire (tools included)  
+✅ Phase 3: Metadata Transformation (transform_metadata.py)  
+✅ Phase 4: AI Code Generation (generation guide included)  
+✅ Phase 5: Testing (documented)  
 
-**Overall Status:** Complete and ready to use ✅
-
----
-
-## What's in Each Generated File
-
-| File | Purpose | Who Reads It |
-|------|---------|--------------|
-| `metadata.json` | Model info, design intent, materials, variations | AI, documentation |
-| `parameters.json` | CLI arguments, defaults, ranges, validation rules | AI (code generation) |
-| `constraints.json` | Design rules, tolerances, limits, dependencies | AI (validation code) |
-| `features.json` | Feature sequence and dependencies | AI (model reconstruction) |
-| `assembly.json` | Component structure and fasteners | AI (assembly generation) |
-
----
+**Overall:** Complete and ready to use.
 
 ## Next Steps
 
-1. ✅ Review this README and understand the workflow
-2. ✅ Look at `example-context/` to see a complete example
-3. ✅ Follow Steps 1-6 above with your own model
-4. ✅ Use `example-context/` as a template for your context package
-5. ✅ Send to AI using the example prompt from Step 5
-6. ✅ Test the generated code thoroughly
+1. Review `examples/` to see a complete example
+2. Design your model in Fusion 360 with named parameters
+3. Follow Step 1-7 above
+4. Send context package to AI
+5. Test the generated code
 
----
-
-## References
-
-- **Fusion 360 API:** https://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/
-- **CadQuery Docs:** https://cadquery.readthedocs.io/
-- **Export Guide:** `export_fusion360_guide.md`
-- **Questionnaire Help:** `questionnaire_guide.md`
-- **Transformation Details:** `transform_metadata_guide.md`
-- **Code Generation:** `generator-guide/generation-guide.md`
-- **Example Package:** `example-context/README.md`
+Happy generating! 🚀
