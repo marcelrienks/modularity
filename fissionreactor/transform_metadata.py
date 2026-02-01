@@ -30,6 +30,11 @@ from datetime import datetime
 from typing import Dict, Any, List
 
 
+# Default parameter range multipliers when exact limits unknown
+DEFAULT_PARAM_RANGE_MULTIPLIER = 2  # If max not specified, default max = value * 2
+DEFAULT_PARAM_FALLBACK_MAX = 100    # If no value available, use this as fallback max
+
+
 class MetadataTransformer:
     """Transforms model.json + context.json into 5 metadata files."""
     
@@ -146,7 +151,7 @@ class MetadataTransformer:
                 param_max = float(param_max) if param_max is not None else param_value
             except (TypeError, ValueError):
                 # If max is a formula string, use a default range
-                param_max = param_value * 2 if param_value else 100
+                param_max = param_value * DEFAULT_PARAM_RANGE_MULTIPLIER if param_value else DEFAULT_PARAM_FALLBACK_MAX
             
             # Determine if parameter is fixed
             is_fixed = param_min >= param_max
@@ -396,14 +401,63 @@ def save_json(data: Dict[str, Any], file_path: Path) -> None:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
+def validate_context_json(context_data: Dict[str, Any]) -> tuple[List[str], bool]:
+    """
+    Validate questionnaire completeness.
+    
+    Returns:
+        (warnings: list of warning messages, is_usable: bool)
+    """
+    warnings = []
+    errors = []
+    
+    # Check critical metadata fields
+    context_meta = context_data.get('context_metadata', {})
+    if not context_meta.get('model_name'):
+        errors.append("Missing: context_metadata.model_name")
+    
+    # Check purpose section
+    purpose = context_data.get('purpose', {})
+    if not purpose.get('purpose_primary'):
+        warnings.append("Missing: purpose.purpose_primary (recommended for context)")
+    
+    # Check design intent
+    design_intent = context_data.get('design_intent', {})
+    if not design_intent.get('intent_critical_features'):
+        warnings.append("Missing: design_intent.intent_critical_features (recommended)")
+    
+    # Check constraints - warn if mixing filled and empty (but allow max to be empty)
+    constraints = context_data.get('constraints', {})
+    critical_constraint_fields = [
+        'constraint_tolerances',
+        'constraint_minimum',
+        'constraint_rules',
+        'constraint_dependencies'
+    ]
+    filled_critical = [f for f in critical_constraint_fields if constraints.get(f)]
+    
+    if filled_critical and len(filled_critical) < len(critical_constraint_fields):
+        warnings.append(
+            f"Incomplete critical constraints: {len(filled_critical)}/{len(critical_constraint_fields)} fields filled. "
+            "Recommended to fill all or leave empty."
+        )
+    
+    return (errors, warnings)
+
+
 def main():
     """Main entry point."""
-    if len(sys.argv) < 2:
-        print(__doc__)
-        sys.exit(1)
+    import argparse
     
-    model_dir = Path(sys.argv[1])
-    output_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else model_dir
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('model_dir', help='Directory containing model.json and context.json')
+    parser.add_argument('output_dir', nargs='?', help='Output directory (default: model_dir)')
+    parser.add_argument('--force', action='store_true', help='Skip questionnaire validation warnings')
+    parser.add_argument('--dry-run', action='store_true', help='Show what would be created without writing files')
+    
+    args = parser.parse_args()
+    model_dir = Path(args.model_dir)
+    output_dir = Path(args.output_dir) if args.output_dir else model_dir
     
     if not model_dir.is_dir():
         print(f"Error: Directory not found: {model_dir}")
@@ -424,6 +478,36 @@ def main():
         
         print(f"Loading context.json...")
         context_json = load_json(context_file)
+        
+        # Validate questionnaire completeness
+        errors, warnings = validate_context_json(context_json)
+        
+        if errors:
+            print("\n⚠️  Validation errors (cannot proceed):")
+            for error in errors:
+                print(f"  ✗ {error}")
+            sys.exit(1)
+        
+        if warnings:
+            print("\n⚠️  Questionnaire validation warnings:")
+            for warning in warnings:
+                print(f"  ⚠  {warning}")
+            if not args.force:
+                print("\n⚠️  Use --force to proceed anyway")
+                sys.exit(1)
+            else:
+                print("  (Proceeding with --force)")
+        
+        if args.dry_run:
+            print("\n[DRY-RUN MODE] Would generate:")
+            print("  - metadata.json:    Model info + design intent")
+            print("  - parameters.json:  Code generation ready")
+            print("  - constraints.json: Design rules & validation")
+            print("  - features.json:    Feature timeline")
+            print("  - assembly.json:    Component structure")
+            print(f"\n  Output directory: {output_dir}")
+            print("  (Files not written - use without --dry-run to write)")
+            sys.exit(0)
         
         print(f"Transforming metadata...")
         transformer = MetadataTransformer(model_json, context_json)

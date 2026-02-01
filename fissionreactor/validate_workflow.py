@@ -32,15 +32,15 @@ class ValidationReport:
         self.warnings: List[str] = []
         self.passed: List[str] = []
     
-    def add_error(self, category: str, message: str):
+    def add_error(self, category: str, message: str) -> None:
         """Add validation error."""
         self.errors.append(f"❌ {category}: {message}")
     
-    def add_warning(self, category: str, message: str):
+    def add_warning(self, category: str, message: str) -> None:
         """Add validation warning."""
         self.warnings.append(f"⚠️  {category}: {message}")
     
-    def add_pass(self, category: str, message: str):
+    def add_pass(self, category: str, message: str) -> None:
         """Add successful validation."""
         self.passed.append(f"✓ {category}: {message}")
     
@@ -48,7 +48,7 @@ class ValidationReport:
         """Check if validation has failures."""
         return len(self.errors) > 0
     
-    def print_report(self):
+    def print_report(self) -> None:
         """Print formatted validation report."""
         print("\n" + "="*70)
         print("VALIDATION REPORT")
@@ -78,7 +78,23 @@ class ValidationReport:
 
 
 class ModelValidator:
-    """Validates design export (model.json)."""
+    """Validates design export (model.json).
+    
+    Standard structure (canonical):
+    {
+      "export_metadata": {...},      # Export context
+      "model": {                      # Model summary
+        "name": str,
+        "part_count": int,
+        "feature_count": int
+      },
+      "parameters": [...],            # Top-level parameter array
+      "features": [...],              # Top-level feature array
+      "components": [...],            # Top-level components array
+      "sketches": [...],              # Optional: sketch data
+      "timeline": [...]               # Optional: feature timeline
+    }
+    """
     
     REQUIRED_FIELDS = {
         'export_metadata': {
@@ -88,10 +104,9 @@ class ModelValidator:
         'model': {
             'name': str,
             'part_count': int,
-            'parameters': list,
-            'features': list,
-            'bodies': list,
-        }
+        },
+        'parameters': list,
+        'features': list,
     }
     
     def __init__(self, model_data: Dict[str, Any]):
@@ -121,9 +136,9 @@ class ModelValidator:
                     if subfield not in self.data[field]:
                         report.add_warning("model.json", f"Missing field: {field}.{subfield}")
         
-        # Validate parameters
-        if 'model' in self.data and 'parameters' in self.data['model']:
-            params = self.data['model']['parameters']
+        # Validate parameters (now at top-level)
+        if 'parameters' in self.data:
+            params = self.data['parameters']
             if not isinstance(params, list):
                 report.add_error("model.json", "parameters must be an array")
             elif len(params) == 0:
@@ -131,9 +146,9 @@ class ModelValidator:
             else:
                 report.add_pass("model.json", f"Found {len(params)} parameters")
         
-        # Validate features
-        if 'model' in self.data and 'features' in self.data['model']:
-            features = self.data['model']['features']
+        # Validate features (now at top-level)
+        if 'features' in self.data:
+            features = self.data['features']
             if not isinstance(features, list):
                 report.add_error("model.json", "features must be an array")
             elif len(features) == 0:
@@ -233,7 +248,7 @@ class MetadataFileValidator:
             'optional': True
         },
         'assembly.json': {
-            'required_keys': ['assembly_structure'],
+            'required_keys': ['assembly'],
             'description': 'Component structure',
             'optional': True
         }

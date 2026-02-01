@@ -65,29 +65,38 @@ Together, AI generates better parameterized code.
 fissionreactor/
 ├── README.md                          # This file
 ├── export_fusion360_data.py           # Phase 2: Fusion 360 export script
-├── questionnaire_template.json        # Phase 3: Design questionnaire
-├── questionnaire_example.json         # Phase 3: Completed example
+├── questionnaire_template.json        # Phase 3: Design questionnaire template
 ├── transform_metadata.py              # Phase 4: Metadata transformation
 ├── validate_workflow.py               # Optional: Validation framework
 ├── template_generator.py              # Phase 5: Code generation template
 │
+├── schemas/                           # JSON Schema definitions
+│   ├── model.schema              # Export format specification
+│   ├── context.schema            # Context format
+│   ├── questionnaire.schema      # Questionnaire format
+│   ├── metadata.schema           # Generated metadata
+│   ├── parameters.schema         # CLI parameters
+│   ├── constraints.schema        # Validation rules
+│   ├── features.schema           # Feature timeline
+│   └── assembly.schema           # Component structure
+│
 ├── docs/                              # Detailed documentation
-│   ├── export_fusion360_guide.md      # How to export from Fusion 360
-│   ├── questionnaire_guide.md         # How to answer questionnaire
-│   ├── transform_metadata_guide.md    # How to run transformation
-│   ├── validation_guide.md            # How to validate data
-│   ├── generator-guide_README.md      # Code generation overview
-│   ├── generator-guide_generation-guide.md   # Detailed generation workflow
-│   └── generator-guide_naming-conventions.md # Code naming standards
+│   ├── export_fusion360.md             # How to export from Fusion 360
+│   ├── questionnaire.md                # How to answer questionnaire
+│   ├── transform_metadata.md           # How to run transformation
+│   ├── validation.md                   # How to validate data
+│   ├── data_format_specification.md   # Complete data format reference
+│   └── generator.md                    # Code generation workflow & naming conventions
 │
 └── examples/                          # Complete working example (ShelfBracket_v1)
     ├── README.md                      # Example guide & checklist
     ├── model.json                     # Exported from Fusion 360
-    ├── context.json                   # Questionnaire answers
+    ├── questionnaire.json             # Questionnaire answers
     ├── metadata.json                  # Generated metadata
     ├── parameters.json                # Generated parameters
     ├── constraints.json               # Generated constraints
     ├── features.json                  # Generated features
+    ├── assembly.json                  # Generated assembly
     └── generate_shelfbracket_example.py # Working code example
 ```
 
@@ -109,11 +118,11 @@ See `examples/` for a real model.
 3. Run script: `Tools > Add-ins > Scripts and Add-ins > Scripts > export_fusion360_data > Run`
 4. Get: `model.json`
 
-**Details:** `docs/export_fusion360_guide.md`
+**Details:** `docs/export_fusion360.md`
 
 ### Step 3: Complete Questionnaire
 
-Edit `questionnaire_template.json` to answer 28 questions about:
+Copy `questionnaire_template.json` and complete it to answer 28 questions about:
 - Purpose & use case
 - Design intent & critical features
 - Key dimensions & parameter relationships
@@ -125,12 +134,19 @@ Edit `questionnaire_template.json` to answer 28 questions about:
 
 Get: `context.json`
 
-**Details:** `docs/questionnaire_guide.md`
+**Details:** `docs/questionnaire.md`
 
 ### Step 4: Transform Metadata
 
 ```bash
+# Standard transformation
 python transform_metadata.py path/to/your/model/
+
+# Preview without writing files
+python transform_metadata.py path/to/your/model/ --dry-run
+
+# Force transformation even with incomplete questionnaire
+python transform_metadata.py path/to/your/model/ --force
 ```
 
 Generates 5 AI-ready files:
@@ -140,7 +156,13 @@ Generates 5 AI-ready files:
 - `features.json` — Feature timeline
 - `assembly.json` — Component structure
 
-**Details:** `docs/transform_metadata_guide.md`
+**Features:**
+- ✓ Validates questionnaire completeness before transformation
+- ✓ Dry-run mode to preview without writing files
+- ✓ `--force` flag to skip warnings
+- ✓ Clear error messages with suggestions
+
+**Details:** `docs/transform_metadata.md` | **Data Format Spec:** `docs/data_format_specification.md`
 
 ### Step 5: Validate (Optional)
 
@@ -150,7 +172,7 @@ python validate_workflow.py path/to/your/model/
 
 Checks that all files are complete and consistent before sending to AI.
 
-**Details:** `docs/validation_guide.md`
+**Details:** `docs/validation.md`
 
 ### Step 6: Send to AI
 
@@ -168,7 +190,7 @@ Use template_generator.py as reference for code structure.
 See examples/generate_shelfbracket_example.py for a working example.
 ```
 
-**Details:** `docs/generator-guide_generation-guide.md`
+**Details:** `docs/generator.md` (includes naming conventions and examples)
 
 ### Step 7: Test Generated Code
 
@@ -284,13 +306,26 @@ A: Works best for 10-50 parameters and 10-20 features. More complex models may n
 
 ## Documentation
 
-- **Export:** `docs/export_fusion360_guide.md`
-- **Questionnaire:** `docs/questionnaire_guide.md`
-- **Transformation:** `docs/transform_metadata_guide.md`
-- **Validation:** `docs/validation_guide.md`
-- **Code Generation:** `docs/generator-guide_generation-guide.md`
-- **Naming Conventions:** `docs/generator-guide_naming-conventions.md`
-- **Example:** `examples/README.md`
+### Workflow Guides
+- **Export:** `docs/export_fusion360.md`
+- **Questionnaire:** `docs/questionnaire.md`
+- **Transformation:** `docs/transform_metadata.md`
+- **Validation:** `docs/validation.md`
+- **Code Generation:** `docs/generator.md` (includes workflow, examples, and naming conventions)
+
+### Reference Documentation
+- **Data Format Specification:** `docs/data_format_specification.md` (complete reference for all JSON formats and schemas)
+- **Example Workflow:** `examples/README.md`
+
+### Schema Files
+All JSON data formats follow strict JSON schemas for validation:
+- `schemas/model.schema` — Fusion 360 export format
+- `schemas/context.schema` — Questionnaire responses
+- `schemas/metadata.schema` — Generated metadata
+- `schemas/parameters.schema` — CLI parameters for code generation
+- `schemas/constraints.schema` — Design validation rules
+- `schemas/features.schema` — Feature timeline
+- `schemas/assembly.schema` — Component structure
 
 ## Status
 
@@ -300,7 +335,16 @@ A: Works best for 10-50 parameters and 10-20 features. More complex models may n
 ✅ Phase 4: AI Code Generation (generation guide included)  
 ✅ Phase 5: Testing (documented)  
 
-**Overall:** Complete and ready to use.
+**Quality Improvements (Latest):**
+- ✅ Model.json schema standardized across all tools
+- ✅ Questionnaire validation with completion checks
+- ✅ Dry-run mode for safe preview (no file writes)
+- ✅ 7 formal JSON schema files for all data formats
+- ✅ Complete data format specification documentation
+- ✅ Improved error handling and messages
+- ✅ Named constants replacing magic numbers
+
+**Overall:** Production-ready with comprehensive validation and documentation.
 
 ## Next Steps
 

@@ -1,11 +1,13 @@
 # Answer the Design Questionnaire
 
-Complete `questionnaire_template.json` to capture design intent and context that AI needs.
+Copy and complete `questionnaire_template.json` to capture design intent and context that AI needs.
 
 ## Overview
 
 The questionnaire bridges the gap: AI can see geometry, but not *why* it was designed that way. Your answers provide critical context for generating better code.
 
+**Reference:** `schemas/questionnaire.schema` (schema specification)  
+**Example:** `examples/questionnaire.json` (completed example for ShelfBracket_v1)  
 **Output:** `context.json` (your questionnaire responses)
 
 ## The 8 Sections (28 Questions Total)
@@ -140,4 +142,4 @@ Run metadata transformation:
 python transform_metadata.py your_model_dir/
 ```
 
-See: `transform_metadata_guide.md`
+See: `../docs/transform_metadata.md`

@@ -1,0 +1,217 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Context JSON Schema",
+  "description": "Schema for context.json produced by questionnaire responses",
+  "type": "object",
+  "required": ["context_metadata", "purpose"],
+  "properties": {
+    "context_metadata": {
+      "type": "object",
+      "title": "Metadata",
+      "required": ["model_name"],
+      "properties": {
+        "model_name": {
+          "type": "string",
+          "description": "Model identifier (must match model.json name)"
+        },
+        "version": {
+          "type": "string",
+          "description": "Model version"
+        },
+        "author": {
+          "type": "string",
+          "description": "Designer/author name"
+        },
+        "creation_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Creation date (YYYY-MM-DD)"
+        },
+        "last_modified": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last modification timestamp"
+        }
+      }
+    },
+    "purpose": {
+      "type": "object",
+      "title": "Purpose & Context",
+      "properties": {
+        "purpose_primary": {
+          "type": "string",
+          "description": "Primary purpose of the design"
+        },
+        "purpose_use_case": {
+          "type": "string",
+          "description": "Specific use case or application"
+        },
+        "purpose_context": {
+          "type": "string",
+          "description": "Context in which design will be used"
+        }
+      }
+    },
+    "design_intent": {
+      "type": "object",
+      "title": "Design Intent",
+      "properties": {
+        "intent_critical_features": {
+          "type": "string",
+          "description": "Most important design features"
+        },
+        "intent_design_decisions": {
+          "type": "string",
+          "description": "Key design decisions and rationale"
+        },
+        "intent_trade_offs": {
+          "type": "string",
+          "description": "Design trade-offs made"
+        }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "title": "Dimensions & Scale",
+      "properties": {
+        "dimension_primary": {
+          "type": "string",
+          "description": "Primary/controlling dimension"
+        },
+        "dimension_relationships": {
+          "type": "string",
+          "description": "How dimensions relate to each other"
+        },
+        "dimension_scale": {
+          "type": "string",
+          "description": "Overall scale/size category"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "title": "Design Constraints",
+      "properties": {
+        "constraint_tolerances": {
+          "type": "string",
+          "description": "Manufacturing/fit tolerances"
+        },
+        "constraint_minimum": {
+          "type": "string",
+          "description": "Minimum dimension or load requirements"
+        },
+        "constraint_maximum": {
+          "type": "string",
+          "description": "Maximum dimension or load limits"
+        },
+        "constraint_rules": {
+          "type": "string",
+          "description": "Specific design rules to follow"
+        },
+        "constraint_dependencies": {
+          "type": "string",
+          "description": "Parameter dependencies and relationships"
+        }
+      }
+    },
+    "materials": {
+      "type": "object",
+      "title": "Materials & Fabrication",
+      "properties": {
+        "material_type": {
+          "type": "string",
+          "description": "Material or material family"
+        },
+        "material_properties": {
+          "type": "string",
+          "description": "Relevant material properties"
+        },
+        "fabrication_process": {
+          "type": "string",
+          "description": "Fabrication/manufacturing method"
+        },
+        "fabrication_limitations": {
+          "type": "string",
+          "description": "Process limitations affecting design"
+        }
+      }
+    },
+    "assembly": {
+      "type": "object",
+      "title": "Assembly & Sub-components",
+      "properties": {
+        "assembly_sub_components": {
+          "type": "string",
+          "description": "List of sub-components"
+        },
+        "assembly_structure": {
+          "type": "string",
+          "description": "How components are organized"
+        },
+        "assembly_instructions": {
+          "type": "string",
+          "description": "Assembly process instructions"
+        },
+        "assembly_difficulty": {
+          "type": "string",
+          "description": "Difficulty level of assembly"
+        },
+        "assembly_fasteners": {
+          "type": "string",
+          "description": "Fasteners or connection methods"
+        }
+      }
+    },
+    "variations": {
+      "type": "object",
+      "title": "Planned Variations",
+      "properties": {
+        "variations_family": {
+          "type": "string",
+          "description": "Family of variations (e.g., small/medium/large)"
+        },
+        "variations_parameters": {
+          "type": "string",
+          "description": "Parameters that vary across family"
+        },
+        "variations_count": {
+          "type": "integer",
+          "description": "Number of planned variations"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "title": "Additional Metadata",
+      "properties": {
+        "related_models": {
+          "type": "string",
+          "description": "Related or dependent models"
+        },
+        "notes": {
+          "type": "string",
+          "description": "General notes or comments"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "context_metadata": {
+        "model_name": "ShelfBracket_v1",
+        "version": "1.0",
+        "author": "John Designer"
+      },
+      "purpose": {
+        "purpose_primary": "Support shelf on modular post system",
+        "purpose_use_case": "Residential shelving system"
+      },
+      "design_intent": {
+        "intent_critical_features": "Load-bearing mounting points"
+      },
+      "constraints": {
+        "constraint_tolerances": "±0.5mm for mounting holes"
+      }
+    }
+  ]
+}

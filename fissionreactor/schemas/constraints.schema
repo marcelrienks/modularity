@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Constraints JSON Schema",
+  "description": "Schema for constraints.json produced by transform_metadata.py - design validation rules",
+  "type": "object",
+  "required": ["constraints"],
+  "properties": {
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "generated_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "model_name": {
+          "type": "string"
+        },
+        "constraint_categories": {
+          "type": "array",
+          "description": "Grouped constraints by category",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "string",
+                "description": "Constraint category (e.g., 'Tolerances', 'Load Requirements')"
+              },
+              "priority": {
+                "type": "string",
+                "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
+                "description": "Importance level"
+              },
+              "source": {
+                "type": "string",
+                "description": "Where constraint came from"
+              },
+              "constraints": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "description": { "type": "string" },
+                    "severity": {
+                      "type": "string",
+                      "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameter_ranges": {
+          "type": "object",
+          "description": "Valid ranges for each parameter",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "min": { "type": "number" },
+              "max": { "type": "number" },
+              "default": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -146,8 +146,8 @@ class FusionExporter:
                             'type': type(constraint).__name__,
                             'name': constraint.name if hasattr(constraint, 'name') else ''
                         })
-                except:
-                    pass
+                except AttributeError as e:
+                    self.log(f"Warning: Could not extract sketch constraints: {str(e)}")
                 
                 sketch_entry = {
                     'name': sketch.name,
@@ -190,8 +190,8 @@ class FusionExporter:
                             'name': feature.name,
                             'parent': component.name
                         })
-                except:
-                    pass
+                except (AttributeError, TypeError) as e:
+                    self.log(f"Warning: Could not extract feature details from {feature.name}: {str(e)}")
         except Exception as e:
             self.log(f"Warning: Error extracting features from {component.name}: {str(e)}")
         return features

@@ -2,414 +2,48 @@
   "metadata": {
     "version": "1.0",
     "schema_version": "1.0",
-    "generated_date": "2026-01-27T09:05:00Z",
+    "generated_date": "2026-02-01T12:24:53.460981",
     "source_model": "ShelfBracket_v1",
     "source_export": "model.json",
     "source_context": "context.json"
   },
-
   "model_info": {
     "name": "ShelfBracket_v1",
     "version": "1.0",
     "author": "Marcel Rienks",
     "created_date": "2026-01-27",
-    "purpose": "Modular shelving system corner bracket",
-    "description": "Corner bracket to support shelves in a parametric shelving system. Connects vertical aluminum posts to horizontal shelf components. Supports moderate loads (up to 20kg per bracket).",
-    "category": "hardware/bracket",
-    "use_cases": ["shelf_mounting", "modular_storage", "shelving_system"],
+    "purpose": "Modular shelving system component",
+    "description": "Corner bracket to support shelves in a parametric shelving system. Used to hold vertical posts and horizontal shelves. Needs to support moderate loads (up to 20kg per bracket in typical use).",
+    "assembly_context": "Part of a larger modular shelving assembly system. Works with vertical posts (40x40mm aluminum) and horizontal shelf components. This is the corner connector piece.",
     "part_count": 1,
     "assembly_type": "single_component"
   },
-
   "design_intent": {
     "critical_features": [
       {
-        "name": "Mounting Holes",
-        "description": "Four M3 holes in corners for bolt mounting",
-        "precision": "±0.1mm",
-        "tolerance_class": "IT7",
-        "reason": "Must align precisely with post connector holes"
-      },
-      {
-        "name": "Wall Thickness",
-        "description": "Minimum 2mm walls for structural strength",
-        "precision": "±0.2mm",
-        "tolerance_class": "IT8",
-        "reason": "Prevents flex and breakage under 20kg load"
-      },
-      {
-        "name": "Internal Edge Radius",
-        "description": "All internal edges rounded minimum 1mm",
-        "precision": "±0.3mm",
-        "tolerance_class": "general",
-        "reason": "Prevents stress concentration and part failure"
+        "name": "Critical Features",
+        "description": "Four M3 mounting holes in corners (3.2mm diameter). These must be positioned exactly to align with post connector holes. Wall thickness minimum 2mm for structural strength. All internal edges rounded at least 1mm to prevent stress concentration.",
+        "reason": "Core functionality"
       }
     ],
-
     "design_decisions": [
       {
-        "decision": "Tapered walls",
-        "rationale": "Reduces weight while maintaining strength",
-        "trade_off": "Slightly more complex geometry"
-      },
-      {
-        "decision": "Reinforcement ribs on internal faces",
-        "rationale": "Improves stiffness and load-bearing capacity",
-        "trade_off": "Longer print time"
-      },
-      {
-        "decision": "1.5mm minimum corner radius",
-        "rationale": "FDM printer reliability threshold",
-        "trade_off": "Slightly less sharp aesthetic"
-      },
-      {
-        "decision": "Fixed 150mm depth",
-        "rationale": "Must match aluminum post connector spacing",
-        "trade_off": "No depth variation possible"
+        "decision": "Design Optimization",
+        "rationale": "Tapered walls (thicker near mounting points, thinner in middle sections) to reduce weight while maintaining strength. Reinforcement ribs on internal faces to improve stiffness. Corner radii set at 1.5mm minimum for FDM print quality (smaller radii tend to fail)."
       }
     ],
-
-    "aesthetic_requirements": {
-      "surface_finish": "Smooth external surfaces",
-      "symmetry": "Fully symmetrical design",
-      "edge_treatment": "No sharp edges for safety",
-      "color_finish": "Natural PLA finish"
-    }
+    "aesthetic_requirements": "Smooth external surfaces for professional appearance. Symmetrical design makes it work equally well in any orientation. No sharp edges for safety when handling.",
+    "load_requirements": "Corner bracket to support shelves in a parametric shelving system. Used to hold vertical posts and horizontal shelves. Needs to support moderate loads (up to 20kg per bracket in typical use)."
   },
-
-  "parameters_metadata": {
-    "total_count": 8,
-    "variable_count": 4,
-    "fixed_count": 2,
-    "derived_count": 2,
-
-    "parameters": [
-      {
-        "name": "BaseWidth",
-        "type": "length",
-        "category": "primary_dimension",
-        "value_default": 200,
-        "value_min": 100,
-        "value_max": 300,
-        "unit": "mm",
-        "step_recommended": 10,
-        "variability": "high",
-        "constraints": ["Must be divisible by 10", "Affects rib spacing"],
-        "impact": "Controls overall bracket size and shelf support width"
-      },
-      {
-        "name": "BaseDepth",
-        "type": "length",
-        "category": "fixed_dimension",
-        "value_default": 150,
-        "value_min": 150,
-        "value_max": 150,
-        "unit": "mm",
-        "variability": "none",
-        "reason": "Post connector standard - cannot vary",
-        "impact": "Determines depth of bracket (post mounting depth)"
-      },
-      {
-        "name": "BaseThickness",
-        "type": "length",
-        "category": "structural_dimension",
-        "value_default": 10,
-        "value_min": 8,
-        "value_max": 12,
-        "unit": "mm",
-        "step_recommended": 1,
-        "variability": "low",
-        "constraints": ["Affects load capacity"],
-        "impact": "Controls vertical height of bracket"
-      },
-      {
-        "name": "CornerRadius",
-        "type": "length",
-        "category": "aesthetic_dimension",
-        "value_default": 1.5,
-        "value_min": 1.5,
-        "value_max": 3,
-        "unit": "mm",
-        "step_recommended": 0.5,
-        "variability": "medium",
-        "constraints": ["Minimum 1.5mm for FDM reliability"],
-        "impact": "Controls external edge roundness"
-      },
-      {
-        "name": "MountingHoleDiameter",
-        "type": "length",
-        "category": "fastener_dimension",
-        "value_default": 3.2,
-        "value_min": 3.0,
-        "value_max": 3.5,
-        "unit": "mm",
-        "step_recommended": 0.1,
-        "variability": "low",
-        "constraints": ["Must accommodate M3 bolts with tolerance"],
-        "impact": "Controls bolt clearance"
-      },
-      {
-        "name": "MinWallThickness",
-        "type": "length",
-        "category": "structural_dimension",
-        "value_default": 2,
-        "value_min": 1.5,
-        "value_max": 3,
-        "unit": "mm",
-        "step_recommended": 0.5,
-        "variability": "low",
-        "constraints": ["Below 1.5mm parts fail in use", "Affects structural reliability"],
-        "impact": "Controls wall thickness in tapered sections"
-      },
-      {
-        "name": "RibHeight",
-        "type": "length",
-        "category": "structural_feature",
-        "value_default": 5,
-        "value_min": 3,
-        "value_max": 8,
-        "unit": "mm",
-        "step_recommended": 1,
-        "variability": "medium",
-        "constraints": [],
-        "impact": "Controls reinforcement rib depth"
-      },
-      {
-        "name": "RibSpacing",
-        "type": "expression",
-        "category": "derived_dimension",
-        "expression": "BaseWidth * 0.25",
-        "variability": "derived",
-        "description": "Ribs spaced dynamically at 25% intervals of base width",
-        "impact": "Automatically adjusts rib spacing based on width"
-      }
-    ]
+  "materials": {
+    "material_type": "PLA plastic (Prusament PLA Pro or equivalent)",
+    "fabrication_method": "FDM 3D printing on Prusa i3 MK3S+. Layer height: 0.15mm. Infill: 15% gyroid. Support: tree supports where needed.",
+    "material_considerations": "No draft angles needed (not molded). PLA shrinks slightly (0.3-0.5%) after cooling. Minimum wall thickness 1.5mm for reliability. Sharp corners/edges fail first under load, so all corners rounded. Overhangs less than 45° print reliably without support.",
+    "post_processing": "Post-print processing: Remove support structures, sand smooth any rough edges with 220 grit sandpaper. Optional: UV stabilizer coating to prevent yellowing. No painting (keep natural PLA finish)."
   },
-
-  "constraints_metadata": {
-    "total_count": 4,
-    "categories": {
-      "tolerances": 3,
-      "minimums": 4,
-      "rules": 4,
-      "dependencies": 4
-    },
-
-    "tolerance_constraints": [
-      {
-        "name": "Mounting hole diameter tolerance",
-        "value": "3.2 ± 0.1 mm",
-        "reason": "Must accommodate M3 bolts with clearance",
-        "enforcement": "Critical - verified in post-print inspection"
-      },
-      {
-        "name": "Wall thickness tolerance",
-        "value": "2.0 ± 0.2 mm",
-        "reason": "Below tolerance causes structural failure",
-        "enforcement": "Critical - minimum must be honored"
-      },
-      {
-        "name": "Corner radius tolerance",
-        "value": "1.5 ± 0.5 mm",
-        "reason": "Loose tolerance acceptable for aesthetic feature",
-        "enforcement": "Advisory - affects FDM print quality"
-      }
-    ],
-
-    "minimum_constraints": [
-      {
-        "name": "Minimum wall thickness",
-        "value": "1.5 mm",
-        "reason": "Below this, parts break under 20kg load",
-        "violation_risk": "CRITICAL - complete part failure"
-      },
-      {
-        "name": "Minimum hole diameter",
-        "value": "3.0 mm",
-        "reason": "Printer nozzle limits smaller features",
-        "violation_risk": "HIGH - unprintable holes"
-      },
-      {
-        "name": "Minimum feature size",
-        "value": "0.4 mm",
-        "reason": "Typical FDM printer resolution",
-        "violation_risk": "MEDIUM - features may not print"
-      },
-      {
-        "name": "Minimum bracket width",
-        "value": "50 mm",
-        "reason": "Must accommodate four holes (10mm inset each)",
-        "violation_risk": "HIGH - insufficient space for holes"
-      }
-    ],
-
-    "design_rules": [
-      {
-        "rule": "All fillets ≥ 1mm for reliable 3D printing",
-        "applies_to": ["Corner Fillet External", "Edge Fillet Internal"],
-        "enforcement": "Automatic in feature generation"
-      },
-      {
-        "rule": "Walls must be ≥ 2mm everywhere for structural reliability",
-        "applies_to": ["BaseThickness", "Tapered Walls", "Thin Sections"],
-        "enforcement": "Must validate before export"
-      },
-      {
-        "rule": "Mounting holes always positioned in four corners",
-        "applies_to": ["MountingHoles sketch"],
-        "enforcement": "Positional constraint - cannot vary"
-      },
-      {
-        "rule": "Pattern spacing cannot be less than 5mm between features",
-        "applies_to": ["RibPattern", "Feature arrays"],
-        "enforcement": "Validated in rib generation"
-      }
-    ],
-
-    "dependency_constraints": [
-      {
-        "dependent": "Mounting Boss Height",
-        "depends_on": "BaseWidth",
-        "relationship": "15% of base width",
-        "reason": "Scales proportionally with bracket size"
-      },
-      {
-        "dependent": "Hole Spacing",
-        "depends_on": "Post connector standard",
-        "relationship": "Fixed at 150mm intervals",
-        "reason": "Must align with aluminum post holes"
-      },
-      {
-        "dependent": "Reinforcement Ribs",
-        "depends_on": "BaseWidth",
-        "relationship": "Extends to 80% of width (20mm margin at edges)",
-        "reason": "Prevents ribs interfering with edge mounting"
-      },
-      {
-        "dependent": "Wall thickness profile",
-        "depends_on": "MinWallThickness parameter",
-        "relationship": "All thin sections set to this parameter",
-        "reason": "Ensures structural consistency"
-      }
-    ]
-  },
-
-  "materials_metadata": {
-    "primary_material": "PLA",
-    "material_grade": "Prusament PLA Pro or equivalent",
-
-    "fabrication_specs": {
-      "process": "FDM 3D printing",
-      "printer_model": "Prusa i3 MK3S+",
-      "layer_height": "0.15 mm",
-      "nozzle_temperature": "210°C",
-      "bed_temperature": "60°C",
-      "infill_type": "gyroid",
-      "infill_percentage": "15%",
-      "support_type": "tree supports where needed"
-    },
-
-    "material_properties": {
-      "strength": "Medium - suitable for moderate loads",
-      "flexibility": "Low - rigid plastic",
-      "durability": "Good - UV resistant variants available",
-      "printability": "Excellent - forgiving material"
-    },
-
-    "print_considerations": [
-      "No draft angles needed (not molded part)",
-      "PLA shrinks 0.3-0.5% after cooling",
-      "Minimum wall thickness 1.5mm for reliability",
-      "Sharp corners/edges fail first under load - all rounded",
-      "Overhangs < 45° print reliably without support"
-    ],
-
-    "post_processing": {
-      "required": [
-        "Remove support structures carefully",
-        "Sand smooth any rough edges with 220 grit sandpaper"
-      ],
-      "optional": [
-        "UV stabilizer coating to prevent yellowing",
-        "Light polish for aesthetic finish"
-      ],
-      "not_recommended": [
-        "Painting (blocks pores, reduces durability)",
-        "High temperature treatments (distorts PLA)"
-      ]
-    }
-  },
-
-  "assembly_metadata": {
-    "assembly_type": "Single solid component - no subassemblies",
-    "part_count": 1,
-    "subcomponent_count": 0,
-
-    "mounting": {
-      "mount_interface": "Four M3 bolt holes in corners",
-      "mount_surface": "Vertical aluminum posts (40×40mm)",
-      "fastener_type": "M3 × 20mm stainless steel bolts",
-      "fastener_count": 4,
-      "fastener_specs": {
-        "bolt": "Stainless steel M3 × 20mm",
-        "washer": "M3 washer (distributes load)",
-        "nut": "M3 nylon lock nut (prevents loosening)",
-        "note": "Washers prevent bolt head crushing into PLA"
-      }
-    },
-
-    "installation_steps": [
-      "1. Position bracket at desired height on vertical post",
-      "2. Insert M3 bolts through the four mounting holes",
-      "3. Tighten bolts firmly but do NOT over-tighten (PLA can strip)",
-      "4. Slide shelf onto the bracket support surfaces",
-      "5. For left/right combinations, flip bracket 180° to match post orientation"
-    ],
-
-    "assembly_difficulty": "Simple - no tools required beyond standard socket wrench",
-    "estimated_assembly_time": "5 minutes per bracket",
-
-    "load_capacity": {
-      "rated_load": "20 kg per bracket",
-      "safety_factor": "2.0x (design tested to 40kg)",
-      "failure_mode": "Gradual stress relaxation in PLA",
-      "inspection_interval": "Annually - check for small cracks"
-    }
-  },
-
-  "variations_metadata": {
-    "planned_variations": [
-      {
-        "name": "Size variations",
-        "count": 3,
-        "examples": [
-          {"name": "Small", "parameters": {"BaseWidth": 100}},
-          {"name": "Medium", "parameters": {"BaseWidth": 200}},
-          {"name": "Large", "parameters": {"BaseWidth": 300}}
-        ],
-        "use_case": "Different shelf widths"
-      },
-      {
-        "name": "Handedness",
-        "count": 2,
-        "examples": [
-          {"name": "Left-hand", "parameters": {"Mirrored": false}},
-          {"name": "Right-hand", "parameters": {"Mirrored": true}}
-        ],
-        "use_case": "Match post orientation"
-      },
-      {
-        "name": "Material variants (future)",
-        "planned_materials": ["TPU (flexible)", "PETG (more durable)"],
-        "use_case": "Different load requirements"
-      }
-    ],
-
-    "variation_generation": {
-      "parametric": true,
-      "single_parameter_variation": "BaseWidth",
-      "other_parameters_fixed": true,
-      "recommendation": "A single parameterized script can generate all size variations by varying BaseWidth only"
-    }
+  "variations": {
+    "planned_variants": "Three standard sizes for different shelf widths: Small (100mm) for compact shelves, Medium (200mm) for standard shelves, Large (300mm) for wide shelves. Also planned: left/right handed versions (mirror images). Future: material variations (flexible TPU version for adjustable shelves).",
+    "variant_examples": "Small bracket: width 100mm. Medium bracket: width 200mm. Large bracket: width 300mm. Left-hand: normal orientation. Right-hand: mirrored 180° (same part, different mounting).",
+    "variable_parameters": "Only the base width parameter varies between sizes. Depth (150mm), thickness (10mm), and all hole positions remain constant. This means a single parameterized script can generate all size variations."
   }
 }

@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Parameters JSON Schema",
+  "description": "Schema for parameters.json produced by transform_metadata.py - code generation ready parameters",
+  "type": "object",
+  "required": ["parameters"],
+  "properties": {
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Schema version"
+        },
+        "generated_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "model_name": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "description": "Parameters ready for CLI code generation",
+          "items": {
+            "type": "object",
+            "required": ["name", "cli_name", "type", "default"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Original parameter name (PascalCase)"
+              },
+              "cli_name": {
+                "type": "string",
+                "description": "CLI argument name (kebab-case, e.g., --base-width)"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["float", "integer", "string"],
+                "description": "Python type for CLI parsing"
+              },
+              "default": {
+                "type": ["number", "string"],
+                "description": "Default value"
+              },
+              "min": {
+                "type": "number",
+                "description": "Minimum valid value"
+              },
+              "max": {
+                "type": "number",
+                "description": "Maximum valid value"
+              },
+              "unit": {
+                "type": "string",
+                "description": "Unit (e.g., 'mm', 'degrees')"
+              },
+              "description": {
+                "type": "string",
+                "description": "Help text for CLI"
+              },
+              "validation": {
+                "type": "string",
+                "description": "Validation logic or constraints"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

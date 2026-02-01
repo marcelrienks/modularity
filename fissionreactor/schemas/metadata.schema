@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Metadata JSON Schema",
+  "description": "Schema for metadata.json produced by transform_metadata.py - unified model info and design intent",
+  "type": "object",
+  "required": ["metadata"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["version", "generated_date", "model_name"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Schema version"
+        },
+        "generated_date": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When metadata was generated"
+        },
+        "model_name": {
+          "type": "string",
+          "description": "Model identifier"
+        },
+        "model_info": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "description": { "type": "string" },
+            "part_count": { "type": "integer" },
+            "feature_count": { "type": "integer" },
+            "parameter_count": { "type": "integer" }
+          }
+        },
+        "design_intent": {
+          "type": "object",
+          "properties": {
+            "purpose": { "type": "string" },
+            "use_case": { "type": "string" },
+            "critical_features": { "type": "string" },
+            "design_decisions": { "type": "string" }
+          }
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "author": { "type": "string" },
+            "creation_date": { "type": "string" },
+            "version": { "type": "string" }
+          }
+        },
+        "export_source": {
+          "type": "object",
+          "properties": {
+            "source_file": { "type": "string" },
+            "export_date": { "type": "string" },
+            "fusion360_version": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "assembly": {
+    "version": "1.0",
+    "generated_date": "2026-02-01T12:24:53.460981",
+    "model_name": "ShelfBracket_v1",
+    "description": "Assembly structure and component hierarchy",
+    "structure": {
+      "part_count": 0,
+      "assembly_type": "single_component",
+      "description": "This is a single solid body with no subcomponents. It mounts to vertical posts via M3 bolts through the four corner holes."
+    },
+    "components": [],
+    "assembly_process": {
+      "instructions": "1. Position bracket at desired height on vertical post. 2. Insert M3 bolts through the four mounting holes. 3. Tighten bolts firmly but do not over-tighten (PLA can strip). 4. Slide shelf onto the bracket support surfaces. 5. For left/right combinations, flip bracket 180° to match post orientation.",
+      "difficulty": "Simple",
+      "required_tools": []
+    },
+    "fasteners": [
+      {
+        "description": "Four M3 x 20mm stainless steel bolts with washers and nylon lock nuts. Washers help distribute load and prevent bolt head crushing into PLA.",
+        "type": "specified"
+      }
+    ],
+    "sub_assemblies": []
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Design Questionnaire Schema",
+  "description": "Schema for user-filled questionnaire responses that capture design intent, constraints, and context for AI code generation",
+  "type": "object",
+  "required": ["questionnaire_metadata", "context_metadata", "purpose", "design_intent"],
+  "properties": {
+    "questionnaire_metadata": {
+      "type": "object",
+      "description": "Questionnaire versioning and metadata",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Questionnaire schema version"
+        },
+        "description": {
+          "type": "string"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "purpose": {
+          "type": "string"
+        }
+      }
+    },
+    "context_metadata": {
+      "type": "object",
+      "required": ["model_name"],
+      "properties": {
+        "model_name": {
+          "type": "string",
+          "description": "Must match model.json name"
+        },
+        "version": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "creation_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "last_modified": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "purpose": {
+      "type": "object",
+      "description": "Model purpose and use case",
+      "properties": {
+        "purpose_primary": {
+          "type": "string",
+          "description": "Primary purpose of the design"
+        },
+        "purpose_use_case": {
+          "type": "string",
+          "description": "Specific use case or application"
+        },
+        "purpose_context": {
+          "type": "string",
+          "description": "Context in larger assembly or system"
+        }
+      }
+    },
+    "design_intent": {
+      "type": "object",
+      "description": "Design intent and key decisions",
+      "properties": {
+        "intent_critical_features": {
+          "type": "string",
+          "description": "Critical features that must remain unchanged"
+        },
+        "intent_design_decisions": {
+          "type": "string",
+          "description": "Non-obvious design decisions"
+        },
+        "intent_aesthetic": {
+          "type": "string",
+          "description": "Aesthetic or visual elements"
+        },
+        "intent_trade_offs": {
+          "type": "string",
+          "description": "Design trade-offs made"
+        }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "Key dimensions and parameters",
+      "properties": {
+        "param_primary": {
+          "type": "string",
+          "description": "3-5 most important dimensions"
+        },
+        "param_relationships": {
+          "type": "string",
+          "description": "How parameters relate to each other"
+        },
+        "dimension_scale": {
+          "type": "string",
+          "description": "Overall scale or size category"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Design constraints and rules",
+      "properties": {
+        "constraint_tolerances": {
+          "type": "string",
+          "description": "Manufacturing or fit tolerances"
+        },
+        "constraint_minimum": {
+          "type": "string",
+          "description": "Minimum dimensions or load requirements"
+        },
+        "constraint_maximum": {
+          "type": "string",
+          "description": "Maximum dimensions or limits"
+        },
+        "constraint_rules": {
+          "type": "string",
+          "description": "Specific design rules to follow"
+        },
+        "constraint_dependencies": {
+          "type": "string",
+          "description": "Parameter dependencies and relationships"
+        }
+      }
+    },
+    "materials": {
+      "type": "object",
+      "description": "Materials and fabrication process",
+      "properties": {
+        "material_type": {
+          "type": "string",
+          "description": "Material or material family"
+        },
+        "material_properties": {
+          "type": "string",
+          "description": "Relevant material properties"
+        },
+        "fabrication_process": {
+          "type": "string",
+          "description": "Fabrication or manufacturing method"
+        },
+        "fabrication_limitations": {
+          "type": "string",
+          "description": "Process limitations affecting design"
+        }
+      }
+    },
+    "assembly": {
+      "type": "object",
+      "description": "Assembly and sub-components",
+      "properties": {
+        "assembly_sub_components": {
+          "type": "string",
+          "description": "List of sub-components"
+        },
+        "assembly_structure": {
+          "type": "string",
+          "description": "How components are organized"
+        },
+        "assembly_instructions": {
+          "type": "string",
+          "description": "Assembly process instructions"
+        },
+        "assembly_difficulty": {
+          "type": "string",
+          "enum": ["Simple", "Moderate", "Complex", "Not specified"],
+          "description": "Difficulty level of assembly"
+        },
+        "assembly_fasteners": {
+          "type": "string",
+          "description": "Fasteners or connection methods"
+        }
+      }
+    },
+    "variations": {
+      "type": "object",
+      "description": "Planned variations",
+      "properties": {
+        "variations_family": {
+          "type": "string",
+          "description": "Family of variations (e.g., small/medium/large)"
+        },
+        "variations_parameters": {
+          "type": "string",
+          "description": "Parameters that vary across family"
+        },
+        "variations_count": {
+          "type": "integer",
+          "description": "Number of planned variations"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata",
+      "properties": {
+        "related_models": {
+          "type": "string",
+          "description": "Related or dependent models"
+        },
+        "notes": {
+          "type": "string",
+          "description": "General notes or comments"
+        }
+      }
+    }
+  }
+}

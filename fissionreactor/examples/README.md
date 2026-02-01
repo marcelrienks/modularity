@@ -260,11 +260,11 @@ This context package follows key principles:
 
 ## Related Documentation
 
-- `../questionnaire_guide.md` - How to fill out context questionnaire
-- `../export_fusion360_guide.md` - How to export design data from Fusion 360
+- `../docs/questionnaire.md` - How to fill out context questionnaire
+- `../docs/export_fusion360.md` - How to export design data from Fusion 360
 - `../README.md` - fissionreactor overview and workflow
-- `../transform_metadata_guide.md` - How to use the metadata transformation tool
-- `../generator-guide/generation-guide.md` - How to generate parameterized code
+- `../docs/transform_metadata.md` - How to use the metadata transformation tool
+- `../docs/generator-workflow.md` - How to generate parameterized code
 
 ## Common Failures to Avoid
 
@@ -303,7 +303,7 @@ GOOD: Features listed: Base Extrude, Holes, Tapers, Fillets  (matches Fusion 360
 ## How to Create Your Own Package
 
 1. **Export your model** using fissionreactor export script → `model.json`
-2. **Answer questionnaire** using questionnaire_guide.md → `context.json`
+2. **Answer questionnaire** using docs/questionnaire.md → `context.json`
 3. **Create metadata.json** by combining model + context, using metadata.json from this example as template
 4. **Create parameters.json** specifying CLI interface and validation rules
 5. **Create constraints.json** documenting all design rules and limits

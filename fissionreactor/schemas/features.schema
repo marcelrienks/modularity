@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Features JSON Schema",
+  "description": "Schema for features.json produced by transform_metadata.py - feature timeline and dependencies",
+  "type": "object",
+  "required": ["features"],
+  "properties": {
+    "features": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "generated_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "model_name": {
+          "type": "string"
+        },
+        "timeline": {
+          "type": "array",
+          "description": "Features in construction order",
+          "items": {
+            "type": "object",
+            "required": ["order", "name"],
+            "properties": {
+              "order": {
+                "type": "integer",
+                "description": "Position in timeline (0-indexed)"
+              },
+              "name": {
+                "type": "string",
+                "description": "Feature name"
+              },
+              "type": {
+                "type": "string",
+                "description": "Feature type (extrude, pocket, fillet, etc.)"
+              },
+              "description": {
+                "type": "string"
+              },
+              "parameters_used": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Which parameters this feature uses"
+              },
+              "depends_on": {
+                "type": "array",
+                "items": { "type": "integer" },
+                "description": "Indices of features this depends on"
+              },
+              "sketch": {
+                "type": "string",
+                "description": "Associated sketch (if any)"
+              }
+            }
+          }
+        },
+        "dependencies": {
+          "type": "object",
+          "description": "Feature dependency graph",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

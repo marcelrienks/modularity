@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Assembly JSON Schema",
+  "description": "Schema for assembly.json produced by transform_metadata.py - component structure and assembly process",
+  "type": "object",
+  "required": ["assembly"],
+  "properties": {
+    "assembly": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "generated_date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "model_name": {
+          "type": "string"
+        },
+        "components": {
+          "type": "array",
+          "description": "Component hierarchy",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "parent": { "type": "string" },
+              "feature_count": { "type": "integer" },
+              "sketch_count": { "type": "integer" }
+            }
+          }
+        },
+        "assembly_process": {
+          "type": "object",
+          "properties": {
+            "instructions": {
+              "type": "string",
+              "description": "Assembly instructions"
+            },
+            "difficulty": {
+              "type": "string",
+              "enum": ["Simple", "Moderate", "Complex", "Not specified"],
+              "description": "Assembly difficulty level"
+            },
+            "required_tools": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Tools needed for assembly"
+            }
+          }
+        },
+        "fasteners": {
+          "type": "array",
+          "description": "Fasteners and connection specifications",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string" },
+              "type": { "type": "string" },
+              "quantity": { "type": "integer" }
+            }
+          }
+        },
+        "sub_assemblies": {
+          "type": "array",
+          "description": "Sub-assembly specifications",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "components": { "type": "array", "items": { "type": "string" } },
+              "order": { "type": "integer" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

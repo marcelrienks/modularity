@@ -1,63 +1,62 @@
 {
   "parameters_for_code_generation": {
     "version": "1.0",
-    "generated_date": "2026-01-27T09:10:00Z",
+    "generated_date": "2026-02-01T12:24:53.460981",
     "model_name": "ShelfBracket_v1",
-    "description": "Code-generation-ready parameter definitions for CadQuery-based Python generator",
-
+    "description": "Code-generation-ready parameter definitions",
     "parameters": {
       "BaseWidth": {
         "type": "length",
         "unit": "mm",
-        "default": 200,
-        "min": 100,
-        "max": 300,
+        "default": 200.0,
+        "min": 100.0,
+        "max": 300.0,
         "step": 10,
-        "cli_arg": "--width",
-        "cli_help": "Bracket width in mm (100-300, step 10)",
+        "cli_arg": "--basewidth",
+        "cli_help": "BaseWidth in mm",
         "code_type": "float",
-        "validation": "if not (100 <= value <= 300 and value % 10 == 0): raise ValueError('Width must be 100-300, divisible by 10')"
+        "fixed": false,
+        "comment": ""
       },
-
       "BaseDepth": {
         "type": "length",
         "unit": "mm",
-        "default": 150,
-        "min": 150,
-        "max": 150,
+        "default": 150.0,
+        "min": 150.0,
+        "max": 150.0,
         "step": null,
         "cli_arg": null,
-        "fixed": true,
+        "cli_help": null,
         "code_type": "float",
-        "comment": "Standard post connector depth - not user configurable"
+        "fixed": true,
+        "comment": "Fixed - must align with post standard"
       },
-
       "BaseThickness": {
         "type": "length",
         "unit": "mm",
-        "default": 10,
-        "min": 8,
-        "max": 12,
+        "default": 10.0,
+        "min": 8.0,
+        "max": 12.0,
         "step": 1,
-        "cli_arg": "--thickness",
-        "cli_help": "Bracket height in mm (8-12, step 1)",
+        "cli_arg": "--basethickness",
+        "cli_help": "BaseThickness in mm",
         "code_type": "float",
-        "validation": "if not (8 <= value <= 12): raise ValueError('Thickness must be 8-12mm')"
+        "fixed": false,
+        "comment": ""
       },
-
       "CornerRadius": {
         "type": "length",
         "unit": "mm",
         "default": 1.5,
         "min": 1.5,
-        "max": 3,
+        "max": 3.0,
         "step": 0.5,
-        "cli_arg": "--corner-radius",
-        "cli_help": "External corner radius in mm (1.5-3, step 0.5, min 1.5 for FDM)",
+        "cli_arg": "--cornerradius",
+        "cli_help": "CornerRadius in mm",
         "code_type": "float",
-        "validation": "if not (1.5 <= value <= 3): raise ValueError('Corner radius must be 1.5-3mm')"
+        "fixed": false,
+        "comment": "Minimum 1.5mm for FDM print reliability"
       },
-
       "MountingHoleDiameter": {
         "type": "length",
         "unit": "mm",
@@ -65,105 +64,59 @@
         "min": 3.0,
         "max": 3.5,
         "step": 0.1,
-        "cli_arg": "--hole-diameter",
-        "cli_help": "M3 bolt hole diameter in mm (3.0-3.5, tolerance ±0.1)",
+        "cli_arg": "--mountingholediameter",
+        "cli_help": "MountingHoleDiameter in mm",
         "code_type": "float",
-        "validation": "if not (3.0 <= value <= 3.5): raise ValueError('Hole diameter must be 3.0-3.5mm for M3 bolts')"
+        "fixed": false,
+        "comment": ""
       },
-
       "MinWallThickness": {
         "type": "length",
         "unit": "mm",
-        "default": 2,
+        "default": 2.0,
         "min": 1.5,
-        "max": 3,
+        "max": 3.0,
         "step": 0.5,
-        "cli_arg": "--wall-thickness",
-        "cli_help": "Minimum wall thickness in mm (1.5-3, step 0.5, do not go below 1.5)",
+        "cli_arg": "--minwallthickness",
+        "cli_help": "MinWallThickness in mm",
         "code_type": "float",
-        "validation": "if value < 1.5: raise ValueError('Wall thickness < 1.5mm causes structural failure. Minimum is 1.5mm.')"
+        "fixed": false,
+        "comment": "Structural minimum - do not reduce below 1.5mm"
       },
-
       "RibHeight": {
         "type": "length",
         "unit": "mm",
-        "default": 5,
-        "min": 3,
-        "max": 8,
+        "default": 5.0,
+        "min": 3.0,
+        "max": 8.0,
         "step": 1,
-        "cli_arg": "--rib-height",
-        "cli_help": "Reinforcement rib height in mm (3-8, step 1)",
+        "cli_arg": "--ribheight",
+        "cli_help": "RibHeight in mm",
         "code_type": "float",
-        "validation": "if not (3 <= value <= 8): raise ValueError('Rib height must be 3-8mm')"
-      }
-    },
-
-    "derived_parameters": {
+        "fixed": false,
+        "comment": ""
+      },
       "RibSpacing": {
         "type": "expression",
-        "formula": "BaseWidth * 0.25",
-        "description": "Ribs automatically spaced at 25% intervals",
-        "code_implementation": "rib_spacing = BaseWidth * 0.25"
-      },
-
-      "MountingBossHeight": {
-        "type": "expression",
-        "formula": "BaseWidth * 0.15",
-        "description": "Boss height scales with width",
-        "code_implementation": "boss_height = BaseWidth * 0.15"
-      },
-
-      "TaperFactor": {
-        "type": "constant",
-        "value": 0.85,
-        "description": "Wall taper scale factor for middle sections",
-        "code_implementation": "taper_factor = 0.85"
+        "unit": "mm",
+        "default": 0,
+        "min": 0.0,
+        "max": 0.0,
+        "step": null,
+        "cli_arg": null,
+        "cli_help": null,
+        "code_type": "int",
+        "fixed": true,
+        "comment": ""
       }
     },
-
-    "cli_interface": {
-      "script_name": "generate_shelfbracket.py",
-      "usage": "python generate_shelfbracket.py [--width W] [--thickness T] [--corner-radius R] [--hole-diameter D] [--wall-thickness W] [--rib-height H] [--output FILE]",
-      "example_commands": [
-        "python generate_shelfbracket.py --width 100 --output bracket_small.step",
-        "python generate_shelfbracket.py --width 200 --thickness 10 --output bracket_medium.step",
-        "python generate_shelfbracket.py --width 300 --rib-height 6 --output bracket_large.step"
-      ],
-      "default_output": "ShelfBracket_v1.step",
-      "supported_formats": ["step", "stl"]
-    },
-
-    "validation_rules": {
-      "pre_generation": [
-        "Check all parameter values within min/max ranges",
-        "Verify BaseWidth is multiple of 10mm",
-        "Verify MinWallThickness >= 1.5mm",
-        "Verify CornerRadius >= 1.5mm for FDM reliability"
-      ],
-      "post_generation": [
-        "Verify model has exactly 1 solid body",
-        "Check all mounting holes are through-holes",
-        "Validate wall thickness in thin sections >= MinWallThickness",
-        "Confirm volume reasonable (expect 50000-150000 mm³)",
-        "Check bounding box dimensions match parameters"
-      ]
-    },
-
-    "code_structure": {
-      "imports": [
-        "from cadquery import Workplane",
-        "from cadquery.cq import CQ",
-        "import argparse",
-        "import json"
-      ],
-      "main_function": "def generate_bracket(BaseWidth, BaseThickness, CornerRadius, MountingHoleDiameter, MinWallThickness, RibHeight) -> CQ",
-      "helper_functions": [
-        "def create_base_profile(width, depth, radius) -> Sketch",
-        "def create_mounting_holes_sketch(width, depth, hole_diameter) -> Sketch",
-        "def create_rib_pattern(width, depth, spacing) -> Sketch",
-        "def apply_taper_and_reinforcement(body, taper_factor, rib_height) -> CQ"
-      ],
-      "output_handler": "def export_model(model, format, filename) -> None"
-    }
+    "derived_parameters": [
+      {
+        "name": "Derived Parameters",
+        "formula": "Height of mounting boss is always 15% of the base width. The spacing between the four mounting holes is derived from post connector patterns. Wall thickness in thin sections is always 2mm regardless of base dimensions.",
+        "note": "Automatically calculated from primary parameters"
+      }
+    ],
+    "scaling_strategy": "Width can vary from 100-300mm in 10mm increments. Depth stays fixed at 150mm (post standard spacing). All other features scale proportionally with width changes. Hole positions stay relative to corners."
   }
 }

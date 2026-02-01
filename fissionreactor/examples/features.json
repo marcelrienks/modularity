@@ -1,0 +1,113 @@
+{
+  "features": {
+    "version": "1.0",
+    "generated_date": "2026-02-01T12:24:53.460981",
+    "model_name": "ShelfBracket_v1",
+    "description": "Feature timeline and dependencies",
+    "feature_count": 12,
+    "feature_sequence": [
+      {
+        "index": 0,
+        "name": "Base Extrude",
+        "type": "extrude",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 1,
+        "name": "Mounting Boss Height",
+        "type": "extrude",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 2,
+        "name": "Tapered Walls",
+        "type": "scale",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 3,
+        "name": "Mounting Holes",
+        "type": "pocket",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 4,
+        "name": "Reinforcement Ribs",
+        "type": "extrude",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 5,
+        "name": "Corner Fillet External",
+        "type": "fillet",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 6,
+        "name": "Edge Fillet Internal",
+        "type": "fillet",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 7,
+        "name": "Thin Wall Chamfer",
+        "type": "chamfer",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 8,
+        "name": "Shell Operation",
+        "type": "shell",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 9,
+        "name": "Hole Draft",
+        "type": "draft",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 10,
+        "name": "Press Fit Surface",
+        "type": "offset_face",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      },
+      {
+        "index": 11,
+        "name": "Final Fillet",
+        "type": "fillet",
+        "parent": "root",
+        "critical": false,
+        "preservable": true
+      }
+    ],
+    "critical_features": [],
+    "guidelines": {
+      "preserve": [],
+      "order_matters": true,
+      "construction_method": "Timeline order from Fusion 360"
+    }
+  }
+}
