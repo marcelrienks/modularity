@@ -6,17 +6,17 @@ Export complete design data from your Fusion 360 model as `model.json`.
 
 ### macOS
 ```bash
-cp export_fusion360_data.py ~/Library/Application\ Support/Autodesk/Fusion\ 360/API/Python/Samples/
+cp ExportMetaData.py ~/Library/Application\ Support/Autodesk/Fusion\ 360/API/Python/Samples/
 ```
 
 ### Windows
 ```cmd
-copy export_fusion360_data.py "%APPDATA%\Autodesk\Fusion 360\API\Python\Samples\"
+copy ExportMetaData.py "%APPDATA%\Autodesk\Fusion 360\API\Python\Samples\"
 ```
 
 ### Linux
 ```bash
-cp export_fusion360_data.py ~/.Autodesk/Fusion\ 360/API/Python/Samples/
+cp ExportMetaData.py ~/.Autodesk/Fusion\ 360/API/Python/Samples/
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ cp export_fusion360_data.py ~/.Autodesk/Fusion\ 360/API/Python/Samples/
 1. **Restart Fusion 360** after copying the script
 2. **Open your .f3d design file**
 3. Go to: **Tools > Add-ins > Scripts and Add-ins > Scripts tab**
-4. Right-click `export_fusion360_data` → **Run**
+4. Right-click `ExportMetaData` → **Run**
 5. **Select output directory**
 6. Get: **model.json** (in your selected directory)
 

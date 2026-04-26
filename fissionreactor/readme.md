@@ -32,7 +32,7 @@ A Python script that:
 
 ```bash
 # Copy export script to Fusion 360 (macOS example)
-cp export_fusion360_data.py ~/Library/Application\ Support/Autodesk/Fusion\ 360/API/Python/Samples/
+cp ExportMetaData.py ~/Library/Application\ Support/Autodesk/Fusion\ 360/API/Python/Samples/
 
 # Required: Python 3.6+, CadQuery
 pip install cadquery
@@ -43,7 +43,7 @@ pip install cadquery
 | Phase | Tool | Input | Output | Time |
 |-------|------|-------|--------|------|
 | 1 | Fusion 360 | CAD design | Prepared model | — |
-| 2 | export_fusion360_data.py | .f3d file | model.json | 5 min |
+| 2 | ExportMetaData.py | .f3d file | model.json | 5 min |
 | 3 | Questionnaire | Design intent | context.json | 15-30 min |
 | 4 | transform_metadata.py | model + context | 5 metadata files | 1 min |
 | 5 | AI (Claude/GPT) | Context package | generate_model.py | 2-5 min |
@@ -64,7 +64,7 @@ Together, AI generates better parameterized code.
 ```
 fissionreactor/
 ├── README.md                          # This file
-├── export_fusion360_data.py           # Phase 2: Fusion 360 export script
+├── ExportMetaData.py                  # Phase 2: Fusion 360 export script
 ├── questionnaire_template.json        # Phase 3: Design questionnaire template
 ├── transform_metadata.py              # Phase 4: Metadata transformation
 ├── validate_workflow.py               # Optional: Validation framework
@@ -113,9 +113,9 @@ See `examples/` for a real model.
 
 ### Step 2: Export Design Data
 
-1. Copy `export_fusion360_data.py` to Fusion 360 scripts directory (see docs/)
+1. Copy `ExportMetaData.py` to Fusion 360 scripts directory (see docs/)
 2. Open your .f3d file
-3. Run script: `Tools > Add-ins > Scripts and Add-ins > Scripts > export_fusion360_data > Run`
+3. Run script: `Tools > Add-ins > Scripts and Add-ins > Scripts > ExportMetaData > Run`
 4. Get: `model.json`
 
 **Details:** `docs/export_fusion360.md`
