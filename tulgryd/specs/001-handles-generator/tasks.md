@@ -156,8 +156,7 @@
 
 **Purpose**: Production-ready refinements and edge cases
 
-- [ ] T050 [P] Implement file overwrite confirmation: `"File exists, overwrite? [y/N]"` prompt in `handles/generate.py` (uses Python `input()`)
-- [ ] T050b [P] Handle user abort on overwrite (exit code 4) in `handles/generate.py`
+- [ ] T050 [P] Implement file overwrite confirmation: `"File exists, overwrite? [y/N]"` prompt in `handles/generate.py` (uses Python `input()`); handle user abort (exit code 4)
 - [ ] T051 [P] Auto-create output directory if missing (mkdir -p behavior) in `handles/core/exporter.py`
 - [ ] T052 [P] Test output directory creation failure handling (permissions error) in `tests/integration/test_io.py`
 - [ ] T053 [P] Add `--version` flag to CLI showing generator version in `handles/generate.py`
@@ -183,6 +182,7 @@
 - [ ] T064 [P] Test with multiple 3D printer profiles (if available)
 - [ ] T065 Create final project checklist in `handles/IMPLEMENTATION_CHECKLIST.md`
 - [ ] T066 Update `.specify/feature.json` with completion status
+- [ ] T067 Commit implementation completion: all tests passing, all requirements met
 
 ---
 
@@ -195,10 +195,10 @@
 | US3 (Validation) | 8 | Gating |
 | US1 (Core MVP) | 15 | Critical path |
 | US2 (Multi-format) | 9 | Dependent on US1 |
-| US4 (Assembly Guide) | 5 | Dependent on US1 |
+| US4 (Assembly Guide) | 7 | Dependent on US1 |
 | Polish | 10 | Final refinements |
 | Validation | 7 | Quality gates |
-| **TOTAL** | **64** | **Fully scoped** |
+| **TOTAL** | **66** | **Fully scoped** |
 
 ---
 

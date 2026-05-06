@@ -31,6 +31,29 @@ Assembly guides are auto-generated Markdown documents paired with each handle mo
 | Layer count | {{ layer_count }} |
 | Grid compatibility | ToolGrid 10mm spacing |
 
+## Template Variables & Calculation
+
+| Variable | Source | Example |
+|----------|--------|---------|
+| `{{ diameter }}` | User input (--diameter) | `2.6` |
+| `{{ height }}` | User input (--height) | `2.0` |
+| `{{ layer_count }}` | Auto-calculated: `ceil(height / 0.2)` | `10` |
+| `{{ generated_timestamp }}` | System (ISO 8601) | `2026-05-06T14:30:00Z` |
+
+### Layer Count Formula
+
+```
+layer_count = ceil(height_mm / 0.2)
+```
+
+**Examples**:
+- height = 0.5mm → ceil(0.5 / 0.2) = 3 layers
+- height = 1.0mm → ceil(1.0 / 0.2) = 5 layers
+- height = 2.0mm → ceil(2.0 / 0.2) = 10 layers
+- height = 2.5mm → ceil(2.5 / 0.2) = 13 layers
+
+**Interpretation**: Assumes 0.2mm standard layer height (industry default). Adjustment optional.
+
 ## Print Settings
 
 ### Recommended (PLA)
