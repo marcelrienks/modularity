@@ -5,6 +5,14 @@
 **Status**: Draft  
 **Input**: User description: "Parametric handles generator script for custom tool holder models"
 
+## Clarifications
+
+### Session 2026-05-06
+
+- Q: What does "100% structural integrity" mean in practice? → A: Geometric validity (watertight, no self-intersections, export validation pass)
+- Q: When user runs generator twice with same parameters to same output directory, should the script overwrite, confirm, error, or rename? → A: Overwrite with confirmation (ask user before replacing)
+- Q: For CLI parameter handling, should script require both diameter and height, offer presets, or provide smart defaults? → A: Require both parameters (no defaults; explicit intent)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Generate custom handles with CLI parameters (Priority: P1)
@@ -20,6 +28,7 @@ User wants to generate a single handle model with custom grip diameter and heigh
 1. **Given** user has Python 3.8+ and CadQuery installed, **When** running `python generate.py --diameter 3.0 --height 2.5`, **Then** outputs `handle_d3.0_h2.5.stl` with correct geometry
 2. **Given** user specifies metric dimensions, **When** running generator with valid numeric inputs, **Then** output reflects exactly those custom dimensions
 3. **Given** user provides custom output directory, **When** running with `--output-dir /path`, **Then** file is created in specified directory
+4. **Given** user omits required parameters, **When** running generator without `--diameter` or `--height`, **Then** exits with error message showing required usage
 
 ---
 
@@ -52,6 +61,7 @@ User provides invalid diameter or height values (negative, zero, out-of-range) a
 1. **Given** user enters negative diameter, **When** generator validates inputs, **Then** returns clear error message indicating valid range
 2. **Given** user provides zero height, **When** generator checks constraints, **Then** rejects with explanation that height must be positive
 3. **Given** user provides non-numeric input, **When** CLI parser processes arguments, **Then** shows help with example valid usage
+4. **Given** output file already exists, **When** user runs generator to same path, **Then** prompts "File exists, overwrite? [y/N]" and honors user choice
 
 ---
 
@@ -74,15 +84,15 @@ User receives auto-generated README with handle specifications, usage notes, and
 ### Edge Cases
 
 - What happens when diameter is less than 1.0mm or greater than 10.0mm (physical constraints)?
-- How does system handle file already existing in output directory (overwrite vs. error)?
+- Output file already exists in directory: script prompts "File exists, overwrite? [y/N]" and waits for user response
 - What if output directory is not writable or doesn't exist?
 
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
 
-- **FR-001**: Script MUST accept `--diameter` parameter (mm) as floating point input
-- **FR-002**: Script MUST accept `--height` parameter (mm) as floating point input
+- **FR-001**: Script MUST require `--diameter` parameter (mm) as floating point input; error if missing
+- **FR-002**: Script MUST require `--height` parameter (mm) as floating point input; error if missing
 - **FR-003**: Script MUST validate that diameter is positive and within printable range (≥1.0mm, ≤10.0mm)
 - **FR-004**: Script MUST validate that height is positive and within structural limits (≥0.5mm, ≤5.0mm)
 - **FR-005**: Script MUST generate 3D model respecting reference parameters as fixed derived constraints
@@ -94,6 +104,7 @@ User receives auto-generated README with handle specifications, usage notes, and
 - **FR-011**: Script MUST provide clear error messages for invalid inputs with guidance on valid ranges
 - **FR-012**: Script MUST support `--help` flag showing all options with examples
 - **FR-013**: Script MUST expose only diameter and height as user parameters; all other dimensions locked to reference values
+- **FR-014**: Script MUST prompt user for confirmation before overwriting existing files ("File exists, overwrite? [y/N]")
 
 ### Key Entities *(include if feature involves data)*
 
@@ -105,7 +116,7 @@ User receives auto-generated README with handle specifications, usage notes, and
 ### Measurable Outcomes
 
 - **SC-001**: Users can generate custom handles in under 2 seconds from CLI invocation
-- **SC-002**: Generated models are 3D-printable without manual geometry correction (100% structural integrity)
+- **SC-002**: Generated models are 3D-printable without manual geometry correction (100% structural integrity = watertight, no self-intersections, export validation pass)
 - **SC-003**: Parameter validation catches 100% of out-of-range inputs before attempting model generation
 - **SC-004**: Output filename encoding supports parameter values with ±0.1mm precision without truncation
 - **SC-005**: 95% of users can generate their first handle without consulting documentation (CLI is self-explanatory via `--help`)
@@ -114,9 +125,11 @@ User receives auto-generated README with handle specifications, usage notes, and
 ## Assumptions
 
 - Python 3.8+ is available and CadQuery 2.4+ is installed in user's environment
+- Both `--diameter` and `--height` parameters are required; no default values provided (explicit intent required)
 - Reference parameters from `handles/origin/handles.json` remain fixed during MVP; user customization of reference params is out of scope
 - Output formats (STL, STEP) are sufficient; OBJ/3MF added in future iterations if needed
 - Diameter range 1.0–10.0mm covers all practical use cases; edge case values outside this range can be documented as unsupported
 - Users have basic understanding of millimeter dimensions and 3D printing; detailed CAD knowledge not required
 - Assembly guide template follows pattern from `tiles/` generator for consistency but tailored to handles context
 - Filenames use simple encoding scheme (e.g., `handle_d2.6_h2.0`) rather than UUID; no collision detection needed for v1
+- Users accept prompt confirmation for file overwrites; non-interactive workflows should handle this via script wrappers
