@@ -4,100 +4,64 @@ Parametric model repository and generator scripts for the **ToolGrid** modular w
 
 ## Overview
 
-tulgryd is a collection of:
+tulgryd is a collection of independent parametric model generator tools. Each tool lives in its own directory, has its own CLI entry point, and is used entirely independently. There is no global entry point or shared API.
 
-1. **Models** - Parametric and pre-built 3D models for ToolGrid tiles and tool holders
-2. **Generator Scripts** - Python utilities to programmatically create customized models with specific dimensions
-3. **Design Files** - Fusion 360 source models for reference and modification
+Each tool:
+- Accepts user parameters via its own CLI
+- Generates 3D models (STL, STEP) ready for printing or CAD work
+- Produces assembly guides alongside generated models
+- Is documented independently
 
-This allows you to:
-- Generate custom pegboard tiles for your exact workshop dimensions
-- Create tool holders tailored to your specific needs
-- Version-control design parameters and construction logic
-- Rapidly iterate on designs with programmatic variations
+## Tools
+
+| Tool | Directory | Status | Description |
+|------|-----------|--------|-------------|
+| Tiles | [`tiles/`](tiles/README.md) | Operational | Generates modular pegboard tiles to fill exact wall dimensions |
+| Handles | [`handles/`](handles/README.md) | Operational | Generates custom grip handles with parametric diameter/height; exports STL/STEP with auto assembly guides |
+
+> **Note:** Each tool has its own `README.md` with usage instructions, CLI reference, and output details.
 
 ## Project Structure
 
 ```
 tulgryd/
-├── tiles/                    # Tile generation system
-│   ├── generate.py          # Main CLI tool for tile generation
-│   ├── core/                # Core modules (layout, modeling, assembly)
-│   └── origin/              # Original hand-designed ToolGrid tiles
-├── handles/                  # Custom tool holder models
-│   ├── origin/              # Original designs
-│   └── (generated models)   # Output from generator scripts
-└── tulgryd.f3d              # Master design file (Fusion 360)
+├── tiles/                    # Tile generator tool
+│   ├── generate.py          # CLI entry point
+│   ├── README.md            # Tool documentation
+│   ├── core/                # Core modules
+│   ├── origin/              # Reference models
+│   └── output/              # Generated outputs
+├── handles/                  # Handles generator tool
+│   ├── generate.py          # CLI entry point (in development)
+│   ├── README.md            # Tool documentation
+│   ├── core/                # Core modules (in development)
+│   ├── origin/              # Reference models and parameters
+│   └── output/              # Generated outputs
+└── tulgryd.f3d              # Master Fusion 360 design file
 ```
 
-## Quick Start
+## Shared Requirements
 
-### Generate Custom Tiles
+- Python 3.8+
+- CadQuery 2.4+ (`pip install cadquery`)
 
-```bash
-# Generate tiles for a 250×180mm drawer
-python tiles/generate.py --total-width 250 --total-length 180
-
-# Generate calibration tile (test hole sizes)
-python tiles/generate.py --calibrate --hole-diameter 4.0
-```
-
-## About the Fusion 360 Source Files
-
-The `tulgryd.f3d` file contains the master design. For documentation or parameterization work, you can extract design data using the **fissionreactor** tool:
-
-- See [`../fissionreactor/`](../fissionreactor/) for the export Add-In
-- Requires Fusion 360 to be running with the design file open
-- Generates JSON metadata for analysis or AI-based code generation
-
-This is optional—the core tulgryd generators work independently.
-
-## Generator Scripts
-
-Generator scripts take design parameters as input and programmatically create models. Examples:
-
-- **Tiles:** Input dimensions → Output optimized pegboard tile layout
-- **Tool Holders:** Input tool dimensions → Output custom organizer
-
-Generators produce:
-- STL files (for 3D printing)
-- STEP files (for further design work)
-- Assembly guides (with layout diagrams)
+Individual tools may have additional dependencies — see each tool's `README.md`.
 
 ## Design Versioning
 
-Design data exported from Fusion 360 models is stored as JSON in the structure:
+Reference design data exported from Fusion 360 is stored as JSON:
 
 ```
-model_name/
+tool_name/
 └── origin/
-    └── model_name.json
+    └── tool_name.json
 ```
 
-This enables:
-- Design documentation
-- Parameter tracking over time
-- Git version control of design intent
-- Reference for building new generators
+This enables parameter tracking over time, Git version control of design intent, and a reference baseline for generator scripts.
 
-## Requirements
+## About the Fusion 360 Source Files
 
-- Python 3.8+
-- CadQuery 2.4+ (for tile generation)
-- Fusion 360 (optional, only for using export tool)
-
-## Getting Started
-
-1. **Browse existing models** - Check `tiles/origin/` and `handles/origin/` for reference designs
-2. **Generate custom tiles** - Run `tiles/generate.py` with your dimensions
-3. **Print and assemble** - Follow generated assembly guides
-
-For more details on tile generation, see `tiles/` directory.
-
-## Learn More
-
-- **tulgryd** - Parametric tile and tool holder generation system
-- **fissionreactor** - Fusion 360 Add-In for model export and AI-enabled parameterization
+The `tulgryd.f3d` file contains the master design. Design data can be extracted using the **fissionreactor** Add-In (see `../fissionreactor/`) — this is optional and not required to use the generators.
 - **ToolGrid System:** Learn about the base system at [toolgrid.io](https://toolgrid.io/) (if available)
 
 ---

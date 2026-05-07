@@ -1,19 +1,23 @@
 # tulgryd Project Context
 
-**Last Read:** 2026-05-06  
-**Scan Mode:** Full (initial)
+**Last Read:** 2026-05-07  
+**Scan Mode:** Full (updated)
 
 ---
 
 ## Project Purpose
 
-**tulgryd** — Parametric model repository and generator scripts for the ToolGrid modular workshop organization system. 
+**tulgryd** — Collection of independent parametric model generator tools for the ToolGrid modular workshop organization system.
 
-Core mission: Generate customized pegboard tiles and tool holders from dimensional input. Version-control design parameters. Rapidly iterate designs programmatically.
+Core model: each tool lives in its own directory, has its own CLI entry point and documentation, and is used entirely independently. No global entry point or shared API.
+
+**Current tools:**
+- **tiles/** — Generates pegboard tiles to fill exact wall dimensions (operational, older style)
+- **handles/** — Generates custom grip handles for tool holders (in development, new reference style)
 
 **Users can:**
-- Generate custom pegboard tiles for exact workshop dimensions
-- Create tool holders tailored to specific needs
+- Generate custom pegboard tiles for exact workshop dimensions (tiles tool)
+- Generate custom grip handles for tool holders (handles tool)
 - Version-control design parameters and construction logic via Git
 - Iterate on designs with programmatic variations
 
@@ -36,21 +40,20 @@ Core mission: Generate customized pegboard tiles and tool holders from dimension
 ### Project Structure
 ```
 tulgryd/
-├── tiles/                    # Tile generation system
-│   ├── generate.py          # Main CLI tool for tile generation
-│   ├── core/                # Core modules
-│   │   ├── __init__.py
-│   │   ├── layout_calculator.py     # Layout optimization
-│   │   ├── builder.py               # 3D model building
-│   │   ├── assembly_guide.py        # Assembly README generation
-│   │   └── parameters.py            # Parameter definitions
-│   ├── origin/              # Original hand-designed reference tiles
-│   ├── output/              # Generated model outputs
-│   └── readme.md
-├── handles/                 # Custom tool holder models
-│   └── origin/              # Original designs
+├── tiles/                    # Tile generator tool (operational, older style)
+│   ├── generate.py          # CLI entry point
+│   ├── README.md            # Tool documentation
+│   ├── core/                # Core modules (layout, builder, assembly guide)
+│   ├── origin/              # Reference STEP models + plan.md
+│   └── output/              # Generated model outputs
+├── handles/                 # Handles generator tool (in development, new style)
+│   ├── generate.py          # CLI entry point (in development)
+│   ├── README.md            # Tool documentation
+│   ├── core/                # Core modules (in development)
+│   ├── origin/              # Reference design + handles.json
+│   └── output/              # Generated model outputs
 ├── tulgryd.f3d             # Master design file (Fusion 360)
-└── readme.md               # Project overview
+└── README.md               # Repository overview
 ```
 
 ---
@@ -112,33 +115,37 @@ All dimensions configurable:
 
 | File | Purpose |
 |------|---------|
-| `readme.md` | Project overview, quick start, requirements, structure |
-| `tiles/readme.md` | Detailed tile generator usage, CLI options, Python API, customization |
-| `tiles/origin/plan.md` | Implementation strategy, platform analysis (CadQuery recommended) |
-| `tiles/core/` | Core module implementations (layout, builder, assembly guide) |
-| `tiles/origin/` | Reference models (STEP files) |
-| `handles/origin/` | Reference tool holder designs |
+| `README.md` | Repository overview, tool index, shared requirements |
+| `tiles/README.md` | Tiles tool: CLI usage, options, output structure, specs, Python API |
+| `tiles/origin/plan.md` | Tiles implementation strategy, platform analysis |
+| `handles/README.md` | Handles tool: CLI usage, parameters, output structure, specs |
+| `handles/origin/handles.json` | Fusion 360 exported parameters (source of truth for reference params) |
+| `.specify/memory/constitution.md` | Governing principles, dev workflow, repo model |
 
 ---
 
 ## File Hashes (Change Detection)
 
 ```
-43476677d581344cf03d70d85fbb84fe  readme.md
-2a920ddf6f378682f7ff2390e4123d00  tiles/readme.md
+e34c1c9151e0cb8a8a35eeca52f576dc  README.md
+2a920ddf6f378682f7ff2390e4123d00  tiles/README.md
 75c306f96f04af9f54bbc11fa9d29ad0  tiles/origin/plan.md
+247f46295470841086da7d46f770ed6e  handles/README.md
+554ea943ff5b7dad458bd8e2857cdb9a  .specify/memory/constitution.md
 ```
 
 ---
 
 ## Key Insights
 
-1. **Modular Tile System:** 100×100mm standard tiles + custom edge pieces for exact dimensional fit.
-2. **Assembly Automation:** Layout calculator automatically determines tile count and geometry.
-3. **3D Printer Tolerance:** Calibration mode enables per-printer diameter adjustment.
-4. **Quantity Coding:** Filenames encode quantity (e.g., `qty4` = print 4 copies).
-5. **Recommended Platform:** CadQuery (Python + OpenSCAD fallback).
-6. **Cross-Verified Design:** All specifications consistent across markdown, PNG drawing, and STEP model.
+1. **Independent Tools:** No global entry point/API. Each tool is standalone with own CLI.
+2. **Style Split:** `tiles/` = older conventions; `handles/` = new reference implementation style.
+3. **Modular Tile System:** 100×100mm standard tiles + custom edge pieces for exact dimensional fit.
+4. **Assembly Automation:** Layout calculator determines tile count and geometry automatically.
+5. **3D Printer Tolerance:** Calibration mode enables per-printer diameter adjustment (tiles).
+6. **Quantity Coding:** Filenames encode quantity (e.g., `qty4` = print 4 copies).
+7. **Recommended Platform:** CadQuery (Python + OpenSCAD fallback).
+8. **Handles Params:** `--diameter` (1–10mm) + `--height` (0.5–5mm), both required, no defaults.
 
 ---
 

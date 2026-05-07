@@ -1,0 +1,90 @@
+{
+  "workflow": "speckit",
+  "specName": "001-handles-generator",
+  "branch": "001-handles-generator",
+  "selectedAt": "2026-05-07T14:52:47.162Z",
+  "currentStep": "plan",
+  "status": "planned",
+  "stepHistory": {
+    "plan": {
+      "startedAt": "2026-05-07T14:55:31.138Z",
+      "completedAt": "2026-05-07T16:55:40.478Z",
+      "substeps": [
+        {
+          "name": "research",
+          "startedAt": "2026-05-07T14:53:53.255Z",
+          "completedAt": "2026-05-07T14:54:00.000Z"
+        },
+        {
+          "name": "design",
+          "startedAt": "2026-05-07T14:54:00.000Z",
+          "completedAt": "2026-05-07T14:54:19.658Z"
+        }
+      ]
+    },
+    "specify": {
+      "startedAt": "2026-05-07T14:55:05.250Z",
+      "completedAt": "2026-05-07T14:55:05.250Z"
+    }
+  },
+  "transitions": [
+    {
+      "step": "plan",
+      "substep": null,
+      "from": {
+        "step": "specify",
+        "substep": null
+      },
+      "by": "extension",
+      "at": "2026-05-07T14:53:53.255Z"
+    },
+    {
+      "step": "plan",
+      "substep": "research",
+      "from": null,
+      "by": "ai",
+      "at": "2026-05-07T14:53:53.255Z"
+    },
+    {
+      "step": "plan",
+      "substep": "research",
+      "from": null,
+      "by": "ai",
+      "at": "2026-05-07T14:54:00.000Z"
+    },
+    {
+      "step": "plan",
+      "substep": "design",
+      "from": null,
+      "by": "ai",
+      "at": "2026-05-07T14:54:00.000Z"
+    },
+    {
+      "step": "plan",
+      "substep": "design",
+      "from": null,
+      "by": "ai",
+      "at": "2026-05-07T14:54:19.658Z"
+    },
+    {
+      "step": "plan",
+      "substep": null,
+      "from": {
+        "step": "plan",
+        "substep": null
+      },
+      "by": "extension",
+      "at": "2026-05-07T14:55:31.138Z"
+    },
+    {
+      "step": "plan",
+      "substep": null,
+      "from": {
+        "step": "plan",
+        "substep": null
+      },
+      "by": "ai",
+      "at": "2026-05-07T16:55:40.478Z"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+CadQuery>=2.4
+Click>=8.0
+Jinja2>=3.0
+pytest>=7.0
+numpy>=1.20

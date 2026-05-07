@@ -99,12 +99,12 @@ User receives auto-generated README with handle specifications, usage notes, and
 - **FR-006**: Script MUST export to STL format with filenames encoding parameters (e.g., `handle_d2.6_h2.0.stl`)
 - **FR-007**: Script MUST support `--format` option with choices: `stl`, `step`, `both`
 - **FR-008**: Script MUST create output directory if it doesn't exist
-- **FR-009**: Script MUST support `--output-dir` parameter to specify custom output location
+- **FR-009**: Script MUST support `--output-dir` parameter to specify custom output location; directory is created if missing (mkdir -p behavior), but script errors if directory exists and is unwritable
 - **FR-010**: Script MUST generate assembly guide README with handle specifications and usage guide (filename: `handle_d{diameter}_h{height}_README.md`, parallel to model file)
 - **FR-011**: Script MUST provide clear error messages for invalid inputs with guidance on valid ranges
 - **FR-012**: Script MUST support `--help` flag showing all options with examples
 - **FR-013**: Script MUST expose only diameter and height as user parameters; all other dimensions locked to reference values
-- **FR-014**: Script MUST prompt user for confirmation before overwriting existing files ("File exists, overwrite? [y/N]")
+- **FR-014**: Script MUST prompt user for confirmation before overwriting existing files ("File exists, overwrite? [y/N]") with default behavior N (no overwrite); user may enter 'y' to proceed or 'N'/Enter to abort
 
 ### Key Entities *(include if feature involves data)*
 
@@ -120,7 +120,7 @@ User receives auto-generated README with handle specifications, usage notes, and
 - **SC-003**: Parameter validation catches 100% of out-of-range inputs before attempting model generation
 - **SC-004**: Output filename encoding supports parameter values with ±0.1mm precision without truncation
 - **SC-005**: 95% of users can generate their first handle without consulting documentation (CLI is self-explanatory via `--help`)
-- **SC-006**: Assembly guide is generated for 100% of runs (filename: `handle_d{d}_h{h}_README.md`) and contains all required sections: specifications table, print settings (PLA/PETG/TPU), assembly steps, troubleshooting, and maintenance guidance
+- **SC-006**: Assembly guide is generated for 100% of runs (filename: `handle_d{d}_h{h}_README.md`) and contains all required sections: specifications table, print settings (PLA/PETG/TPU), assembly steps, troubleshooting (fit issues, layer adhesion, warping), and maintenance guidance
 
 ## Assumptions
 

@@ -1,0 +1,255 @@
+{
+  "export_metadata": {
+    "exported_date": "2026-02-01T13:54:00.191322",
+    "fusion_360_api": "Autodesk Fusion 360 API",
+    "model_name": "handles",
+    "source_f3d": "Unknown",
+    "document_path": "Unknown"
+  },
+  "user_parameters": [
+    {
+      "name": "handles_diameter",
+      "value": 2.6,
+      "unit": "mm",
+      "comment": "The diameter of the end of the handle",
+      "type": "user_parameter"
+    },
+    {
+      "name": "handles_height",
+      "value": 2.0,
+      "unit": "mm",
+      "comment": "Height of the center of the handle diameter from the surface of the gryd (e.g. diameter/2+height)",
+      "type": "user_parameter"
+    }
+  ],
+  "reference_parameters": [
+    {
+      "name": "d165",
+      "value": 0.30000000000000004,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d144",
+      "value": 0.6000000000000001,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d145",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d146",
+      "value": -0.010000000000000002,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d149",
+      "value": 0.2,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d176",
+      "value": 2.6,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d178",
+      "value": 3.3,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d180",
+      "value": 1.6,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d183",
+      "value": 1.6,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d191",
+      "value": 0.9424241430000001,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d192",
+      "value": 1.8848482860000002,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d193",
+      "value": 0.4363323129985824,
+      "unit": "deg",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d200",
+      "value": 0.75,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d203",
+      "value": 0.45,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d189",
+      "value": 1.7000000000000002,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d190",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d194",
+      "value": 0.30000000000000004,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d201",
+      "value": -0.45,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d202",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d204",
+      "value": 0.0,
+      "unit": "deg",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d205",
+      "value": 0.13,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d206",
+      "value": 1.0,
+      "unit": "",
+      "comment": "",
+      "type": "reference_parameter"
+    },
+    {
+      "name": "d207",
+      "value": 0.1,
+      "unit": "mm",
+      "comment": "",
+      "type": "reference_parameter"
+    }
+  ],
+  "timeline": {
+    "total_events": 3,
+    "events": [
+      {
+        "index": 0,
+        "name": "tiles",
+        "feature_type": "TimelineGroup",
+        "is_suppressed": false
+      },
+      {
+        "index": 1,
+        "name": "clean tiles",
+        "feature_type": "TimelineGroup",
+        "is_suppressed": false
+      },
+      {
+        "index": 2,
+        "name": "handles",
+        "feature_type": "TimelineGroup",
+        "is_suppressed": false
+      }
+    ]
+  },
+  "sketches": {
+    "total_count": 2,
+    "sketches": [
+      {
+        "name": "tiles",
+        "parent": "tulgryd v23",
+        "geometry_count": 140,
+        "profile_count": 173,
+        "is_visible": false,
+        "constraints_count": 6
+      },
+      {
+        "name": "handles",
+        "parent": "tulgryd v23",
+        "geometry_count": 26,
+        "profile_count": 4,
+        "is_visible": false,
+        "constraints_count": 22
+      }
+    ]
+  },
+  "features": {
+    "total_count": 0,
+    "features": []
+  },
+  "components": {
+    "total_count": 1,
+    "components": [
+      {
+        "name": "tulgryd v23",
+        "parent": "root",
+        "feature_count": 0,
+        "sketch_count": 2
+      }
+    ]
+  },
+  "summary": {
+    "user_parameters_count": 2,
+    "reference_parameters_count": 23,
+    "timeline_events_count": 3,
+    "sketches_count": 2,
+    "features_count": 0,
+    "components_count": 1
+  }
+}
