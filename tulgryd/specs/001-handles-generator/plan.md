@@ -6,7 +6,7 @@
 
 ## Summary
 
-**Feature**: Parametric CLI script to generate custom tool holder handle models with user-specified grip diameter (1.0–10.0mm) and height (0.5–5.0mm). Geometry built in CadQuery respecting 23 locked reference parameters from design. Outputs STL/STEP files with parameter-encoded filenames + auto-generated assembly guides. Validates structural integrity (watertight, no self-intersections) before export. Confirms file overwrites interactively.
+**Feature**: Parametric CLI script to generate custom tool holder handle models with user-specified grip diameter (10.0–30.0mm) and height (3.0–30.0mm). Geometry built in CadQuery respecting 23 locked reference parameters from design. Outputs STL/STEP files with parameter-encoded filenames + auto-generated assembly guides. Validates structural integrity (watertight, no self-intersections) before export. Confirms file overwrites interactively.
 
 **Technical Approach**: 
 - Build: CadQuery parametric geometry with user params + fixed reference params

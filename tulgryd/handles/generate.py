@@ -15,20 +15,20 @@ __version__ = "0.1.0"
 \b
 EXAMPLES:
   # Generate standard handle (STL format)
-  python generate.py --diameter 2.6 --height 2.0
+  python generate.py --diameter 20.0 --height 10.0
 
   # Export to both STL and STEP formats
-  python generate.py --diameter 3.5 --height 1.5 --format both
+  python generate.py --diameter 25.0 --height 15.0 --format both
 
   # Custom output directory
-  python generate.py --diameter 2.6 --height 2.0 --output-dir ./my-models
+  python generate.py --diameter 20.0 --height 10.0 --output-dir ./my-models
 
   # Check version
   python generate.py --version
 
 PARAMETER RANGES:
-  Diameter: 1.0–10.0 mm (grip end width)
-  Height:   0.5–5.0 mm (handle grip height above mounting surface)
+  Diameter: 10.0–30.0 mm (grip end width)
+  Height:   3.0–30.0 mm (handle grip height above mounting surface)
 
 EXIT CODES:
   0 = Success
@@ -42,14 +42,14 @@ EXIT CODES:
     "--diameter",
     type=float,
     required=True,
-    help="Grip diameter in mm [1.0-10.0]",
+    help="Grip diameter in mm [10.0-30.0]",
     metavar="FLOAT",
 )
 @click.option(
     "--height",
     type=float,
     required=True,
-    help="Grip height in mm [0.5-5.0]",
+    help="Grip height in mm [3.0-30.0]",
     metavar="FLOAT",
 )
 @click.option(

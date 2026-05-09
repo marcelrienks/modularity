@@ -10,7 +10,7 @@ class TestCLIParameters:
     def test_cli_with_both_parameters(self):
         """CLI accepts --diameter and --height."""
         result = subprocess.run(
-            ["python", "generate.py", "--diameter", "2.6", "--height", "2.0"],
+            ["python", "generate.py", "--diameter", "20.0", "--height", "15.0"],
             cwd="/Users/marcelrienks/workspace/code/modularity/tulgryd/handles",
             capture_output=True,
             text=True,
@@ -21,7 +21,7 @@ class TestCLIParameters:
     def test_cli_missing_diameter(self):
         """CLI fails if --diameter missing."""
         result = subprocess.run(
-            ["python", "generate.py", "--height", "2.0"],
+            ["python", "generate.py", "--height", "15.0"],
             cwd="/Users/marcelrienks/workspace/code/modularity/tulgryd/handles",
             capture_output=True,
             text=True,
@@ -32,7 +32,7 @@ class TestCLIParameters:
     def test_cli_missing_height(self):
         """CLI fails if --height missing."""
         result = subprocess.run(
-            ["python", "generate.py", "--diameter", "2.6"],
+            ["python", "generate.py", "--diameter", "20.0"],
             cwd="/Users/marcelrienks/workspace/code/modularity/tulgryd/handles",
             capture_output=True,
             text=True,

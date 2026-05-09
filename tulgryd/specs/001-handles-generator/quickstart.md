@@ -179,7 +179,7 @@ python generate.py --diameter 5.0 --height 2.0  # ✓ Valid
 ### Error: Height out of range
 
 ```
-❌ ERROR: height must be between 0.5 and 5.0 mm (got: 10.0)
+❌ ERROR: height must be between 3.0 and 30.0 mm (got: 35.0)
 ```
 
 **Fix**: Use a value between 0.5 and 5.0 mm.

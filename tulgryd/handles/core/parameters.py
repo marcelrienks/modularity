@@ -25,10 +25,10 @@ class HandleParameters:
     }
 
     # User parameters (exposed via CLI)
-    DIAMETER_MIN = 1.0
-    DIAMETER_MAX = 10.0
-    HEIGHT_MIN = 0.5
-    HEIGHT_MAX = 5.0
+    DIAMETER_MIN = 10.0
+    DIAMETER_MAX = 30.0
+    HEIGHT_MIN = 3.0
+    HEIGHT_MAX = 30.0
 
     def __init__(self, diameter: float, height: float):
         """Initialize with user parameters."""

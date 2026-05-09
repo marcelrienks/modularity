@@ -15,10 +15,10 @@ class TestDirectoryCreation:
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir) / "nonexistent" / "nested"
             
-            params = HandleParameters(2.6, 2.0)
+            params = HandleParameters(20.0, 15.0)
             builder = HandleBuilder(params)
             shape = builder.build()
-            exporter = HandleExporter(shape, 2.6, 2.0)
+            exporter = HandleExporter(shape, 20.0, 15.0)
             
             # Should create directory without error
             files = exporter.export(output_dir, formats="stl")
@@ -37,10 +37,10 @@ class TestDirectoryCreation:
             os.chmod(output_dir, 0o444)
             
             try:
-                params = HandleParameters(2.6, 2.0)
+                params = HandleParameters(20.0, 15.0)
                 builder = HandleBuilder(params)
                 shape = builder.build()
-                exporter = HandleExporter(shape, 2.6, 2.0)
+                exporter = HandleExporter(shape, 20.0, 15.0)
                 
                 # Should raise PermissionError
                 with pytest.raises(PermissionError):
@@ -58,10 +58,10 @@ class TestDirectoryCreation:
             marker_file = output_dir / ".marker"
             marker_file.touch()
             
-            params = HandleParameters(2.6, 2.0)
+            params = HandleParameters(20.0, 15.0)
             builder = HandleBuilder(params)
             shape = builder.build()
-            exporter = HandleExporter(shape, 2.6, 2.0)
+            exporter = HandleExporter(shape, 20.0, 15.0)
             
             files = exporter.export(output_dir, formats="stl")
             

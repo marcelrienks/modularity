@@ -12,9 +12,9 @@ class TestE2EMultipleParameterSets:
     def test_e2e_three_parameter_sets(self):
         """T058: Generate 3 different handle models with different parameter sets."""
         parameter_sets = [
-            (1.0, 0.5),   # Min values
-            (5.0, 2.5),   # Mid values
-            (10.0, 5.0),  # Max values
+            (10.0, 3.0),   # Min values
+            (20.0, 15.0),  # Mid values
+            (30.0, 30.0),  # Max values
         ]
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -56,11 +56,11 @@ class TestE2EMultipleParameterSets:
     def test_e2e_parameter_coverage(self):
         """Test parameter ranges across the valid spectrum."""
         test_cases = [
-            (1.0, 0.5, "minimum values"),
-            (2.6, 2.0, "typical values"),
-            (5.5, 2.8, "mid-range values"),
-            (8.3, 3.5, "high range values"),
-            (10.0, 5.0, "maximum values"),
+            (10.0, 3.0, "minimum values"),
+            (15.0, 8.0, "typical values"),
+            (20.0, 15.0, "mid-range values"),
+            (25.0, 22.0, "high range values"),
+            (30.0, 30.0, "maximum values"),
         ]
         
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -90,7 +90,7 @@ class TestE2EMultipleParameterSets:
         """Test that STL and STEP exports represent the same geometry."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
-            diameter, height = 3.5, 1.8
+            diameter, height = 20.5, 12.8
             
             # Generate both formats
             params = HandleParameters(diameter, height)

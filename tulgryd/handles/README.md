@@ -13,22 +13,22 @@ pip install -r requirements.txt
 
 ### Basic Usage
 
-Generate a handle with 2.6mm grip diameter and 2.0mm height:
+Generate a handle with 12mm grip diameter and 5mm height:
 
 ```bash
-python generate.py --diameter 2.6 --height 2.0
+python generate.py --diameter 12 --height 5
 ```
 
 This creates:
-- `output/handle_d2.6_h2.0.stl` — 3D model (STL format)
-- `output/handle_d2.6_h2.0_README.md` — Assembly guide with print settings
+- `output/handle_d12.0_h5.0.stl` — 3D model (STL format)
+- `output/handle_d12.0_h5.0_README.md` — Assembly guide with print settings
 
 ### Multiple Formats
 
 Export to both STL and STEP CAD formats:
 
 ```bash
-python generate.py --diameter 3.5 --height 1.5 --format both
+python generate.py --diameter 20 --height 15 --format both
 ```
 
 Supported formats: `stl`, `step`, `both` (default: `stl`)
@@ -36,7 +36,7 @@ Supported formats: `stl`, `step`, `both` (default: `stl`)
 ### Custom Output Directory
 
 ```bash
-python generate.py --diameter 2.6 --height 2.0 --output-dir ./models
+python generate.py --diameter 12 --height 5 --output-dir ./models
 ```
 
 ### View Help
@@ -49,8 +49,8 @@ python generate.py --help
 
 | Parameter | Min | Max | Unit |
 |-----------|-----|-----|------|
-| **Diameter** | 1.0 | 10.0 | mm |
-| **Height** | 0.5 | 5.0 | mm |
+| **Diameter** | 10.0 | 30.0 | mm |
+| **Height** | 3.0 | 30.0 | mm |
 
 Out-of-range values are rejected with clear error messages.
 
@@ -129,11 +129,11 @@ python generate.py --diameter 2.6 --height 2.0 --output-dir ~/Desktop/handles
 
 ### Validation Error
 
-**Problem**: `ERROR: diameter must be between 1.0 and 10.0 mm`
+**Problem**: `ERROR: diameter must be between 10.0 and 30.0 mm`
 
 **Solution**: Check parameter ranges. Valid values:
-- Diameter: 1.0–10.0mm
-- Height: 0.5–5.0mm
+- Diameter: 10.0–30.0mm
+- Height: 3.0–30.0mm
 
 ### Out of Disk Space
 

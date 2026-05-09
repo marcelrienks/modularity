@@ -1,7 +1,7 @@
 # tulgryd Project Context
 
-**Last Read:** 2026-05-07  
-**Scan Mode:** Full (updated)
+**Last Read:** 2026-05-09  
+**Scan Mode:** Full (updated — README.md + handles/README.md changed)
 
 ---
 
@@ -13,7 +13,7 @@ Core model: each tool lives in its own directory, has its own CLI entry point an
 
 **Current tools:**
 - **tiles/** — Generates pegboard tiles to fill exact wall dimensions (operational, older style)
-- **handles/** — Generates custom grip handles for tool holders (in development, new reference style)
+- **handles/** — Generates custom grip handles with parametric diameter/height; exports STL/STEP with auto assembly guides (operational, new reference style)
 
 **Users can:**
 - Generate custom pegboard tiles for exact workshop dimensions (tiles tool)
@@ -46,7 +46,7 @@ tulgryd/
 │   ├── core/                # Core modules (layout, builder, assembly guide)
 │   ├── origin/              # Reference STEP models + plan.md
 │   └── output/              # Generated model outputs
-├── handles/                 # Handles generator tool (in development, new style)
+├── handles/                 # Handles generator tool (operational, new reference style)
 │   ├── generate.py          # CLI entry point (in development)
 │   ├── README.md            # Tool documentation
 │   ├── core/                # Core modules (in development)
@@ -118,7 +118,9 @@ All dimensions configurable:
 | `README.md` | Repository overview, tool index, shared requirements |
 | `tiles/README.md` | Tiles tool: CLI usage, options, output structure, specs, Python API |
 | `tiles/origin/plan.md` | Tiles implementation strategy, platform analysis |
-| `handles/README.md` | Handles tool: CLI usage, parameters, output structure, specs |
+| `handles/README.md` | Handles tool: CLI usage, parameters (10–30mm dia, 3–30mm h), exit codes, architecture, troubleshooting |
+| `handles/output/handle_d*.stl` | Generated handle models (runtime, not tracked) |
+| `handles/output/handle_d*_README.md` | Per-model assembly guides with print settings |
 | `handles/origin/handles.json` | Fusion 360 exported parameters (source of truth for reference params) |
 | `.specify/memory/constitution.md` | Governing principles, dev workflow, repo model |
 
@@ -127,10 +129,10 @@ All dimensions configurable:
 ## File Hashes (Change Detection)
 
 ```
-e34c1c9151e0cb8a8a35eeca52f576dc  README.md
+bfef084c5d346d42e8610a79363e012d  README.md
 2a920ddf6f378682f7ff2390e4123d00  tiles/README.md
 75c306f96f04af9f54bbc11fa9d29ad0  tiles/origin/plan.md
-247f46295470841086da7d46f770ed6e  handles/README.md
+4808cfb92bf57670e3dfd8df7db8c7cd  handles/README.md
 554ea943ff5b7dad458bd8e2857cdb9a  .specify/memory/constitution.md
 ```
 
@@ -145,7 +147,10 @@ e34c1c9151e0cb8a8a35eeca52f576dc  README.md
 5. **3D Printer Tolerance:** Calibration mode enables per-printer diameter adjustment (tiles).
 6. **Quantity Coding:** Filenames encode quantity (e.g., `qty4` = print 4 copies).
 7. **Recommended Platform:** CadQuery (Python + OpenSCAD fallback).
-8. **Handles Params:** `--diameter` (1–10mm) + `--height` (0.5–5mm), both required, no defaults.
+8. **Handles Params:** `--diameter` (10.0–30.0mm) + `--height` (3.0–30.0mm), both required, no defaults.
+9. **Handles Exit Codes:** 0=success, 1=validation error, 2=geometry failed, 3=export failed, 4=user cancelled.
+10. **Handles Output:** `handle_d{D}_h{H}.stl/step` + `handle_d{D}_h{H}_README.md` assembly guide per generation.
+11. **Assembly Guides:** Jinja2-templated markdown; cover specs, PLA/PETG/TPU print settings, assembly steps, troubleshooting.
 
 ---
 

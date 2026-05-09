@@ -13,8 +13,8 @@ A Handle Model is a 3D parametric geometry representing a customizable tool grip
 
 | Parameter | Type | Range | Unit | Description | Source |
 |-----------|------|-------|------|-------------|--------|
-| `diameter` | float | 1.0–10.0 | mm | Outer diameter of grip end | User input (required) |
-| `height` | float | 0.5–5.0 | mm | Height of grip center from mounting surface | User input (required) |
+| `diameter` | float | 10.0–30.0 | mm | Outer diameter of grip end | User input (required) |
+| `height` | float | 3.0–30.0 | mm | Height of grip center from mounting surface | User input (required) |
 
 ### Reference Parameters (Locked)
 
@@ -54,8 +54,8 @@ Handle Model
 ### Validation Rules
 
 1. **Parameter Validation**:
-   - `diameter` ∈ [1.0, 10.0] mm (inclusive)
-   - `height` ∈ [0.5, 5.0] mm (inclusive)
+   - `diameter` ∈ [10.0, 30.0] mm (inclusive)
+   - `height` ∈ [3.0, 30.0] mm (inclusive)
    - Both must be positive floats; no NaN/infinity
 
 2. **Geometric Validation**:

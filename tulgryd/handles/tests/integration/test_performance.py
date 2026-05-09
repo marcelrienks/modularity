@@ -19,7 +19,7 @@ class TestPerformance:
         """
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
-            diameter, height = 2.6, 2.0
+            diameter, height = 20.0, 15.0
             
             start_time = time.time()
             
@@ -45,7 +45,7 @@ class TestPerformance:
         """Test that multi-format export completes reasonably fast."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
-            diameter, height = 3.5, 1.5
+            diameter, height = 20.0, 12.0
             
             params = HandleParameters(diameter, height)
             builder = HandleBuilder(params)
@@ -64,7 +64,7 @@ class TestPerformance:
         """Test that assembly guide generation is fast."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
-            diameter, height = 2.6, 2.0
+            diameter, height = 20.0, 15.0
             
             guide_gen = AssemblyGuideGenerator(diameter, height)
             
@@ -80,7 +80,7 @@ class TestPerformance:
         """Test full pipeline (build + export + guide) performance."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir)
-            diameter, height = 3.5, 1.5
+            diameter, height = 18.5, 10.5
             
             start_time = time.time()
             
@@ -111,7 +111,7 @@ class TestPerformance:
         start_time = time.time()
         
         for i in range(100):
-            params = HandleParameters(2.6 + i * 0.01, 2.0)
+            params = HandleParameters(20.0 + i * 0.01, 15.0)
             is_valid, _ = params.validate()
             assert is_valid
         

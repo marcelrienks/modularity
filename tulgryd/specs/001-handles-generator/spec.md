@@ -83,7 +83,7 @@ User receives auto-generated README with handle specifications, usage notes, and
 
 ### Edge Cases
 
-- What happens when diameter is less than 1.0mm or greater than 10.0mm (physical constraints)?
+- What happens when diameter is less than 10.0mm or greater than 30.0mm (physical constraints)?
 - Output file already exists in directory: script prompts "File exists, overwrite? [y/N]" and waits for user response
 - What if output directory is not writable or doesn't exist?
 
@@ -93,8 +93,8 @@ User receives auto-generated README with handle specifications, usage notes, and
 
 - **FR-001**: Script MUST require `--diameter` parameter (mm) as floating point input; error if missing
 - **FR-002**: Script MUST require `--height` parameter (mm) as floating point input; error if missing
-- **FR-003**: Script MUST validate that diameter is positive and within printable range (≥1.0mm, ≤10.0mm)
-- **FR-004**: Script MUST validate that height is positive and within structural limits (≥0.5mm, ≤5.0mm)
+- **FR-003**: Script MUST validate that diameter is positive and within printable range (≥10.0mm, ≤30.0mm)
+- **FR-004**: Script MUST validate that height is positive and within structural limits (≥3.0mm, ≤30.0mm)
 - **FR-005**: Script MUST generate 3D model respecting reference parameters as fixed derived constraints
 - **FR-006**: Script MUST export to STL format with filenames encoding parameters (e.g., `handle_d2.6_h2.0.stl`)
 - **FR-007**: Script MUST support `--format` option with choices: `stl`, `step`, `both`
@@ -128,7 +128,7 @@ User receives auto-generated README with handle specifications, usage notes, and
 - Both `--diameter` and `--height` parameters are required; no default values provided (explicit intent required)
 - Reference parameters from `handles/origin/handles.json` remain fixed during MVP; user customization of reference params is out of scope
 - Output formats (STL, STEP) are sufficient; OBJ/3MF added in future iterations if needed
-- Diameter range 1.0–10.0mm covers all practical use cases; edge case values outside this range can be documented as unsupported
+- Diameter range 10.0–30.0mm covers all practical use cases; edge case values outside this range can be documented as unsupported
 - Users have basic understanding of millimeter dimensions and 3D printing; detailed CAD knowledge not required
 - Assembly guide template follows pattern from `tiles/` generator for consistency but tailored to handles context
 - Filenames use simple encoding scheme (e.g., `handle_d2.6_h2.0`) rather than UUID; no collision detection needed for v1

@@ -4,7 +4,7 @@
   "branch": "001-handles-generator",
   "selectedAt": "2026-05-07T14:52:47.162Z",
   "currentStep": "plan",
-  "status": "planned",
+  "status": "completed",
   "stepHistory": {
     "plan": {
       "startedAt": "2026-05-07T14:55:31.138Z",
@@ -85,6 +85,16 @@
       },
       "by": "ai",
       "at": "2026-05-07T16:55:40.478Z"
+    },
+    {
+      "step": "plan",
+      "substep": null,
+      "from": {
+        "step": "plan",
+        "substep": null
+      },
+      "by": "extension",
+      "at": "2026-05-07T15:05:52.644Z"
     }
   ]
 }
